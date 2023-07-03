@@ -1,0 +1,12 @@
+Texture:
+{
+    Path: ../rsc/txtr.png
+    Id: 1
+}
+
+Model:
+{
+    Path: ../rsc/model/Cube.obj
+    Linked texture: 1
+    Id: 1
+}

@@ -1,0 +1,14 @@
+[requires]
+sfml/2.5.1
+
+[options]
+sfml/2.5.1:shared = True
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.so* -> ./lib
+lib, *.dylib* -> ./lib
+
+[generators]
+CMakeToolchain
+CMakeDeps
