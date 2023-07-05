@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#include <sfml/System/Vector2.hpp>
+// #include <sfml/System/Vector2.hpp>
 
 #include "Tool/PreProcessing.hpp"
 
@@ -43,11 +43,11 @@ namespace eng
         template<NumericType _T>
         friend std::ostream &operator<<(std::ostream &_os, const Point2<_T> &_pt);
 
-        operator sf::Vector2<T>() const;
+        // operator sf::Vector2<T>() const;
     };
 
-    template<NumericType T>
-    using Vector2 = Point2<T>;
+    // template<NumericType T>
+    // using Vector2 = Point2<T>;
 }
 
 #include "Engine/Maths/Point2.inl"
