@@ -4,9 +4,22 @@
 
 namespace eng
 {
-    Window::Window(sf::VideoMode _vmode, const std::string& _title, uint32_t _style, const sf::ContextSettings& _set)
-        : sf::RenderWindow(_vmode, _title, _style, _set), m_camera(), m_zbuffer({ _vmode.width, _vmode.height })
+    Window::Window(const Vector2<uint32_t> &_size, const std::string& _title)
+        : , m_camera(), m_zbuffer(_size)
     {
+        // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexa
+        m_implWin = CreateWindowEx(0, WIN_className, _title.c_str(), WS_OVERLAPPEDWINDOW,
+                CW_USEDEFAULT, CW_USEDEFAULT, _size.x, _size.y, NULL, NULL, hInstance, NULL
+            );
+        if (m_implWin != NULL) {
+            ShowWindow(m_implWin, nCmdShow)
+            m_open = true;
+        }
+    }
+
+    bool Window::isOpen() const
+    {
+        return m_open;
     }
 
     void Window::setCamera(float _fov, Point2<float> _range)
