@@ -5,7 +5,8 @@
 
 #include <windows.h>
 
-#include "Engine/Maths/Point2.hpp"
+#include "Engine/Point2.hpp"
+#include "Engine/Color.hpp"
 
 #ifndef WIN_MAXTITLE
 #define WIN_MAXTITLE 256
@@ -29,14 +30,16 @@ namespace tester
 
             //void move(uint32_t _x, int32_t _y);
             void setPosition(uint32_t _x, uint32_t _y);
-            [[nodiscard]] eng::Point2<uint32_t> getPosition() const;
+            [[nodiscard]] Point2<uint32_t> getPosition() const;
             void setSize(uint32_t _x, uint32_t _y);
-            [[nodiscard]] eng::Point2<uint32_t> getSize() const;
+            [[nodiscard]] Point2<uint32_t> getSize() const;
 
         protected:
             static constexpr char WIN_className[] = "Sample Window Class";
 
             static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM wParam, LPARAM lParam);
+
+            bool peekMessage(LPMSG _msg) const;
 
             HDC getDc() const;
             int releaseDC() const;
@@ -57,8 +60,8 @@ namespace tester
             bool polyBezierTo(const POINT *_lpoint, uint32_t _count);
 
         private:
-            WNDCLASS WIN_winClass{};
-            HWND WIN_impl;
-            HDC WIN_DC;
+            WNDCLASS m_winClass{};
+            HWND m_win;
+            HDC m_dc;
     };
 }
