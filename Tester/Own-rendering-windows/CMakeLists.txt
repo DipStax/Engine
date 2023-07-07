@@ -17,7 +17,6 @@ add_executable(Oww-rendering-windows
 )
 
 target_include_directories(Oww-rendering-windows PRIVATE include)
-target_include_directories(Oww-rendering-windows PRIVATE ../../include)
 # set_target_properties(Oww-rendering-windows PROPERTIES WIN32_EXECUTABLE TRUE)
 
 foreach(file IN LISTS SRC_FILE + HDR_FILE)
