@@ -7,16 +7,21 @@
 
 namespace tester
 {
-    class RenderWindow : public Window<RenderWindow>, public RenderTarget
+    class RenderWindow : public Window, public RenderTarget
     {
         public:
             RenderWindow(uint32_t _x, uint32_t _y, const std::string& _title);
-            ~RenderWindow();
+            ~RenderWindow() = default;
 
             bool pollEvent(Event &_event);
             void clear();
 
             [[nodiscard]] Point2<uint32_t> getSize() const;
+
+            void display() const;
+
+        protected:
+            void render() const;
 
         private:
             bool eventMouseUp(size_t _param, uint32_t _eparam, Event &_event);

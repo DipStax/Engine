@@ -22,7 +22,13 @@ namespace tester
 
     void RenderTarget::drawPixel(const Pixel &_px)
     {
-        m_renderData[_px.pos.y * getSize().y + _px.pos.x] = _px.clr;
+        size_t pos = (_px.pos.y * getSize().y + _px.pos.x) * 3;
+
+        if (pos < m_renderData.size() - 3) {
+            m_renderData[pos] = _px.clr.R;
+            m_renderData[pos + 1] = _px.clr.G;
+            m_renderData[pos + 2] = _px.clr.B;
+        }
     }
 
     void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr)

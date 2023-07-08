@@ -19,7 +19,6 @@ namespace Win
 
 namespace tester
 {
-    template<class T>
     class Window
     {
         public:
@@ -42,7 +41,9 @@ namespace tester
 
             bool peekMessage(LPMSG _msg) const;
 
-            HDC getDc() const;
+            [[nodiscard]] HWND getWindow() const;
+
+            [[nodiscard]] HDC getDc() const;
             int releaseDC() const;
 
             bool penMove(uint32_t _x, uint32_t _y, LPPOINT _lpoint);
@@ -60,11 +61,11 @@ namespace tester
             bool polyBezier(const POINT *_lpoint, uint32_t _count);
             bool polyBezierTo(const POINT *_lpoint, uint32_t _count);
 
+            virtual void render() const = 0;
+
         private:
             WNDCLASS m_winClass{};
             HWND m_win;
             HDC m_dc;
     };
 }
-
-#include "Window.inl"

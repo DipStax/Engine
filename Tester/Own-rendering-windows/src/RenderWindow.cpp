@@ -7,12 +7,7 @@ namespace tester
     RenderWindow::RenderWindow(uint32_t _x, uint32_t _y, const std::string& _title)
         : Window(_x, _y, _title)
     {
-        m_renderData = new Color[_y * _x];
-    }
-
-    RenderWindow::~RenderWindow()
-    {
-        delete [] m_renderData;
+        m_renderData.resize(_x * _y * 3, 0);
     }
 
     bool RenderWindow::pollEvent(Event &_event)
@@ -41,7 +36,12 @@ namespace tester
 
     Point2<uint32_t> RenderWindow::getSize() const
     {
-        return Window<RenderWindow>::getSize();
+        return Window::getSize();
+    }
+
+    void RenderWindow::display() const
+    {
+        SendMessage(getWindow(), WM_PAINT, 0, 0);
     }
 
     void RenderWindow::clear()
@@ -52,6 +52,20 @@ namespace tester
         // error handling with ret
         ret = invalideRect(&rect);
         // error handling with ret
+    }
+
+    void RenderWindow::render() const
+    {
+        Point2<uint32_t> size = getSize();
+        BITMAPINFO bmi;
+
+        bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        bmi.bmiHeader.biWidth = size.x;
+        bmi.bmiHeader.biHeight = -size.y;
+        bmi.bmiHeader.biPlanes = 1;
+        bmi.bmiHeader.biBitCount = 24;
+        bmi.bmiHeader.biCompression = BI_RGB;
+        SetDIBitsToDevice(getDc(), 0, 0, size.x, size.y, 0, 0, 0, size.y, m_renderData.data(), &bmi, DIB_RGB_COLORS);
     }
 
     bool RenderWindow::eventMouseUp(size_t _param, uint32_t _eparam, Event& _event)

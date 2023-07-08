@@ -7,7 +7,7 @@ namespace tester
 {
     struct Pixel
     {
-        Color clr;
+        Color clr = Color{ 0, 0, 0 };
         Point2<uint32_t> pos;
     };
 }

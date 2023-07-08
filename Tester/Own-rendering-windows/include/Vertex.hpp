@@ -24,6 +24,7 @@ namespace tester
             void append(const Pixel &_px);
 
             [[nodiscard]] Type getType() const;
+            [[nodiscar]] Pixel &operator[](size_t _idx);
 
         protected:
             void draw(RenderTarget &_target) const;

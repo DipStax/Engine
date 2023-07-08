@@ -23,6 +23,11 @@ namespace tester
         return m_type;
     }
 
+    Pixel &Vertex::operator[](size_t _idx)
+    {
+        return m_pos[_idx];
+    }
+
     void Vertex::draw(RenderTarget &_win) const
     {
         if (!m_pos.empty())

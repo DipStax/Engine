@@ -18,7 +18,7 @@ namespace tester
         protected:
             RenderTarget() = default;
 
-            Color *m_renderData;
+            std::vector<uint8_t> m_renderData;
 
         private:
             void drawPixel(const Pixel &_px);
