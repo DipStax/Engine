@@ -1,3 +1,4 @@
+#include "RenderTarget.hpp"
 #include "Vertex.hpp"
 
 namespace tester
@@ -22,10 +23,9 @@ namespace tester
         return m_type;
     }
 
-    bool Vertex::draw(RenderWindow &_win) const
+    void Vertex::draw(RenderTarget &_win) const
     {
         if (!m_pos.empty())
             _win.draw(m_pos.data(), m_pos.size(), m_type);
-        return !m_pos.empty();
     }
 }

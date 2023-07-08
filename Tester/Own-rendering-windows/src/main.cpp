@@ -12,7 +12,7 @@ int main()
         while (win.pollEvent(event)) {
         }
         win.clear();
-        win.draw(&pxl, 1, tester::Vertex::Type::Pixel);
+        win.draw(&pxl, 1, tester::Vertex::Type::pixel);
     }
     return 0;
 }

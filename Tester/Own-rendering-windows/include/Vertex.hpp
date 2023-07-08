@@ -10,11 +10,11 @@ namespace tester
     class Vertex : public IDrawable
     {
         public:
-            enum class Type
+            enum Type
             {
-                Pixel,
-                Polygone,
-                Line
+                pixel,
+                polygone,
+                line
             };
 
             Vertex(Type _type, size_t _n);
@@ -26,12 +26,10 @@ namespace tester
             [[nodiscard]] Type getType() const;
 
         protected:
-            bool draw(RenderWindow &_win) const;
+            void draw(RenderTarget &_target) const;
 
         private:
             std::vector<Pixel> m_pos;
-            Type m_type = Type::Pixel;
+            Type m_type = Type::pixel;
     };
 }
-
-#include "RenderWindow.hpp"

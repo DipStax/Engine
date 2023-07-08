@@ -2,13 +2,13 @@
 
 namespace tester
 {
-    class RenderWindow;
-
+    class RenderTarget;
+ 
     class IDrawable
     {
         protected:
-            friend RenderWindow;
+            friend class RenderTarget;
 
-            virtual bool draw(RenderWindow &_win) const = 0;
+            virtual void draw(RenderTarget &_win) const = 0;
     };
 }

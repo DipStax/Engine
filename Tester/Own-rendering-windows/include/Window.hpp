@@ -19,6 +19,7 @@ namespace Win
 
 namespace tester
 {
+    template<class T>
     class Window
     {
         public:
@@ -37,7 +38,7 @@ namespace tester
         protected:
             static constexpr char WIN_className[] = "Sample Window Class";
 
-            static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM wParam, LPARAM lParam);
+            static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
             bool peekMessage(LPMSG _msg) const;
 
@@ -65,3 +66,5 @@ namespace tester
             HDC m_dc;
     };
 }
+
+#include "Window.inl"
