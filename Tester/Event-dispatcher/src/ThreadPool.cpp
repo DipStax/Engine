@@ -1,13 +1,25 @@
 #include "ThreadPool.hpp"
 
+#include <iostream>
+
 namespace tester
 {
+    ThreadPool::ThreadPool()
+    {
+        start();
+    }
+
+    ThreadPool::~ThreadPool()
+    {
+        stop();
+    }
+
     void ThreadPool::start()
     {
         if (m_isStarted)
             return;
         for (size_t it = 0; it < N_THREAD_TP; it++)
-            m_thread[it] = std::thread(&ThreadPool::loop);
+            m_thread[it] = std::thread(&ThreadPool::loop, this);
         m_isStarted = true;
     }
 
@@ -36,19 +48,24 @@ namespace tester
         m_cond.notify_one();
     }
 
+    bool ThreadPool::empty()
+    {
+        return m_queue.empty();
+    }
+
     void ThreadPool::loop()
     {
         Task task;
 
-        while (true) {
+        while (!m_terminate) {
             {
                 std::unique_lock<std::mutex> lock(m_mutex);
 
-                m_cond.wait(lock, [] () {
-                    return !m_queue.empty() || m_terminate;
+                m_cond.wait(lock, [this] () {
+                    return !empty() || m_terminate;
                 });
                 if (m_terminate)
-                    return;
+                        return;
                 task = m_queue.pop_front();
             }
             task();

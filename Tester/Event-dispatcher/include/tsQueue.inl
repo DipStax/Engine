@@ -54,7 +54,7 @@ namespace tester::ts
         T data = std::move(m_queue.front());
 
         m_queue.pop();
-        return std::move(data);
+        return data;
     }
 
 }

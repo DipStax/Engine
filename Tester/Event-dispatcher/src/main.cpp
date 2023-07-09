@@ -10,13 +10,16 @@ void func(const tester::ExampleEvent &_event)
 
 int main()
 {
+    tester::ThreadPool tp;
     tester::ExampleEvent ex;
 
+    tester::EventPool<tester::ExampleEvent> ep(tp);
+
     ex.i = 1;
-    tester::ThreadPool::start();
-    auto handler = tester::EventPool::Subscribe<tester::ExampleEvent>(func);
-    tester::EventPool::Raise(ex);
-    tester::EventPool::Unsubscribe(handler);
-    tester::ThreadPool::stop();
+    auto handler = ep.subscribe<tester::ExampleEvent>(func);
+    ep.raise(ex);
+    while (true) {}
+    // tester::EventPool::Unsubscribe(handler);
+    // tester::ThreadPool::stop();
     return 0;
 }

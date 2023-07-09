@@ -6,19 +6,24 @@
 
 namespace tester
 {
+    // check for tuple inside of ts
+    template<class ...Ts>
     class EventPool
     {
         public:
-            template<IsIEvent T>
-            static bool Raise(const T &_event);
+            EventPool(ThreadPool &_tp);
+            ~EventPool() = default;
 
             template<IsIEvent T>
-            static Task<T> Subscribe(Trigger<T>::Task _task);
+            bool raise(const T &_event);
+
             template<IsIEvent T>
-            static void Unsubscribe(Task<T> _task);
+            Trigger<T>::sTask subscribe(Trigger<T>::Task _task);
+            template<IsIEvent T>
+            void unsubscribe(Trigger<T>::sTask _task);
 
         private:
-            inline static TriggerMap<Trigger, EventList> m_map;
+            TriggerMap<Trigger, std::tuple<Ts...>> m_map;
     };
 }
 

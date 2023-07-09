@@ -26,7 +26,7 @@ endforeach()
 
 # General configuration
 if (MSVC)
-    add_compile_options(/W4)
+    add_compile_options(/W4 /Werr)
 else ()
     add_compile_options(-Wall -Wextra -g3)
 endif ()

@@ -4,8 +4,15 @@
 
 namespace tester
 {
+    template<class ...Ts>
+    EventPool<Ts...>::EventPool(ThreadPool& _tp)
+        : m_map(_tp)
+    {
+    }
+
+    template<class ...Ts>
     template<IsIEvent T>
-    bool EventPool::Raise(const T &_event)
+    bool EventPool<Ts...>::raise(const T &_event)
     {
         if (m_map.contains<T>()) {
             m_map.at<T>().raise(_event);
@@ -14,15 +21,17 @@ namespace tester
         return false;
     }
 
+    template<class ...Ts>
     template<IsIEvent T>
-    Task<T> EventPool::Subscribe(Trigger<T>::Task _task)
+    Trigger<T>::sTask EventPool<Ts...>::subscribe(Trigger<T>::Task _task)
     {
         std::cout << "Event::Subscribe" << std::endl;
         return m_map.at<T>().subscribe(_task);
     }
 
+    template<class ...Ts>
     template<IsIEvent T>
-    void EventPool::Unsubscribe(Task<T> _task)
+    void EventPool<Ts...>::unsubscribe(Trigger<T>::sTask _task)
     {
         std::cout << "Event::Unsubscribe" << std::endl;
         if (m_map.contains<T>())

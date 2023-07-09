@@ -5,6 +5,8 @@
 #include <map>
 #include <cstddef>
 
+#include "ThreadPool.hpp"
+
 template<class T, class ...Ts>
 struct tuple_contain;
 
@@ -92,7 +94,7 @@ namespace tester
     class TriggerMap<T, std::tuple<Ts...>>
     {
         public:
-            TriggerMap() = default;
+            TriggerMap(ThreadPool &_tp);
             ~TriggerMap() = default;
 
             template<class _T>

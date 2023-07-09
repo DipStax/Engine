@@ -5,6 +5,12 @@
 namespace tester
 {
     template<template<class> class T, class ...Ts>
+    TriggerMap<T, std::tuple<Ts...>>::TriggerMap(ThreadPool &_tp)
+        : m_tup(_tp)
+    {
+    }
+
+    template<template<class> class T, class ...Ts>
     template<class _T>
     constexpr bool TriggerMap<T, std::tuple<Ts...>>::contains() const noexcept
     {
