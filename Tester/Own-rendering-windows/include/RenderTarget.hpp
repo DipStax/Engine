@@ -3,6 +3,8 @@
 #include "IDrawable.hpp"
 #include "Vertex.hpp"
 
+#include  <windows.h>
+
 namespace tester
 {
     class RenderTarget
@@ -10,19 +12,22 @@ namespace tester
         public:
             virtual void clear() = 0;
 
-            virtual void draw(const IDrawable &_draw);
-            virtual void draw(const Pixel *_px, size_t _size, Vertex::Type _type);
+            void create(uint32_t _x, uint32_t _y);
 
-            virtual [[nodiscard]] Point2<uint32_t> getSize() const = 0;
+            void draw(const IDrawable &_draw);
+            void draw(const Pixel *_px, size_t _size, Vertex::Type _type);
 
         protected:
             RenderTarget() = default;
 
-            std::vector<uint8_t> m_renderData;
+            [[nodiscard]] HBITMAP getDib() const;
 
         private:
             void drawPixel(const Pixel &_px);
             void drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr);
-            // RGB macro pour set avec une COLORREF
+
+            HBITMAP m_dib;
+            uint32_t *m_data = nullptr;
+            Point2<uint32_t> m_size;
     };
 }

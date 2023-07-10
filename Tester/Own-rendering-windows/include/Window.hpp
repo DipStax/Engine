@@ -61,7 +61,7 @@ namespace tester
             bool polyBezier(const POINT *_lpoint, uint32_t _count);
             bool polyBezierTo(const POINT *_lpoint, uint32_t _count);
 
-            virtual void render() const = 0;
+            virtual void render(HDC _draw) const = 0;
 
         private:
             WNDCLASS m_winClass{};

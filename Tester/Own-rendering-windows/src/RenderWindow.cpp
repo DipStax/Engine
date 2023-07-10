@@ -1,4 +1,5 @@
 #include <map>
+#include <iostream>
 
 #include "RenderWindow.hpp"
 
@@ -7,7 +8,9 @@ namespace tester
     RenderWindow::RenderWindow(uint32_t _x, uint32_t _y, const std::string& _title)
         : Window(_x, _y, _title)
     {
-        m_renderData.resize(_x * _y * 3, 0);
+        Point2<uint32_t> size = getSize();
+
+        create(size.y, size.x);
     }
 
     bool RenderWindow::pollEvent(Event &_event)
@@ -41,31 +44,24 @@ namespace tester
 
     void RenderWindow::display() const
     {
-        SendMessage(getWindow(), WM_PAINT, 0, 0);
+        InvalidateRect(getWindow(), NULL, FALSE);
     }
 
     void RenderWindow::clear()
     {
-        RECT rect;
-        bool ret = winRect(&rect);
-
-        // error handling with ret
-        ret = invalideRect(&rect);
+        bool ret = invalideRect(NULL);
         // error handling with ret
     }
 
-    void RenderWindow::render() const
+    void RenderWindow::render(HDC _draw) const
     {
         Point2<uint32_t> size = getSize();
-        BITMAPINFO bmi;
+        HDC hdc = CreateCompatibleDC(_draw);
+        HBITMAP olddib = static_cast<HBITMAP>(SelectObject(hdc, getDib()));
 
-        bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        bmi.bmiHeader.biWidth = size.x;
-        bmi.bmiHeader.biHeight = -size.y;
-        bmi.bmiHeader.biPlanes = 1;
-        bmi.bmiHeader.biBitCount = 24;
-        bmi.bmiHeader.biCompression = BI_RGB;
-        SetDIBitsToDevice(getDc(), 0, 0, size.x, size.y, 0, 0, 0, size.y, m_renderData.data(), &bmi, DIB_RGB_COLORS);
+        BitBlt(_draw, 0, 0, size.x, size.y, hdc, 0, 0, SRCCOPY);
+        SelectObject(hdc, olddib);
+        DeleteDC(hdc);
     }
 
     bool RenderWindow::eventMouseUp(size_t _param, uint32_t _eparam, Event& _event)

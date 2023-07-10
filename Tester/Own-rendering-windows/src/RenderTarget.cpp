@@ -1,10 +1,33 @@
+#include <cmath>
+
 #include "RenderTarget.hpp"
 
 namespace tester
 {
+    void RenderTarget::create(uint32_t _x, uint32_t _y)
+    {
+        HDC hdc = GetDC(NULL);
+        BITMAPINFO bmi;
+
+        m_size = { _x, _y };
+        bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        bmi.bmiHeader.biWidth = _x;
+        bmi.bmiHeader.biHeight = -static_cast<int32_t>(_y);
+        bmi.bmiHeader.biPlanes = 1;
+        bmi.bmiHeader.biBitCount = 32;
+        bmi.bmiHeader.biCompression = BI_RGB;
+        m_dib = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, reinterpret_cast<void **>(&m_data), NULL, NULL);
+        ReleaseDC(NULL, hdc);
+    }
+
     void RenderTarget::draw(const IDrawable &_elem)
     {
         _elem.draw(*this);
+    }
+
+    HBITMAP RenderTarget::getDib() const
+    {
+        return m_dib;
     }
 
     void RenderTarget::draw(const Pixel *_pos, size_t _size, Vertex::Type _type)
@@ -22,34 +45,32 @@ namespace tester
 
     void RenderTarget::drawPixel(const Pixel &_px)
     {
-        size_t pos = (_px.pos.y * getSize().y + _px.pos.x) * 3;
+        size_t pos = _px.pos.y * m_size.y + _px.pos.x;
 
-        if (pos < m_renderData.size() - 3) {
-            m_renderData[pos] = _px.clr.R;
-            m_renderData[pos + 1] = _px.clr.G;
-            m_renderData[pos + 2] = _px.clr.B;
+        if (pos < m_size.x * m_size.y) {
+            m_data[pos] = (static_cast<uint32_t>(_px.clr.B) << 16) + (static_cast<uint32_t>(_px.clr.G) << 8) + _px.clr.R;
         }
     }
 
     void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr)
     {
-        // https://classic.csunplugged.org/documents/activities/community-activities/line-drawing/line-drawing.pdf
         Pixel _px = { .clr = _clr };
         const Point2<uint32_t> &left = (_first.x < _sec.x) ? _first : _sec;
         const Point2<uint32_t> &right = (_first.x < _sec.x) ? _sec : _first;
-        uint32_t dx = right.x - left.x;
-        uint32_t dy = right.y - left.y;
-        uint32_t d = 2 * dy - dx;
-        uint32_t y = left.y;
+        Point2<float> pos{ static_cast<float>(left.x), static_cast<float>(left.y) };
+        int32_t dx = static_cast<int32_t>(right.x) - static_cast<int32_t>(left.x);
+        int32_t dy = static_cast<int32_t>(right.y) - static_cast<int32_t>(left.y);
+        uint32_t step = std::abs(dx);
+        Point2<float> incr;
+        Pixel px{ .clr = _clr };
 
-        for (uint32_t x = left.x; x < right.x; x++) {
-            _px.pos = { x, y };
-            drawPixel(_px);
-            if (d > 0) {
-                y++;
-                d -= 2 * dx;
-            }
-            d *= 2 * dy;
+        if (std::abs(dx) < std::abs(dy))
+            step = std::abs(dy);
+        incr = Point2<float>{ static_cast<float>(dx) / step, static_cast<float>(dy) / step };
+        for (uint32_t it = 0; it < step; it++) {
+            pos += incr;
+            px.pos = { static_cast<uint32_t>(pos.x), static_cast<uint32_t>(pos.y) };
+            drawPixel(px);
         }
     }
 }

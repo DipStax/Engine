@@ -21,7 +21,7 @@ namespace tester
             void display() const;
 
         protected:
-            void render() const;
+            void render(HDC _draw) const;
 
         private:
             bool eventMouseUp(size_t _param, uint32_t _eparam, Event &_event);

@@ -17,18 +17,13 @@ namespace tester
         m_winClass = {
                 .lpfnWndProc = WIN_proc,
                 .hInstance = GetModuleHandle(NULL),
-                .hIcon = LoadIcon(NULL, IDI_APPLICATION),
-                .hCursor = LoadCursor(NULL, IDC_ARROW),
                 .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
                 .lpszClassName = WIN_className,
         };
         RegisterClass(&m_winClass);
-        m_win = CreateWindowEx(0, WIN_className, _title.c_str(), WS_OVERLAPPEDWINDOW,
+        m_win = CreateWindowEx(0, WIN_className, _title.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
             CW_USEDEFAULT, CW_USEDEFAULT, _x, _y, NULL, NULL, m_winClass.hInstance, this
         );
-        if (m_win != NULL) {
-            ShowWindow(m_win, SW_SHOWDEFAULT);
-        }
         m_dc = getDc();
     }
 
@@ -101,10 +96,11 @@ namespace tester
             pthis = (Window *)GetWindowLongPtr(_win, GWLP_USERDATA);
         }
         switch (_msg) {
-            case WM_PAINT:
-                BeginPaint(_win, &ps);
-                pthis->render();
+            case WM_PAINT: {
+                HDC hdc = BeginPaint(_win, &ps);
+                pthis->render(hdc);
                 EndPaint(_win, &ps);
+            }
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);
