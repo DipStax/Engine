@@ -10,12 +10,12 @@ namespace tester
     class RenderTarget
     {
         public:
-            virtual void clear() = 0;
-
             void create(uint32_t _x, uint32_t _y);
 
             void draw(const IDrawable &_draw);
             void draw(const Pixel *_px, size_t _size, Vertex::Type _type);
+
+            void clear(const Color &_clr = { 255, 255, 255, 255 });
 
         protected:
             RenderTarget() = default;

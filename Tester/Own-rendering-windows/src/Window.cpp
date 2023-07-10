@@ -29,7 +29,8 @@ namespace tester
 
     Window::~Window()
     {
-        releaseDC();
+        ReleaseDC(m_win, m_dc);
+        DestroyWindow(m_win);
     }
 
     void Window::setTitle(const std::string& _title)
@@ -46,6 +47,13 @@ namespace tester
 
         // error handling with ret
         return title;
+    }
+
+    void Window::move(uint32_t _x, int32_t _y)
+    {
+        Point2<uint32_t> pos = getPosition();
+
+       setPosition(pos.x + _y, pos.y + _y);
     }
 
     void Window::setPosition(uint32_t _x, uint32_t _y)
@@ -127,16 +135,6 @@ namespace tester
         return m_dc;
     }
 
-    int Window::releaseDC() const
-    {
-        return ReleaseDC(m_win, m_dc);
-    }
-
-    bool Window::penMove(uint32_t _x, uint32_t _y, LPPOINT _lpoint)
-    {
-        return MoveToEx(m_dc, _x, _y, _lpoint);
-    }
-
     bool Window::winRect(LPRECT _rect) const
     {
         return GetWindowRect(m_win, _rect);
@@ -150,40 +148,5 @@ namespace tester
     bool Window::invalideRect(const LPRECT _rect)
     {
         return InvalidateRect(m_win, _rect, false);
-    }
-
-    COLORREF Window::setPixel(uint32_t _x, uint32_t _y, COLORREF _clr)
-    {
-        return SetPixel(m_dc, _x, _y, _clr);
-    }
-
-    COLORREF Window::getPixel(uint32_t _x, uint32_t _y)
-    {
-        return GetPixel(m_dc, _x, _y);
-    }
-
-    bool Window::lineTo(uint32_t _x, uint32_t _y)
-    {
-        return LineTo(m_dc, _x, _y);
-    }
-
-    bool Window::polyline(const POINT *_lpoint, uint32_t _count)
-    {
-        return Polyline(m_dc, _lpoint, _count);
-    }
-
-    bool Window::polylineTo(const POINT *_lpoint, uint32_t _count)
-    {
-        return Polyline(m_dc, _lpoint, _count);
-    }
-
-    bool Window::polyBezier(const POINT *_lpoint, uint32_t _count)
-    {
-        return PolyBezier(m_dc, _lpoint, _count);
-    }
-
-    bool Window::polyBezierTo(const POINT *_lpoint, uint32_t _count)
-    {
-        return PolyBezierTo(m_dc, _lpoint, _count);
     }
 }

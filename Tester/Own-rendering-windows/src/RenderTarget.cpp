@@ -20,6 +20,11 @@ namespace tester
         ReleaseDC(NULL, hdc);
     }
 
+    void RenderTarget::clear(const Color &_clr)
+    {
+        std::fill(m_data, m_data + m_size.x * m_size.y, CLR(_clr));
+    }
+
     void RenderTarget::draw(const IDrawable &_elem)
     {
         _elem.draw(*this);
@@ -35,7 +40,7 @@ namespace tester
         if (_type == Vertex::Type::pixel) {
             for (size_t it = 0; it < _size; it++)
                 drawPixel(_pos[it]);
-        } else if (_type == Vertex::Type::line) {
+        } else if (_type == Vertex::Type::line || _type == Vertex::Type::polygone) {
             for (size_t it = 1; it < _size; it++)
                 drawLine(_pos[it - 1].pos, _pos[it].pos, _pos[it - 1].clr);
             if (_type == Vertex::Type::polygone)
@@ -47,9 +52,8 @@ namespace tester
     {
         size_t pos = _px.pos.y * m_size.y + _px.pos.x;
 
-        if (pos < m_size.x * m_size.y) {
-            m_data[pos] = (static_cast<uint32_t>(_px.clr.B) << 16) + (static_cast<uint32_t>(_px.clr.G) << 8) + _px.clr.R;
-        }
+        if (pos < m_size.x * m_size.y)
+            m_data[pos] = CLR(_px.clr);
     }
 
     void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr)

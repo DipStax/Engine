@@ -28,7 +28,7 @@ namespace tester
             void setTitle(const std::string& _title);
             [[nodiscard]] std::string getTitle() const;
 
-            //void move(uint32_t _x, int32_t _y);
+            void move(uint32_t _x, int32_t _y);
             void setPosition(uint32_t _x, uint32_t _y);
             [[nodiscard]] Point2<uint32_t> getPosition() const;
             void setSize(uint32_t _x, uint32_t _y);
@@ -42,24 +42,11 @@ namespace tester
             bool peekMessage(LPMSG _msg) const;
 
             [[nodiscard]] HWND getWindow() const;
-
             [[nodiscard]] HDC getDc() const;
-            int releaseDC() const;
-
-            bool penMove(uint32_t _x, uint32_t _y, LPPOINT _lpoint);
 
             bool winRect(LPRECT _rect) const;
             bool move(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height) const;
             bool invalideRect(const LPRECT _rect);
-
-            COLORREF setPixel(uint32_t _x, uint32_t _y, COLORREF _clr);
-            COLORREF getPixel(uint32_t _x, uint32_t _y);
-
-            bool lineTo(uint32_t _x, uint32_t _y);
-            bool polyline(const POINT *_lpoint, uint32_t _count);
-            bool polylineTo(const POINT *_lpoint, uint32_t _count);
-            bool polyBezier(const POINT *_lpoint, uint32_t _count);
-            bool polyBezierTo(const POINT *_lpoint, uint32_t _count);
 
             virtual void render(HDC _draw) const = 0;
 

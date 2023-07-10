@@ -14,7 +14,6 @@ namespace tester
             ~RenderWindow() = default;
 
             bool pollEvent(Event &_event);
-            void clear();
 
             [[nodiscard]] Point2<uint32_t> getSize() const;
 

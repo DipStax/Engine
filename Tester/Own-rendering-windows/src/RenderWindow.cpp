@@ -47,12 +47,6 @@ namespace tester
         InvalidateRect(getWindow(), NULL, FALSE);
     }
 
-    void RenderWindow::clear()
-    {
-        bool ret = invalideRect(NULL);
-        // error handling with ret
-    }
-
     void RenderWindow::render(HDC _draw) const
     {
         Point2<uint32_t> size = getSize();
