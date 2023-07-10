@@ -6,21 +6,17 @@ int main()
 {
     tester::RenderWindow win(200, 200, "Titre");
     tester::Pixel pxl{ tester::Color{ 125, 125, 125 }, tester::Point2<uint32_t>{ 0, 0 } };
-    tester::Vertex vrt(tester::Vertex::Type::line, 4);
+    tester::Vertex vrt(tester::Vertex::Type::polygone, 4);
     tester::Event event;
 
     vrt[0].pos = tester::Point2<uint32_t>{ 10, 10 };
-    vrt[0].clr = { 125, 125 };
     vrt[1].pos = tester::Point2<uint32_t>{ 50, 10 };
-    vrt[1].clr = { 125, 125 };
     vrt[2].pos = tester::Point2<uint32_t>{ 50, 50 };
-    vrt[2].clr = { 125, 125 };
     vrt[3].pos = tester::Point2<uint32_t>{ 10, 50 };
-    vrt[3].clr = { 125, 125 };
     while (true) {
         while (win.pollEvent(event)) {
         }
-        // win.clear();
+        win.clear({ 255, 0, 0 });
         for (uint32_t y = 1; y < 20; y++) {
             for (uint32_t x = 1; x < 20; x++) {
                 pxl.pos = { x, y };

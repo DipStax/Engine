@@ -1,3 +1,4 @@
+#include <map>
 #include <iostream>
 
 #include "Window.hpp"
@@ -29,14 +30,15 @@ namespace tester
 
     Window::~Window()
     {
-        releaseDC();
+        ReleaseDC(m_win, m_dc);
+        DestroyWindow(m_win);
     }
 
     void Window::setTitle(const std::string& _title)
     {
-        if (!SetWindowText(m_win, _title.c_str())) {
-            std::cerr << "Window: can't change the title of the window" << std::endl;
-        }
+        bool ret = SetWindowText(m_win, _title.c_str());
+
+        // error handling with ret
     }
 
     std::string Window::getTitle() const
@@ -46,6 +48,13 @@ namespace tester
 
         // error handling with ret
         return title;
+    }
+
+    void Window::move(uint32_t _x, int32_t _y)
+    {
+        Point2<uint32_t> pos = getPosition();
+
+       setPosition(pos.x + _y, pos.y + _y);
     }
 
     void Window::setPosition(uint32_t _x, uint32_t _y)
@@ -82,6 +91,35 @@ namespace tester
         return Point2<uint32_t>{ static_cast<uint32_t>(rect.right - rect.left), static_cast<uint32_t>(rect.bottom - rect.top) };
     }
 
+    bool Window::pollEvent(Event &_event)
+    {
+        using MsgFn = bool (Window::*)(size_t, uint32_t, Event &);
+
+        static std::map<size_t, MsgFn> mapfn = {};
+        MSG msg;
+
+        while (peekMessage(&msg)) {
+            if (mapfn.contains(msg.message))
+                if ((this->*(mapfn[msg.message]))(msg.lParam, msg.wParam, _event))
+                    return true;
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        return false;
+    }
+
+    void Window::close()
+    {
+        ReleaseDC(m_win, m_dc);
+        DestroyWindow(m_win);
+        m_open = false;
+    }
+
+    HWND Window::getWindow() const
+    {
+        return m_win;
+    }
+
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         PAINTSTRUCT ps;
@@ -112,29 +150,14 @@ namespace tester
         return 0;
     }
 
-    bool Window::peekMessage(LPMSG _msg) const
-    {
-        return PeekMessage(_msg, m_win, 0, 0, PM_REMOVE);
-    }
-
-    HWND Window::getWindow() const
-    {
-        return m_win;
-    }
-
     HDC Window::getDc() const
     {
         return m_dc;
     }
 
-    int Window::releaseDC() const
+    bool Window::peekMessage(LPMSG _msg) const
     {
-        return ReleaseDC(m_win, m_dc);
-    }
-
-    bool Window::penMove(uint32_t _x, uint32_t _y, LPPOINT _lpoint)
-    {
-        return MoveToEx(m_dc, _x, _y, _lpoint);
+        return PeekMessage(_msg, m_win, 0, 0, PM_REMOVE);
     }
 
     bool Window::winRect(LPRECT _rect) const
@@ -145,45 +168,5 @@ namespace tester
     bool Window::move(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height) const
     {
         return MoveWindow(m_win, _x, _y, _width, _height, true);
-    }
-
-    bool Window::invalideRect(const LPRECT _rect)
-    {
-        return InvalidateRect(m_win, _rect, false);
-    }
-
-    COLORREF Window::setPixel(uint32_t _x, uint32_t _y, COLORREF _clr)
-    {
-        return SetPixel(m_dc, _x, _y, _clr);
-    }
-
-    COLORREF Window::getPixel(uint32_t _x, uint32_t _y)
-    {
-        return GetPixel(m_dc, _x, _y);
-    }
-
-    bool Window::lineTo(uint32_t _x, uint32_t _y)
-    {
-        return LineTo(m_dc, _x, _y);
-    }
-
-    bool Window::polyline(const POINT *_lpoint, uint32_t _count)
-    {
-        return Polyline(m_dc, _lpoint, _count);
-    }
-
-    bool Window::polylineTo(const POINT *_lpoint, uint32_t _count)
-    {
-        return Polyline(m_dc, _lpoint, _count);
-    }
-
-    bool Window::polyBezier(const POINT *_lpoint, uint32_t _count)
-    {
-        return PolyBezier(m_dc, _lpoint, _count);
-    }
-
-    bool Window::polyBezierTo(const POINT *_lpoint, uint32_t _count)
-    {
-        return PolyBezierTo(m_dc, _lpoint, _count);
     }
 }
