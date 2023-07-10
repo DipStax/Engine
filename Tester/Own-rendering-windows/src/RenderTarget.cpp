@@ -54,23 +54,11 @@ namespace tester
 
     void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr)
     {
-        Pixel _px = { .clr = _clr };
-        const Point2<uint32_t> &left = (_first.x < _sec.x) ? _first : _sec;
-        const Point2<uint32_t> &right = (_first.x < _sec.x) ? _sec : _first;
-        Point2<float> pos{ static_cast<float>(left.x), static_cast<float>(left.y) };
-        int32_t dx = static_cast<int32_t>(right.x) - static_cast<int32_t>(left.x);
-        int32_t dy = static_cast<int32_t>(right.y) - static_cast<int32_t>(left.y);
-        uint32_t step = std::abs(dx);
-        Point2<float> incr;
-        Pixel px{ .clr = _clr };
+        HDC hdc = CreateCompatibleDC(NULL);
+        HBITMAP olddib = (HBITMAP)SelectObject(hdc, m_dib);
 
-        if (std::abs(dx) < std::abs(dy))
-            step = std::abs(dy);
-        incr = Point2<float>{ static_cast<float>(dx) / step, static_cast<float>(dy) / step };
-        for (uint32_t it = 0; it < step; it++) {
-            pos += incr;
-            px.pos = { static_cast<uint32_t>(pos.x), static_cast<uint32_t>(pos.y) };
-            drawPixel(px);
-        }
+        MoveToEx(hdc, _first.x, _first.y, NULL);
+        LineTo(hdc, _sec.x, _sec.y);
+        SelectObject(hdc, olddib);
     }
 }
