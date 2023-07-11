@@ -17,6 +17,8 @@ namespace tester
 
             void clear(const Color &_clr = { 255, 255, 255, 255 });
 
+            virtual [[nodiscard]] Point2<uint32_t> getSize() const = 0;
+
         protected:
             RenderTarget() = default;
 

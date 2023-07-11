@@ -9,10 +9,9 @@ namespace tester
         HDC hdc = GetDC(NULL);
         BITMAPINFO bmi;
 
-        m_size = { _x, _y };
         bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        bmi.bmiHeader.biWidth = _x;
-        bmi.bmiHeader.biHeight = -static_cast<int32_t>(_y);
+        bmi.bmiHeader.biWidth = getSize().x;
+        bmi.bmiHeader.biHeight = -static_cast<int32_t>(getSize().y);
         bmi.bmiHeader.biPlanes = 1;
         bmi.bmiHeader.biBitCount = 32;
         bmi.bmiHeader.biCompression = BI_RGB;
@@ -22,7 +21,7 @@ namespace tester
 
     void RenderTarget::clear(const Color &_clr)
     {
-        std::fill(m_data, m_data + m_size.x * m_size.y, CLR(_clr));
+        std::fill(m_data, m_data + getSize().x * getSize().y, CLR(_clr));
     }
 
     void RenderTarget::draw(const IDrawable &_elem)
@@ -52,7 +51,7 @@ namespace tester
     {
         size_t pos = _px.pos.y * m_size.y + _px.pos.x;
 
-        if (pos < m_size.x * m_size.y)
+        if (pos < getSize().x * getSize().y)
             m_data[pos] = CLR(_px.clr);
     }
 

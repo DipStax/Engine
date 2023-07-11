@@ -15,6 +15,18 @@ namespace tester
 {
     Window::Window(uint32_t _x, uint32_t _y, const std::string& _title)
     {
+        open(_x, _y, _title);
+    }
+
+    Window::~Window()
+    {
+        close();
+    }
+
+    void Window::open(uint32_t _x, uint32_t _y, const std::string& _title)
+    {
+        if (m_open)
+            close();
         m_winClass = {
                 .lpfnWndProc = WIN_proc,
                 .hInstance = GetModuleHandle(NULL),
@@ -28,10 +40,9 @@ namespace tester
         m_dc = getDc();
     }
 
-    Window::~Window()
+    bool Window::isOpen() const
     {
-        ReleaseDC(m_win, m_dc);
-        DestroyWindow(m_win);
+        return m_open;
     }
 
     void Window::setTitle(const std::string& _title)
