@@ -38,6 +38,7 @@ namespace tester
             CW_USEDEFAULT, CW_USEDEFAULT, _x, _y, NULL, NULL, m_winClass.hInstance, this
         );
         m_dc = getDc();
+        m_open = true;
     }
 
     bool Window::isOpen() const
@@ -153,6 +154,7 @@ namespace tester
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);
+                pthis->close();
                 break;
             default:
                 return DefWindowProc(_win, _msg, _wparam, _lparam);
