@@ -1,6 +1,8 @@
 #ifndef TESTER_COLOR_HPP
 #define TESTER_COLOR_HPP
 
+#include <stdint.h>
+
 #define CLR(_clr) (static_cast<uint32_t>(_clr.A) << 24) + (static_cast<uint32_t>(_clr.B) << 16) + (static_cast<uint32_t>(_clr.G) << 8) + _clr.R
 
 namespace tester

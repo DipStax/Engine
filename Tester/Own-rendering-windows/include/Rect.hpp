@@ -4,9 +4,9 @@
 
 namespace tester
 {
-    struct Vertex
+    struct Rect
     {
         Point2<uint32_t> pos;
-        Point2<uint32_t> txtrPos;
+        Point2<uint32_t> size;
     };
 }

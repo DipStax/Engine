@@ -1,9 +1,10 @@
 #pragma once
 
-#include "IDrawable.hpp"
-#include "Vertex.hpp"
-
 #include  <windows.h>
+
+#include "Engine/Color.hpp"
+#include "Image.hpp"
+#include "VertexArray.hpp"
 
 namespace tester
 {
@@ -12,8 +13,9 @@ namespace tester
         public:
             void create(uint32_t _x, uint32_t _y);
 
-            void draw(const IDrawable &_draw);
-            void draw(const Pixel *_px, size_t _size, Vertex::Type _type);
+            void draw(const IDrawable &_elem, Image *_img = nullptr);
+            void draw(const Vertex *_vtx, size_t _size, Image *_img);
+            void draw(const Vertex *_vtx, size_t _size, VertexArray::Type _type);
 
             void clear(const Color &_clr = { 255, 255, 255, 255 });
 
@@ -25,8 +27,7 @@ namespace tester
             [[nodiscard]] HBITMAP getDib() const;
 
         private:
-            void drawPixel(const Pixel &_px);
-            void drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr);
+            void drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec);
 
             HBITMAP m_dib;
             uint32_t *m_data = nullptr;

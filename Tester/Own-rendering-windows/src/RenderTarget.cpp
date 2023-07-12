@@ -24,9 +24,26 @@ namespace tester
         std::fill(m_data, m_data + getSize().x * getSize().y, CLR(_clr));
     }
 
-    void RenderTarget::draw(const IDrawable &_elem)
+    void RenderTarget::draw(const IDrawable & _elem, Image* _img)
     {
-        _elem.draw(*this);
+        _elem.draw(*this, _img);
+    }
+
+    void RenderTarget::draw(const Vertex *_vtx, size_t _size, Image *_img)
+    {
+    }
+
+    void RenderTarget::draw(const Vertex *_vtx, size_t _size, VertexArray::Type _type)
+    {
+        if (_type == VertexArray::Type::point) {
+            for (size_t it = 0; it < _size; it++)
+                drawLine(_vtx[it].pos, _vtx[it].pos);
+        } else if (_type == VertexArray::Type::line || _type == VertexArray::Type::polygone) {
+            for (size_t it = 1; it < _size; it++)
+                drawLine(_vtx[it - 1].pos, _vtx[it].pos);
+            if (_type == VertexArray::Type::polygone)
+                drawLine(_vtx[_size - 1].pos, _vtx[0].pos);
+        }
     }
 
     HBITMAP RenderTarget::getDib() const
@@ -34,28 +51,7 @@ namespace tester
         return m_dib;
     }
 
-    void RenderTarget::draw(const Pixel *_pos, size_t _size, Vertex::Type _type)
-    {
-        if (_type == Vertex::Type::pixel) {
-            for (size_t it = 0; it < _size; it++)
-                drawPixel(_pos[it]);
-        } else if (_type == Vertex::Type::line || _type == Vertex::Type::polygone) {
-            for (size_t it = 1; it < _size; it++)
-                drawLine(_pos[it - 1].pos, _pos[it].pos, _pos[it - 1].clr);
-            if (_type == Vertex::Type::polygone)
-                drawLine(_pos[_size - 1].pos, _pos[0].pos, _pos[_size - 1].clr);
-        }
-    }
-
-    void RenderTarget::drawPixel(const Pixel &_px)
-    {
-        size_t pos = _px.pos.y * m_size.y + _px.pos.x;
-
-        if (pos < getSize().x * getSize().y)
-            m_data[pos] = CLR(_px.clr);
-    }
-
-    void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec, const Color &_clr)
+    void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec)
     {
         HDC hdc = CreateCompatibleDC(NULL);
         HBITMAP olddib = (HBITMAP)SelectObject(hdc, m_dib);
