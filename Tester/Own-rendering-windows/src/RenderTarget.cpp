@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "CircleList.hpp"
 #include "RenderTarget.hpp"
 
 namespace tester
@@ -31,6 +32,10 @@ namespace tester
 
     void RenderTarget::draw(const Vertex *_vtx, size_t _size, Image *_img)
     {
+        CircleList<Vertex> cl;
+
+        for (size_t it = 0; it < _size; it++)
+            cl.push_back(_vtx[it]); // memory optimisation (copying data)
     }
 
     void RenderTarget::draw(const Vertex *_vtx, size_t _size, VertexArray::Type _type)

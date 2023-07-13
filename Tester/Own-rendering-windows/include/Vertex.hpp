@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Point2.hpp"
+#include "Rect.hpp"
 
 namespace tester
 {
