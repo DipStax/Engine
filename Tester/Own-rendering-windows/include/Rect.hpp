@@ -6,7 +6,7 @@ namespace tester
 {
     struct Rect
     {
-        Point2<uint32_t> pos;
-        Point2<uint32_t> size;
+        Point2<float> pos;
+        Point2<float> size;
     };
 }

@@ -15,13 +15,13 @@ namespace tester
 
             void setImage(Image &_img);
 
-            void setPosition(uint32_t _x, uint32_t _y);
-            void setPosition(const Point2<uint32_t> &_pos);
-            [[nodiscard]] Point2<uint32_t> getPosition() const;
+            void setPosition(float _x, float _y);
+            void setPosition(const Point2<float> &_pos);
+            [[nodiscard]] Point2<float> getPosition() const;
 
-            void setScale(const Point2<uint32_t> &_scale);
-            void setScale(uint32_t _rh, uint32_t _rw);
-            [[nodiscard]] Point2<uint32_t> getScale() const;
+            void setScale(const Point2<float> &_scale);
+            void setScale(float _rh, float _rw);
+            [[nodiscard]] Point2<float> getScale() const;
 
             void setImgRect(Rect &_rect);
             [[nodiscard]] Rect getImgRect() const;
@@ -30,14 +30,14 @@ namespace tester
             void draw(RenderTarget &_target, const Image *_img) const;
 
         private:
-            void generateVertex();
+            void processRect();
 
             Image m_img;
 
             VertexArray m_vertex;
 
             Rect m_rect;
-            Point2<uint32_t> m_pos;
-            Point2<uint32_t> m_scale;
+            Point2<float> m_pos;
+            Point2<float> m_scale = { 1, 1 };
     };
 }

@@ -39,6 +39,11 @@ namespace tester
         bool operator!=(const Point2<T> &_pos);
 
         template<NumericType _T>
+        static Point2<_T> as(const Point2<T> &_pt);
+        template<NumericType _T>
+        Point2<_T> as() const;
+
+        template<NumericType _T>
         friend std::ostream &operator<<(std::ostream &_os, const Point2<_T> &_pt);
     };
 }

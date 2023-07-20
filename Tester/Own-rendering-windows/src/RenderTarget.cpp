@@ -42,18 +42,29 @@ namespace tester
     {
         if (_type == VertexArray::Type::point) {
             for (size_t it = 0; it < _size; it++)
-                drawLine(_vtx[it].pos, _vtx[it].pos);
+                drawPixel(_vtx[it].pos.as<uint32_t>(), _vtx[it].clr);
         } else if (_type == VertexArray::Type::line || _type == VertexArray::Type::polygone) {
             for (size_t it = 1; it < _size; it++)
-                drawLine(_vtx[it - 1].pos, _vtx[it].pos);
+                drawLine(_vtx[it - 1].pos.as<uint32_t>(), _vtx[it].pos.as<uint32_t>());
             if (_type == VertexArray::Type::polygone)
-                drawLine(_vtx[_size - 1].pos, _vtx[0].pos);
+                drawLine(_vtx[_size - 1].pos.as<uint32_t>(), _vtx[0].pos.as<uint32_t>());
         }
     }
 
     HBITMAP RenderTarget::getDib() const
     {
         return m_dib;
+    }
+
+    void RenderTarget::drawPixel(const Point2<uint32_t> &_pos, const Color &_clr)
+    {
+        HDC hdc = CreateCompatibleDC(NULL);
+        HBITMAP olddib = (HBITMAP)SelectObject(hdc, m_dib);
+        Color clr = { 255, 255, 0, 0 };
+
+        SetPixel(hdc, _pos.x, _pos.y, CLR(clr));
+        SelectObject(hdc, olddib);
+        DeleteDC(hdc);
     }
 
     void RenderTarget::drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec)
@@ -64,5 +75,6 @@ namespace tester
         MoveToEx(hdc, _first.x, _first.y, NULL);
         LineTo(hdc, _sec.x, _sec.y);
         SelectObject(hdc, olddib);
+        DeleteDC(hdc);
     }
 }

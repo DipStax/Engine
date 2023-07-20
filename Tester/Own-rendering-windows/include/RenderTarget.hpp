@@ -27,6 +27,7 @@ namespace tester
             [[nodiscard]] HBITMAP getDib() const;
 
         private:
+            void drawPixel(const Point2<uint32_t> &_pos, const Color &_clr);
             void drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec);
 
             HBITMAP m_dib;

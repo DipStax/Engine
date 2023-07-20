@@ -6,36 +6,37 @@ namespace tester
     void Sprite::setImage(Image &_img)
     {
         m_img = _img;
-        m_rect.pos = { 0, 0 };
-        m_rect.size = _img.getSize();
+        processRect();
     }
 
-    void Sprite::setPosition(uint32_t _x, uint32_t _y)
+    void Sprite::setPosition(float _x, float _y)
     {
         setPosition({ _x, _y });
     }
 
-    void Sprite::setPosition(const Point2<uint32_t> &_pos)
+    void Sprite::setPosition(const Point2<float> &_pos)
     {
         m_pos = _pos;
+        processRect();
     }
 
-    Point2<uint32_t> Sprite::getPosition() const
+    Point2<float> Sprite::getPosition() const
     {
         return m_pos;
     }
 
-    void Sprite::setScale(uint32_t _rh, uint32_t _rw)
+    void Sprite::setScale(float _rh, float _rw)
     {
         setScale({ _rh, _rw });
     }
 
-    void Sprite::setScale(const Point2<uint32_t> &_scale)
+    void Sprite::setScale(const Point2<float> &_scale)
     {
         m_scale = _scale;
+        processRect();
     }
 
-    Point2<uint32_t> Sprite::getScale() const
+    Point2<float> Sprite::getScale() const
     {
         return m_scale;
     }
@@ -55,14 +56,15 @@ namespace tester
         _target.draw(m_vertex, &m_img);
     }
 
-    void Sprite::generateVertex()
+    void Sprite::processRect()
     {
-        Point2<uint32_t> size = m_img.getSize();
+        Point2<float> size = m_img.getSize().as<float>();
 
+        m_rect = { m_pos, size * m_scale };
         m_vertex.clear();
-        m_vertex.append({ m_pos, m_rect.pos });
-        m_vertex.append({ { m_pos.x + size.x, m_pos.y }, { m_rect.pos.x + size.x, m_rect.pos.y  } });
-        m_vertex.append({ m_pos + size, m_rect.pos + size });
-        m_vertex.append({ { m_pos.x, m_pos.y + size.y }, { m_rect.pos.x, m_rect.pos.y + size.y  } });
+        m_vertex.append({ m_rect.pos, { 0, 0 } });
+        m_vertex.append({ { m_rect.pos.x + size.x, m_rect.pos.y }, { 1, 0 } });
+        m_vertex.append({ m_rect.pos + size, { 1, 1 } });
+        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + size.y }, { 0, 1 } });
     }
 }
