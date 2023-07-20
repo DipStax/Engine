@@ -38,7 +38,7 @@ namespace tester
         m_pos.clear();
     }
 
-    void VertexArray::draw(RenderTarget &_target, Image *_img) const
+    void VertexArray::draw(RenderTarget &_target, const Image *_img) const
     {
         if (!m_pos.empty()) {
             if (_img)

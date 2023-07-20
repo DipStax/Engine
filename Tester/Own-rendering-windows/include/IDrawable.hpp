@@ -11,6 +11,6 @@ namespace tester
         protected:
             friend class RenderTarget;
 
-            virtual void draw(RenderTarget &_target, Image *_img) const = 0;
+            virtual void draw(RenderTarget &_target, const Image *_img) const = 0;
     };
 }

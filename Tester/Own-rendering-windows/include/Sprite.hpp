@@ -27,7 +27,7 @@ namespace tester
             [[nodiscard]] Rect getImgRect() const;
 
         protected:
-            void draw(RenderTarget &_target, Image *_img) const;
+            void draw(RenderTarget &_target, const Image *_img) const;
 
         private:
             void generateVertex();

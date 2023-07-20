@@ -25,12 +25,12 @@ namespace tester
         std::fill(m_data, m_data + getSize().x * getSize().y, CLR(_clr));
     }
 
-    void RenderTarget::draw(const IDrawable & _elem, Image* _img)
+    void RenderTarget::draw(const IDrawable & _elem, const Image *_img)
     {
         _elem.draw(*this, _img);
     }
 
-    void RenderTarget::draw(const Vertex *_vtx, size_t _size, Image *_img)
+    void RenderTarget::draw(const Vertex *_vtx, size_t _size, const Image *_img)
     {
         CircleList<Vertex> cl;
 

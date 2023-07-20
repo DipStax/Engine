@@ -31,7 +31,7 @@ namespace tester
             void clear();
 
         protected:
-            void draw(RenderTarget &_target, Image *_img) const;
+            void draw(RenderTarget &_target, const Image *_img) const;
 
         private:
             std::vector<Vertex> m_pos;

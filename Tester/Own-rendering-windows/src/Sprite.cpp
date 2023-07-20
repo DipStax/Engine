@@ -50,9 +50,9 @@ namespace tester
         return m_rect;
     }
 
-    void Sprite::draw(RenderTarget &_target, Image *_img) const
+    void Sprite::draw(RenderTarget &_target, const Image *_img) const
     {
-        _target.draw(m_vertex, _img);
+        _target.draw(m_vertex, &m_img);
     }
 
     void Sprite::generateVertex()
