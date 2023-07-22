@@ -34,12 +34,11 @@ namespace tester
     Color Image::getPixel(const Point2<uint32_t>& _pos) const
     {
         uint32_t pos = (_pos.y * getSize().x + _pos.x) * 4;
-        return Color{ m_pxl.at(pos), m_pxl.at(pos + 1), m_pxl.at(pos + 2), m_pxl.at(pos + 3) };
+        return Color{ m_pxl.at(pos + 2), m_pxl.at(pos + 1), m_pxl.at(pos + 0) };
     }
 
     void Image::facBmp(const std::string &_path)
     {
-        HBITMAP oldbmp;
         BITMAP bmp;
         BITMAPINFO bmpInfo;
         HDC hdc;

@@ -27,9 +27,10 @@ endforeach()
 
 # General configuration
 if (MSVC)
-    add_compile_options(/W4)
+    target_compile_options(Oww-rendering-windows PRIVATE /W4)
+    target_compile_definitions(Oww-rendering-windows PUBLIC NOMINMAX)
 else ()
-    add_compile_options(-Wall -Wextra -g3)
+    target_compile_options(Oww-rendering-windows PRIVATE -Wall -Wextra -g3)
 endif ()
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Oww-rendering-windows)

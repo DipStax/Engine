@@ -26,24 +26,34 @@ namespace tester
             void push_back(const T &_data);
 
             template<class ...Ts>
-            void emplace(size_t _idx, Ts ..._args);
+            void emplace(int32_t _idx, Ts ..._args);
             template<class ...Ts>
             void emplace_back(Ts ..._args);
 
+            void swap(int32_t _idx1, int32_t _idx2);
             void resize(size_t _size, T &_val = T());
 
-            T &at(size_t _idx);
-            const T &at(size_t _idx) const;
+            [[nodiscard]] T &at(int32_t _idx);
+            [[nodiscard]] const T &at(int32_t _idx) const;
 
-            T &operator[](size_t _idx);
-            const T &operator[](size_t _idx) const;
+            [[nodiscard]] T &operator[](int32_t _idx);
+            [[nodiscard]] const T &operator[](int32_t _idx) const;
 
-            void erase(size_t _idx);
+            void erase(int32_t _idx);
 
             void clear();
 
+            // todo
+            // using sortFn = std::function<bool(const T &, const T &)>;
+            // static void sort(CircleList<T> &_cl, sortFn _fn);
+
         private:
-            std::shared_ptr<priv::CLNode> m_head;
-            size_t m_size;
+            [[nodiscard]] std::shared_ptr<priv::CLNode<T>> iat(int32_t _idx);
+            [[nodiscard]] const std::shared_ptr<priv::CLNode<T>> iat(int32_t _idx) const;
+
+            std::shared_ptr<priv::CLNode<T>> m_head = nullptr;
+            size_t m_size = 0;
     };
 }
+
+#include "CircleList.inl"

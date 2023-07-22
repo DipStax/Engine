@@ -26,7 +26,7 @@ namespace tester
             void resize(size_t _n);
             void append(const Vertex &_px);
 
-            [[nodiscar]] Vertex &operator[](size_t _idx);
+            [[nodiscard]] Vertex &operator[](size_t _idx);
 
             void clear();
 

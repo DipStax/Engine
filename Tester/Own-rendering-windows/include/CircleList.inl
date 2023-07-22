@@ -11,7 +11,7 @@ namespace tester
     template<class T>
     void CircleList<T>::push_back(const T &_data)
     {
-        std::shared_ptr<priv::CLNode> node = std::make_shared<priv::CLNode>({ _data });
+        std::shared_ptr<priv::CLNode<T>> node = std::make_shared<priv::CLNode<T>>(priv::CLNode<T>{ .data = _data });
 
         if (m_head) {
             node->next = m_head;
@@ -28,17 +28,17 @@ namespace tester
 
     template<class T>
     template<class ...Ts>
-    void CircleList<T>::emplace(size_t _idx, Ts ..._args)
+    void CircleList<T>::emplace(int32_t _idx, Ts ..._args)
     {
-        std::shared_ptr<priv::CLNode> ptr = m_head;
-        std::shared_ptr<priv::CLNode> node = std::make_shared<priv::CLNode>({ _data });
+        std::shared_ptr<priv::CLNode<T>> ptr = m_head;
+        std::shared_ptr<priv::CLNode<T>> node = std::make_shared<priv::CLNode<T>>({ T(std::forward<Ts>(_args)...) });
 
         if (_idx == 0) {
             push_back(T(std::forward<Ts>(_args)...));
             m_head = m_head->prev;
             return;
         }
-        for (size_t it = 0; it < _idx; it++, ptr = ptr->next) {}
+        ptr = at(_idx);
         node->next = ptr;
         node->prev = ptr->prev;
         ptr->prev->next = node;
@@ -50,6 +50,12 @@ namespace tester
     void CircleList<T>::emplace_back(Ts ..._args)
     {
         emplace(m_size++, std::forward<Ts>(_args)...);
+    }
+
+    template<class T>
+    void CircleList<T>::swap(int32_t _idx1, int32_t _idx2)
+    {
+        std::swap(iat(_idx1)->data, iat(_idx2)->data);
     }
 
     template<class T>
@@ -65,40 +71,34 @@ namespace tester
     }
 
     template<class T>
-    T &CircleList<T>::at(size_t _idx)
+    T &CircleList<T>::at(int32_t _idx)
     {
-        std::shared_ptr<priv::CLNode> ptr = m_head;
-
-        for (size_t it = 0; it < _idx; it++, ptr = ptr->next) {}
-        return ptr->data;
+        return iat(_idx)->data;
     }
 
     template<class T>
-    const T &CircleList<T>::at(size_t _idx) const
+    const T &CircleList<T>::at(int32_t _idx) const
     {
-        std::shared_ptr<priv::CLNode> ptr = m_head;
-
-        for (size_t it = 0; it < _idx; it++, ptr = ptr->next) {}
-        return ptr->data;
+        return iat(_idx)->data;
     }
 
     template<class T>
-    T &CircleList<T>::operator[](size_t _idx)
+    T &CircleList<T>::operator[](int32_t _idx)
     {
-        return at(_idx);
+        return iat(_idx)->data;
     }
 
     template<class T>
-    const T &CircleList<T>::operator[](size_t _idx) const
+    const T &CircleList<T>::operator[](int32_t _idx) const
     {
-        return at(_idx);
+        return iat(_idx)->data;
     }
 
     template<class T>
-    void CircleList<T>::erase(size_t _idx)
+    void CircleList<T>::erase(int32_t _idx)
     {
         // memory leak ?
-        std::shared_ptr<priv::CLNode> ptr = m_head;
+        std::shared_ptr<priv::CLNode<T>> ptr = m_head;
 
         if (m_size == 0)
             return;
@@ -113,7 +113,7 @@ namespace tester
             if (m_size == 1)
                 m_head = nullptr;
         } else {
-            for (size_t it = 0; it < _idx; it++, ptr = ptr->next) {}
+            ptr = iat(_idx);
             ptr->next->prev = ptr->prev;
             ptr->prev->next = ptr->next;
         }
@@ -125,5 +125,29 @@ namespace tester
     {
         while (m_size)
             erase(0);
+    }
+
+    template<class T>
+    std::shared_ptr<priv::CLNode<T>> CircleList<T>::iat(int32_t _idx)
+    {
+        std::shared_ptr<priv::CLNode<T>> ptr = m_head;
+
+        if (_idx > 0)
+            for (int32_t it = 0; it < _idx; it++, ptr = ptr->next) {}
+        else
+            for (int32_t it = 0; it > _idx; it--, ptr = ptr->prev) {}
+        return ptr;
+    }
+
+    template<class T>
+    const std::shared_ptr<priv::CLNode<T>> CircleList<T>::iat(int32_t _idx) const
+    {
+        std::shared_ptr<priv::CLNode<T>> ptr = m_head;
+
+        if (_idx > 0)
+            for (int32_t it = 0; it < _idx; it++, ptr = ptr->next) {}
+        else
+            for (int32_t it = 0; it > _idx; it--, ptr = ptr->prev) {}
+        return ptr;
     }
 }

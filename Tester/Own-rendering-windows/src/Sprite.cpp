@@ -63,8 +63,8 @@ namespace tester
         m_rect = { m_pos, size * m_scale };
         m_vertex.clear();
         m_vertex.append({ m_rect.pos, { 0, 0 } });
-        m_vertex.append({ { m_rect.pos.x + size.x, m_rect.pos.y }, { 1, 0 } });
-        m_vertex.append({ m_rect.pos + size, { 1, 1 } });
-        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + size.y }, { 0, 1 } });
+        m_vertex.append({ { m_rect.pos.x + m_rect.size.x, m_rect.pos.y }, { m_rect.size.x, 0 } });
+        m_vertex.append({ m_rect.pos + m_rect.size.x, m_rect.size });
+        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y }, { 0, m_rect.size.y } });
     }
 }
