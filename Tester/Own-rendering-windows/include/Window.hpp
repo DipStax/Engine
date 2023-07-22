@@ -13,11 +13,6 @@
 #define WIN_MAXTITLE 256
 #endif
 
-namespace Win
-{
-    HWND find(LPCTSTR _name, LPCTSTR _class);
-}
-
 namespace tester
 {
     class Window

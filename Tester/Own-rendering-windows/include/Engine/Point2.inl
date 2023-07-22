@@ -146,12 +146,4 @@ namespace tester
         _os << "{ " << _pt.x << ", " << _pt.y << " }";
         return _os;
     }
-
-    // template<NumericType T>
-    // inline Point2<T>::operator sf::Vector2<T>() const
-    // {
-    //     return sf::Vector2<T>(x, y);
-    // }
-
-    
 }

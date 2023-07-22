@@ -33,6 +33,5 @@ namespace tester
 
             HBITMAP m_dib;
             uint32_t *m_data = nullptr;
-            Point2<uint32_t> m_size;
     };
 }

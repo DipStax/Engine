@@ -53,6 +53,8 @@ namespace tester
 
     void Sprite::draw(RenderTarget &_target, const Image *_img) const
     {
+        std::ignore = _img;
+
         _target.draw(m_vertex, &m_img);
     }
 
