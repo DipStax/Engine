@@ -1,20 +1,44 @@
-#include "Engine/Maths/Maths.hpp"
-#include "Engine/Rendering/Triangle.hpp"
+#include <map>
+#include <iostream>
+
 #include "Engine/Window.hpp"
+
+namespace Win
+{
+    HWND find(LPCTSTR _name, LPCTSTR _class)
+    {
+        return FindWindow(_class, _name);
+    }
+}
 
 namespace eng
 {
-    Window::Window(const Vector2<uint32_t> &_size, const std::string& _title)
-        : , m_camera(), m_zbuffer(_size)
+    Window::Window(uint32_t _x, uint32_t _y, const std::string& _title)
     {
-        // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexa
-        m_implWin = CreateWindowEx(0, WIN_className, _title.c_str(), WS_OVERLAPPEDWINDOW,
-                CW_USEDEFAULT, CW_USEDEFAULT, _size.x, _size.y, NULL, NULL, hInstance, NULL
-            );
-        if (m_implWin != NULL) {
-            ShowWindow(m_implWin, nCmdShow)
-            m_open = true;
-        }
+        open(_x, _y, _title);
+    }
+
+    Window::~Window()
+    {
+        close();
+    }
+
+    void Window::open(uint32_t _x, uint32_t _y, const std::string& _title)
+    {
+        if (m_open)
+            close();
+        m_winClass = {
+                .lpfnWndProc = WIN_proc,
+                .hInstance = GetModuleHandle(NULL),
+                .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
+                .lpszClassName = WIN_className,
+        };
+        RegisterClass(&m_winClass);
+        m_win = CreateWindowEx(0, WIN_className, _title.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+            CW_USEDEFAULT, CW_USEDEFAULT, _x, _y, NULL, NULL, m_winClass.hInstance, this
+        );
+        m_dc = getDc();
+        m_open = true;
     }
 
     bool Window::isOpen() const
@@ -22,63 +46,140 @@ namespace eng
         return m_open;
     }
 
-    void Window::setCamera(float _fov, Point2<float> _range)
+    void Window::setTitle(const std::string& _title)
     {
-        m_camera.setFov(_fov);
-        m_camera.setRange(_range.x, _range.y);
-        m_camera.setSize(static_cast<float>(getSize().x), static_cast<float>(getSize().y));
+        bool ret = SetWindowText(m_win, _title.c_str());
+
+        // error handling with ret
     }
 
-    void Window::moveCamera(Vector3<float> _move)
+    std::string Window::getTitle() const
     {
-        m_camera.move(_move);
+        std::string title(WIN_MAXTITLE, '\0');
+        int ret = GetWindowText(m_win, const_cast<char*>(title.c_str()), WIN_MAXTITLE);
+
+        // error handling with ret
+        return title;
     }
 
-    void Window::rotateCamera(Point3<float> _rot)
+    void Window::move(uint32_t _x, int32_t _y)
     {
-        _rot.x = toRad(_rot.x);
-        _rot.y = toRad(_rot.y);
-        _rot.z = toRad(_rot.z);
-        m_camera.rotate(_rot);
+        Point2<uint32_t> pos = getPosition();
+
+       setPosition(pos.x + _y, pos.y + _y);
     }
 
-    Point3<float> Window::project(const Point3<float> &_pt)
+    void Window::setPosition(uint32_t _x, uint32_t _y)
     {
-        return m_camera.process(_pt);
+        Point2<uint32_t> size = Window::getSize();
+        bool ret = move(size.x, size.y, _x, _y);
+
+        // error handling with ret
     }
 
-    void Window::drawModel(const Model &_model)
+    Point2<uint32_t> Window::getPosition() const
     {
-        const std::vector<Point3<float>> &txtrPt = _model.getTexturePoint();
-        const std::vector<Point3<float>> &points = _model.getPoint();
-        sf::Image img = _model.getTexture()->copyToImage();
-        std::array<float, 3> depth;
-        std::vector<Point3<float>> projection;
-        Triangle triangle;
+        RECT rect;
+        bool ret = winRect(&rect);
 
-        for (const auto &_pt : points)
-            projection.push_back(project(_pt));
-        for (const auto &_poly : _model.getPoly()) {
-            // add backface culling
-            for (size_t it = 0; it < _poly.size(); it++) {
-                if (_poly.at(it).x > 0)
-                    triangle.pos[it] = projection[_poly.at(it).x - 1];
-                else
-                    triangle.pos[it] = projection[projection.size() + _poly.at(it).x];
-                if (_poly.at(it).y > 0)
-                    triangle.texCoords[it] = txtrPt[_poly.at(it).y - 1].as2();
-                else if (_poly.at(it).y < 0)
-                    triangle.texCoords[it] = txtrPt[txtrPt.size() + _poly.at(it).y].as2();
-            }
-            m_zbuffer.draw(triangle, img);
+        // error handling with ret
+        return Point2<uint32_t>{ static_cast<uint32_t>(rect.left), static_cast<uint32_t>(rect.top) };
+    }
+
+    void Window::setSize(uint32_t _x, uint32_t _y)
+    {
+        Point2<uint32_t> pos = Window::getPosition();
+        bool ret = move(_x, _y, pos.x, pos.y);
+
+        // error handling with ret
+    }
+
+    Point2<uint32_t> Window::getSize() const
+    {
+        RECT rect;
+        bool ret = winRect(&rect);
+
+        // error handling with ret
+        return Point2<uint32_t>{ static_cast<uint32_t>(rect.right - rect.left), static_cast<uint32_t>(rect.bottom - rect.top) };
+    }
+
+    bool Window::pollEvent(Event &_event)
+    {
+        using MsgFn = bool (Window::*)(size_t, uint32_t, Event &);
+
+        static std::map<size_t, MsgFn> mapfn = {};
+        MSG msg;
+
+        while (peekMessage(&msg)) {
+            if (mapfn.contains(msg.message))
+                if ((this->*(mapfn[msg.message]))(msg.lParam, msg.wParam, _event))
+                    return true;
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
         }
-        m_zbuffer.render();
+        return false;
     }
 
-    void Window::render()
+    void Window::close()
     {
-        draw(m_zbuffer);
-        display();
-        m_zbuffer.setSize({ getSize().x, getSize().y });
+        ReleaseDC(m_win, m_dc);
+        DestroyWindow(m_win);
+        m_open = false;
+    }
+
+    HWND Window::getWindow() const
+    {
+        return m_win;
+    }
+
+    LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
+    {
+        PAINTSTRUCT ps;
+        Window *pthis;
+
+        if (_msg == WM_NCCREATE) {
+            CREATESTRUCT* create = (CREATESTRUCT*)_lparam;
+
+            pthis = (Window *)create->lpCreateParams;
+            SetWindowLongPtr(_win, GWLP_USERDATA, (LONG_PTR)pthis);
+        } else {
+            pthis = (Window *)GetWindowLongPtr(_win, GWLP_USERDATA);
+        }
+        switch (_msg) {
+            case WM_PAINT: {
+                HDC hdc = BeginPaint(_win, &ps);
+                pthis->render(hdc);
+                EndPaint(_win, &ps);
+            }
+                break;
+            case WM_DESTROY:
+                PostQuitMessage(0);
+                pthis->close();
+                break;
+            default:
+                return DefWindowProc(_win, _msg, _wparam, _lparam);
+        }
+
+        return 0;
+    }
+
+    HDC Window::getDc() const
+    {
+        return m_dc;
+    }
+
+    bool Window::peekMessage(LPMSG _msg) const
+    {
+        return PeekMessage(_msg, m_win, 0, 0, PM_REMOVE);
+    }
+
+    bool Window::winRect(LPRECT _rect) const
+    {
+        return GetWindowRect(m_win, _rect);
+    }
+
+    bool Window::move(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height) const
+    {
+        return MoveWindow(m_win, _x, _y, _width, _height, true);
     }
 }

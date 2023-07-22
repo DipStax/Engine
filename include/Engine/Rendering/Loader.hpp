@@ -4,7 +4,7 @@
 #include <istream>
 #include <memory>
 
-#include "Engine/Ressource/Data.hpp"
+#include "Engine/Rendering/Data.hpp"
 
 namespace eng
 {
@@ -16,15 +16,13 @@ namespace eng
 
             [[nodiscard]] Data load(const std::string &_path);
 
-            [[nodiscard]] std::pair<size_t, std::shared_ptr<sf::Texture>> loadTexture(std::istream &_file);
-            [[nodiscard]] std::pair<size_t, std::shared_ptr<sf::Font>> loadFont(std::istream &_file);
+            [[nodiscard]] std::pair<size_t, std::shared_ptr<Texture>> loadTexture(std::istream &_file);
             [[nodiscard]] std::pair<size_t, std::unique_ptr<Model>> loadModel(std::istream &_file);
 
         private:
             using FnLoad = void (Loader::*)(Data &, std::istream &);
 
             void fnLoadTexture(Data &_data, std::istream &_file);
-            void fnLoadFont(Data &_data, std::istream &_file);
             void fnLoadModel(Data &_data, std::istream &_file);
     };
 }

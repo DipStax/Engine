@@ -41,13 +41,16 @@ namespace eng
         bool operator!=(const Point2<T> &_pos);
 
         template<NumericType _T>
-        friend std::ostream &operator<<(std::ostream &_os, const Point2<_T> &_pt);
+        static Point2<_T> as(const Point2<T> &_pt);
+        template<NumericType _T>
+        Point2<_T> as() const;
 
-        // operator sf::Vector2<T>() const;
+        template<NumericType _T>
+        friend std::ostream &operator<<(std::ostream &_os, const Point2<_T> &_pt);
     };
 
-    // template<NumericType T>
-    // using Vector2 = Point2<T>;
+    template<NumericType T>
+    using Vector2 = Point2<T>;
 }
 
 #include "Engine/Maths/Point2.inl"

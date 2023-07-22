@@ -64,12 +64,6 @@ namespace ecs::sys
     class ISystem;
 }
 
-namespace eng
-{
-    template<class ...Ts>
-    class Event;
-}
-
 template<class ...Ts>
 using Tuple = std::tuple<std::optional<Ts>...>;
 
@@ -105,8 +99,5 @@ concept KeyType = requires (T r, T l)
 {
     r < l;
 };
-
-template<class T>
-concept IsEvent = is_base_of_template<eng::Event, T>::value;
 
 #endif

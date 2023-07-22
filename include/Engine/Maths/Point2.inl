@@ -133,9 +133,17 @@ namespace eng
         return _os;
     }
 
-    // template<NumericType T>
-    // inline Point2<T>::operator sf::Vector2<T>() const
-    // {
-    //     return sf::Vector2<T>(x, y);
-    // }
+    template<NumericType T>
+    template<NumericType _T>
+    Point2<_T> Point2<T>::as(const Point2<T>& _pt)
+    {
+        return Point2<_T>{ static_cast<_T>(_pt.x), static_cast<_T>(_pt.y) };
+    }
+
+    template<NumericType T>
+    template<NumericType _T>
+    Point2<_T> Point2<T>::as() const
+    {
+        return Point2<T>::as<_T>(*this);
+    }
 }

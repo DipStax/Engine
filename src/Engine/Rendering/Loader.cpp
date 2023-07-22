@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "Engine/Ressource/Loader.hpp"
+#include "Engine/Rendering/Loader.hpp"
 #include "Tool/Splitter.hpp"
 
 namespace eng
@@ -20,8 +20,6 @@ namespace eng
             std::cout << "[rsc::Loader] parsing: '" << line << "'" << std::endl;
             if (line == "Texture:")
                 fn = &Loader::fnLoadTexture;
-            else if (line == "Font:")
-                fn = &Loader::fnLoadFont;
             else if (line == "Model:")
                 fn = &Loader::fnLoadModel;
             else
@@ -35,9 +33,9 @@ namespace eng
         return data;
     }
 
-    std::pair<size_t, std::shared_ptr<sf::Texture>> Loader::loadTexture(std::istream &_file)
+    std::pair<size_t, std::shared_ptr<Texture>> Loader::loadTexture(std::istream &_file)
     {
-        std::shared_ptr<sf::Texture> txtr = std::make_shared<sf::Texture>();
+        std::shared_ptr<Texture> txtr = std::make_shared<Texture>();
         std::string line = "";
         std::pair<std::string, std::string> kv;
         size_t id = 0;
@@ -46,7 +44,7 @@ namespace eng
             std::getline(_file, line);
             kv = split::noSpace(line, ':');
             if (kv.first == "Path") {
-                txtr->loadFromFile(kv.second);
+                txtr->load(kv.second);
             } else if (kv.first == "Id") {
                 id = std::stoull(kv.second);
             } else if (line != "}") {
@@ -54,27 +52,6 @@ namespace eng
             }
         }
         return { id, txtr };
-    }
-
-    std::pair<size_t, std::shared_ptr<sf::Font>> Loader::loadFont(std::istream &_file)
-    {
-        std::shared_ptr<sf::Font> font = std::make_shared<sf::Font>();
-        std::string line = "";
-        std::pair<std::string, std::string> kv;
-        size_t id = 0;
-
-        while (line != "}") {
-            std::getline(_file, line);
-            kv = split::noSpace(line, ':');
-            if (kv.first == "Path") {
-                font->loadFromFile(kv.second);
-            } else if (kv.first == "Id") {
-                id = std::stoull(kv.second);
-            } else {
-                return { 0, nullptr };
-            }
-        }
-        return { id, font };
     }
 
     std::pair<size_t, std::unique_ptr<Model>> Loader::loadModel(std::istream& _file)
@@ -102,20 +79,11 @@ namespace eng
 
     void Loader::fnLoadTexture(Data &_data, std::istream &_file)
     {
-        std::pair<size_t, std::shared_ptr<sf::Texture>> ptxtr;
+        std::pair<size_t, std::shared_ptr<Texture>> ptxtr;
 
         ptxtr = loadTexture(_file);
         if (ptxtr.first && ptxtr.second && !_data.Texture.contains(ptxtr.first))
             _data.Texture.emplace(ptxtr);
-    }
-
-    void Loader::fnLoadFont(Data &_data, std::istream &_file)
-    {
-        std::pair<size_t, std::shared_ptr<sf::Font>> ptxtr;
-
-        ptxtr = loadFont(_file);
-        if (ptxtr.first && ptxtr.second && !_data.Texture.contains(ptxtr.first))
-            _data.Font.emplace(ptxtr);
     }
 
     void Loader::fnLoadModel(Data &_data, std::istream &_file)

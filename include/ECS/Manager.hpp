@@ -16,7 +16,7 @@ namespace ecs
             ~Manager() = default;
 
             template<SystemType T>
-            void runSystem(Entity *_entity = nullptr, eng::Window *_win = nullptr);
+            void runSystem(Entity *_entity = nullptr, eng::RenderTarget *_target = nullptr);
 
             Entity::IdType spawn();
             void kill(Entity::IdType _id);

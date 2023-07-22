@@ -3,9 +3,6 @@
 #include <iostream>
 #include <numbers>
 
-#include <SFML/System/Time.hpp>
-#include <SFML/System/Clock.hpp>
-
 #include "Engine/Camera.hpp"
 
 namespace eng

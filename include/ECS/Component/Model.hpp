@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "Engine/Ressource/Model.hpp"
+#include "Engine/Rendering/Model.hpp"
 
 namespace ecs::comp
 {

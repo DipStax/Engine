@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "Tool/Splitter.hpp"
-#include "Engine/Ressource/Model.hpp"
+#include "Engine/Rendering/Model.hpp"
 
 namespace eng
 {
@@ -65,7 +65,7 @@ namespace eng
         return m_txtrId;
     }
 
-    std::shared_ptr<sf::Texture> Model::getTexture() const
+    std::shared_ptr<Texture> Model::getTexture() const
     {
         return m_txtr;
     }
@@ -75,7 +75,7 @@ namespace eng
         m_txtrId = _id;
     }
 
-    void Model::setTexture(std::shared_ptr<sf::Texture> _txtr)
+    void Model::setTexture(std::shared_ptr<Texture> _txtr)
     {
         m_txtr = _txtr;
     }

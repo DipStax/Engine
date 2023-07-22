@@ -1,10 +1,11 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include "Engine/Window.hpp"
 #include "ECS/Manager.hpp"
-#include "Player.hpp"
-#include "Engine/Ressource/Data.hpp"
+#include "Engine/Event/Event.hpp"
+#include "Engine/Rendering/RenderWindow.hpp"
+#include "Engine/Rendering/Data.hpp"
+//#include "Player.hpp"
 
 class Core
 {
@@ -15,15 +16,12 @@ class Core
         void init(const std::string &_path);
         void run();
 
-    protected:
-        void pollEvent();
-
     private:
-        eng::Window m_win;
-        sf::Event m_event{};
+        eng::RenderWindow m_win;
+        eng::Event m_event{};
 
         ecs::Manager m_manager{};
-        Player m_player{};
+        // Player m_player{};
         eng::Data m_data{};
 
         bool m_pause = false;

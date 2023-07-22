@@ -6,10 +6,8 @@
 #include <string>
 #include <vector>
 
-#include <sfml/Graphics/Texture.hpp>
-#include <sfml/Graphics/VertexArray.hpp>
-#include <sfml/Graphics/RenderTarget.hpp>
-
+#include "Engine/Rendering/Texture.hpp"
+#include "Engine/Rendering/Vertex.hpp"
 #include "Engine/Camera.hpp"
 
 namespace eng
@@ -26,10 +24,10 @@ namespace eng
             void load(const std::string &_path);
 
             [[nodiscard]] size_t getTextureId() const;
-            [[nodiscard]] std::shared_ptr<sf::Texture> getTexture() const;
+            [[nodiscard]] std::shared_ptr<Texture> getTexture() const;
 
             void setTextureId(size_t _id);
-            void setTexture(std::shared_ptr<sf::Texture> _txtr);
+            void setTexture(std::shared_ptr<Texture> _txtr);
 
             [[nodiscard]] const std::vector<eng::Vector3<float>> &getPoint() const;
             [[nodiscard]] const std::vector<eng::Vector3<float>> &getTexturePoint() const;
@@ -56,10 +54,10 @@ namespace eng
             std::vector<eng::Vector3<float>> m_vp;
             std::vector<std::vector<eng::Point3<int64_t>>> m_f;
 
-            std::shared_ptr<sf::Texture> m_txtr = nullptr;
+            std::shared_ptr<Texture> m_txtr = nullptr;
             size_t m_txtrId = 0;
 
-            std::vector<sf::Vertex> m_varray;
+            std::vector<Vertex> m_varray;
     };
 }
 
