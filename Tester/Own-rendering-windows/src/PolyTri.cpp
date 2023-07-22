@@ -10,7 +10,7 @@ namespace tester
 
         for (int32_t it = 0; it < _size; it++)
             cl.push_back(_vtx[it]);
-        for (int32_t it = 0; cl.size() != 3;) {
+        for (int32_t it = 0; cl.size() > 3;) {
             if (priv::isEarTip(cl, it)) {
                 res.push_back({ cl[it - 1], cl[it], cl[it + 1] });
                 cl.erase(it);
@@ -18,7 +18,7 @@ namespace tester
                 it++;
             }
         }
-        res.push_back({ cl[0], cl[1], cl[2] });
+        res.push_back({ cl[-1], cl[0], cl[1] });
         return res;
     }
 

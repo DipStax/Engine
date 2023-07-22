@@ -68,13 +68,11 @@ namespace tester
 
     void RenderTarget::draw(const Vertex *_vtx, size_t _size, const Image *_img)
     {
-        std::vector<std::array<Vertex, 3>> ltri;
         Point2<int32_t> min;
         Point2<int32_t> max;
 
         if (_size > 3) {
-            ltri = polyTri(_vtx, _size);
-            for (auto &_tri : ltri)
+            for (const auto &_tri : polyTri(_vtx, _size))
                 draw(_tri.data(), 3, _img);
         } else {
             min = Point2<float>(std::min({ _vtx[0].pos.x, _vtx[1].pos.x, _vtx[2].pos.x }), std::min({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y })).as<int32_t>();
@@ -177,7 +175,7 @@ namespace tester
             ratio1 = area(_vtx[2].pos, _vtx[0].pos, px) / abc;
             ratio2 = area(_vtx[0].pos, _vtx[1].pos, px) / abc;
             ratio3 = 1 - ratio1 - ratio2;
-            pos = _vtx[0].txtrPos * ratio1 + _vtx[1].txtrPos * ratio2 + _vtx[2].txtrPos * ratio3;
+            pos = _vtx[1].txtrPos * ratio1 + _vtx[2].txtrPos * ratio2 + _vtx[0].txtrPos * ratio3;
             drawPixel(px.as<uint32_t>(), _img->getPixel(pos.as<uint32_t>()));
         }
     }
