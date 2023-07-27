@@ -15,7 +15,7 @@ namespace ecs
         class ISystem
         {
             public:
-                virtual void run(MainRegister &_reg, Entity *_entity, eng::RenderTarget *_window) = 0;
+                virtual void run(MainRegister &_reg, Entity *_entity, eng::RenderWindow *_window) = 0;
         };
     }
 }

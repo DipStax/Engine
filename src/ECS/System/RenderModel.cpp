@@ -5,15 +5,15 @@
 
 namespace ecs::sys
 {
-    void RenderModel::run(MainRegister &_reg, Entity *_entity, eng::RenderTarget *_target)
+    void RenderModel::run(MainRegister &_reg, Entity *_entity, eng::RenderWindow *_target)
     {
         std::ignore = _reg;
         std::ignore = _entity;
         std::ignore = _target;
 
-        /*for (auto& [_key, _val] : _reg)
-            if (opt::get<ecs::comp::Model>(_val).has_value())
-                _target->draw(opt::get<ecs::comp::Model>(_val).value().mod);*/
+        // for (auto& [_key, _val] : _reg)
+        //     if (opt::get<ecs::comp::Model>(_val).has_value())
+        //         _target->draw(opt::get<ecs::comp::Model>(_val).value().mod);
                 // process(opt::get<ecs::comp::Model>(_val).value(), _window);
     }
 

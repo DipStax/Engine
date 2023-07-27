@@ -53,6 +53,39 @@ namespace eng
         return res.as<uint32_t>();
     }
 
+    Point2<uint32_t> triRange(const Vertex3D *_vtx, int32_t _line)
+    {
+        Point2<float> res;
+        bool first = false;
+        float clres = 0;
+
+        for (size_t it = 0; it < 3; it++) {
+            if (_vtx[it].pos.y == _line && _line == _vtx[it + 1].pos.y) {
+                res = { std::min(_vtx[it].pos.x, _vtx[(it + 1) % 3].pos.x), std::max(_vtx[it].pos.x, _vtx[(it + 1) % 3].pos.x) };
+                break;
+            }
+            else if ((_vtx[it].pos.y <= _line && _line <= _vtx[(it + 1) % 3].pos.y) ||
+                (_vtx[(it + 1) % 3].pos.y <= _line && _line <= _vtx[it].pos.y)) {
+                clres = _vtx[it].pos.x;
+
+                if (_vtx[(it + 1) % 3].pos.x != _vtx[it].pos.x) {
+                    float slope = (_vtx[(it + 1) % 3].pos.y - _vtx[it].pos.y) / (_vtx[(it + 1) % 3].pos.x - _vtx[it].pos.x);
+                    clres = (static_cast<float>(_line) - (_vtx[it].pos.y - slope * _vtx[it].pos.x)) / slope;
+                }
+                if (!first) {
+                    res.x = clres;
+                    first = true;
+                }
+                else {
+                    res.y = clres;
+                }
+            }
+        }
+        if (res.x > res.y)
+            std::swap(res.x, res.y);
+        return res.as<uint32_t>();
+    }
+
     namespace priv
     {
         bool isEarTip(const CircleList<Vertex> &_cl, size_t _start)

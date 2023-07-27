@@ -28,7 +28,7 @@ namespace eng
             [[nodiscard]] Rect getTxtrRect() const;
 
         protected:
-            void draw(RenderTarget &_target, const Image *_img) const;
+            void draw(RenderTarget &_target, const Texture *_txtr) const override;
 
         private:
             void processRect();

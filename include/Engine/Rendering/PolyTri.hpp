@@ -10,6 +10,7 @@ namespace eng
 {
     std::vector<std::array<Vertex, 3>> polyTri(const Vertex *_vtx, size_t _size);
     Point2<uint32_t> triRange(const Vertex *_vtx, int32_t _line);
+    Point2<uint32_t> triRange(const Vertex3D* _vtx, int32_t _line);
 
     namespace priv
     {

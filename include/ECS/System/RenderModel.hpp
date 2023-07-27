@@ -8,7 +8,7 @@ namespace ecs::sys
     class RenderModel : public ISystem
     {
         public:
-            void run(MainRegister &_reg, Entity *_entity, eng::RenderTarget *_target) override;
+            void run(MainRegister &_reg, Entity *_entity, eng::RenderWindow *_target) override;
 
         // private:
         //     std::vector<eng::Point2<float>> transform(const ecs::comp::Model &_model, eng::RenderTarget *_window) const;
