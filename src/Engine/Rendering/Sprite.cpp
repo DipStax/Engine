@@ -3,7 +3,7 @@
 
 namespace eng
 {
-    void Sprite::setTexture(Image &_img)
+    void Sprite::setTexture(Texture&_img)
     {
         m_txtr = _img;
         processRect();

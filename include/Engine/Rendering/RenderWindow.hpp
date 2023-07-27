@@ -1,16 +1,12 @@
 #ifndef ENG_REND_RENDERWINDOW_HPP
 #define ENG_REND_RENDERWINDOW_HPP
 
-#include "Engine/Maths/Point3.hpp"
-#include "Engine/Rendering/RenderTarget.hpp"
-#include "Engine/Rendering/Vertex.hpp"
-// #include "Engine/Rendering/ZBuffer.hpp"
-#include "Engine/Camera.hpp"
+#include "Engine/Rendering/RenderTarget3D.hpp"
 #include "Engine/Window.hpp"
 
 namespace eng
 {
-    class RenderWindow : public Window, public RenderTarget
+    class RenderWindow : public Window, public RenderTarget, public RenderTarget3D
     {
         public:
             RenderWindow(uint32_t _x, uint32_t _y, const std::string& _title);
@@ -18,19 +14,15 @@ namespace eng
 
             [[nodiscard]] Point2<uint32_t> getSize() const;
 
-            void setCamera(float _fov, const Point2<float> &_range);
-            void moveCamera(const Vector3<float> &_move);
-            void rotateCamera(const Point3<float> &_rot);
+            void draw(const IDrawable &_elem, const Texture *_txtr = nullptr);
+            void draw(const IDrawable3D &_elem, const Texture *_txtr = nullptr);
+
+            void clear(const Color& _clr = { 0, 0, 0, 255 });
 
             void display() const;
 
         protected:
             void render(HDC _draw) const;
-
-        private:
-            // ZBuffer m_zbuffer;
-
-            Camera m_camera;
     };
 }
 

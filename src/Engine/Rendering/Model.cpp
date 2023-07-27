@@ -3,6 +3,7 @@
 
 #include "Tool/Splitter.hpp"
 #include "Engine/Rendering/Model.hpp"
+#include "Engine/Rendering/RenderTarget3D.hpp"
 
 namespace eng
 {
@@ -23,7 +24,6 @@ namespace eng
         m_f = _model.m_f;
         m_txtr = _model.m_txtr;
         m_txtrId = _model.m_txtrId;
-        m_varray = _model.m_varray;
         return *this;
     }
 
@@ -60,19 +60,14 @@ namespace eng
         std::cout << "[rsc::Model] load - done" << std::endl;
     }
 
-    size_t Model::getTextureId() const
-    {
-        return m_txtrId;
-    }
-
-    std::shared_ptr<Texture> Model::getTexture() const
-    {
-        return m_txtr;
-    }
-
     void Model::setTextureId(size_t _id)
     {
         m_txtrId = _id;
+    }
+
+    size_t Model::getTextureId() const
+    {
+        return m_txtrId;
     }
 
     void Model::setTexture(std::shared_ptr<Texture> _txtr)
@@ -80,19 +75,17 @@ namespace eng
         m_txtr = _txtr;
     }
 
-    const std::vector<Point3<float>> &Model::getPoint() const
+    std::shared_ptr<Texture> Model::getTexture() const
     {
-        return m_v;
+        return m_txtr;
     }
 
-    const std::vector<Point3<float>> &Model::getTexturePoint() const
+    void Model::draw(RenderTarget3D &_target, const Texture *_txtr) const
     {
-        return m_vt;
-    }
+        std::ignore = _txtr;
 
-    const std::vector<std::vector<Point3<int64_t>>> &Model::getPoly() const
-    {
-        return m_f;
+        for (const auto &_f : m_f)
+            _target.draw(_f.data(), _f.size(),  m_txtr.get());
     }
 
     void Model::Init()
@@ -114,30 +107,25 @@ namespace eng
     {
         std::vector<std::string> multi = split::multiple(_line, ' ', true);
         std::vector<std::string> param;
-        std::vector<Point3<int64_t>> f;
-        Point3<int64_t> fv;
+        std::vector<Vertex3D> f;
 
         multi.erase(multi.begin());
         if (multi.size() < 3)
             throw std::runtime_error("Not enough parameters");
         for (auto &_pt : multi) {
+            Vertex3D vtx;
+
             param = split::multiple(_pt, '/', false);
             if (param.size() < 1 || param.size() > 3)
                 throw std::runtime_error("not enough value in the parameters");
-            fv.x = std::stoll(param.at(0));
+            vtx.pos = m_v[std::stoll(param.at(0)) - 1];
             if (param.size() > 1) {
-                if (param.at(1).empty())
-                    fv.y = 0;
-                else
-                    fv.y = std::stoll(param.at(1));
-                if (param.size() > 2)
-                    fv.z = std::stoll(param.at(2));
-                else
-                    fv.z = 0;
-            } else {
-                fv.z = 0;
+                if (!param.at(1).empty())
+                    vtx.txtrPos = m_vt[std::stoll(param.at(1)) - 1].as2();
+                // if (param.size() > 2)
+                // handling normalized vector ?
             }
-            f.push_back(fv);
+            f.push_back(vtx);
         }
         std::cout << "f loaded: " << m_f.size() << std::endl;
         m_f.push_back(f);

@@ -14,9 +14,9 @@ namespace eng
             void draw(const Vertex *_vtx, size_t _size, const Texture *_txtr);
             void draw(const Vertex *_vtx, size_t _size, VertexArray::Type _type);
 
-            void clear(const Color &_clr = { 255, 255, 255, 255 });
-
             virtual [[nodiscard]] Point2<uint32_t> getSize() const = 0;
+
+            void clear(const Color &_clr = { 0, 0, 0, 255 });
 
         protected:
             RenderTarget() = default;

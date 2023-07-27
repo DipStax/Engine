@@ -1,14 +1,16 @@
 #include "Engine/Maths/Maths.hpp"
 #include "Engine/Rendering/RenderWindow.hpp"
+#include "Engine/Rendering/Sprite.hpp"
 
 namespace eng
 {
-    RenderWindow::RenderWindow(uint32_t _x, uint32_t _y, const std::string& _title)
+    RenderWindow::RenderWindow(uint32_t _x, uint32_t _y, const std::string &_title)
         : Window(_x, _y, _title)
     {
         Point2<uint32_t> size = getSize();
 
-        create(size.y, size.x);
+        RenderTarget::create(size.y, size.x);
+        RenderTarget3D::create(size.y, size.x);
     }
 
     Point2<uint32_t> RenderWindow::getSize() const
@@ -16,25 +18,29 @@ namespace eng
         return Window::getSize();
     }
 
-    void RenderWindow::setCamera(float _fov, const Point2<float> &_range)
+    void RenderWindow::draw(const IDrawable &_elem, const Texture *_txtr)
     {
-        m_camera.setFov(_fov);
-        m_camera.setRange(_range.x, _range.y);
-        m_camera.setSize(static_cast<float>(getSize().x), static_cast<float>(getSize().y));
+        RenderTarget::draw(_elem, _txtr);
     }
 
-    void RenderWindow::moveCamera(const Vector3<float> &_move)
+    void RenderWindow::draw(const IDrawable3D &_elem, const Texture *_txtr)
     {
-        m_camera.move(_move);
+        RenderTarget3D::draw(_elem, _txtr);
     }
 
-    void RenderWindow::rotateCamera(const Point3<float> &_rot)
+    void RenderWindow::clear(const Color& _clr)
     {
-        m_camera.rotate({ toRad(_rot.x), toRad(_rot.y), toRad(_rot.z) });
+        RenderTarget::clear(_clr);
+        RenderTarget3D::clear(_clr);
     }
 
     void RenderWindow::display() const
     {
+        Sprite sprt;
+        Texture txtr = getTexture();
+
+        sprt.setTexture(txtr);
+        RenderTarget::draw(sprt, txtr);
         InvalidateRect(getWindow(), NULL, FALSE);
     }
 

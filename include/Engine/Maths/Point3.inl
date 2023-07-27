@@ -144,6 +144,6 @@ namespace eng
     template<NumericType T>
     Point2<T> Point3<T>::as2() const
     {
-        return static_cast<Point2<T>>(*this);
+        return { x, y };
     }
 }

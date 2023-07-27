@@ -6,13 +6,13 @@
 #include <string>
 #include <vector>
 
-#include "Engine/Rendering/Texture.hpp"
+#include "Engine/Maths/Point3.hpp"
+#include "Engine/Rendering/IDrawable3D.hpp"
 #include "Engine/Rendering/Vertex.hpp"
-#include "Engine/Camera.hpp"
 
 namespace eng
 {
-    class Model
+    class Model : public IDrawable3D
     {
         public:
             Model();
@@ -23,17 +23,16 @@ namespace eng
 
             void load(const std::string &_path);
 
+            void setTextureId(size_t _id);
             [[nodiscard]] size_t getTextureId() const;
+
+            void setTexture(std::shared_ptr<Texture> _txtr);
             [[nodiscard]] std::shared_ptr<Texture> getTexture() const;
 
-            void setTextureId(size_t _id);
-            void setTexture(std::shared_ptr<Texture> _txtr);
-
-            [[nodiscard]] const std::vector<eng::Vector3<float>> &getPoint() const;
-            [[nodiscard]] const std::vector<eng::Vector3<float>> &getTexturePoint() const;
-            [[nodiscard]] const std::vector<std::vector<eng::Point3<int64_t>>> &getPoly() const;
-
         protected:
+            void draw(RenderTarget3D &_target, const Texture *_txtr) const override;
+
+        private:
             using FnParsing = void (Model::*)(const std::string &);
 
             static void Init();
@@ -52,12 +51,10 @@ namespace eng
             std::vector<eng::Vector3<float>> m_vn;
             std::vector<eng::Vector3<float>> m_vt;
             std::vector<eng::Vector3<float>> m_vp;
-            std::vector<std::vector<eng::Point3<int64_t>>> m_f;
+            std::vector<std::vector<Vertex3D>> m_f;
 
             std::shared_ptr<Texture> m_txtr = nullptr;
             size_t m_txtrId = 0;
-
-            std::vector<Vertex> m_varray;
     };
 }
 

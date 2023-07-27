@@ -76,7 +76,7 @@ namespace eng
         calculatWorld();
     }
 
-    eng::Point3<float> Camera::process(eng::Point3<float> _pt)
+    eng::Point3<float> Camera::project(eng::Point3<float> _pt)
     {
         eng::Point3<float> res;
         eng::Point3<float> cam;
@@ -88,8 +88,8 @@ namespace eng
         res.x = (proj.x + 1.f) * 0.5f * m_sizeX;
         res.y = (1.f - (proj.y + 1.f) * 0.5f) * m_sizeY;
         res.z = (proj.z + 1) / 2;
-        res.x = static_cast<int>(res.x * 100) / 100;
-        res.y = static_cast<int>(res.y * 100) / 100;
+        res.x = static_cast<float>(static_cast<int>(res.x * 100) / 100);
+        res.y = static_cast<float>(static_cast<int>(res.y * 100) / 100);
         return res;
     }
 
@@ -123,7 +123,7 @@ namespace eng
 
     void Camera::perspective(float &_b, float &_t, float &_l, float &_r)
     {
-        float scale = tan(m_fov * 0.5 * std::numbers::pi / 180) * m_near;
+        float scale = static_cast<float>(tan(m_fov * 0.5 * std::numbers::pi / 180) * m_near);
 
         _r = m_raspect * scale;
         _l = -_r;

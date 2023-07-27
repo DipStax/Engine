@@ -22,7 +22,7 @@ namespace eng
             void move(eng::Vector3<float> _move);
             void rotate(eng::Vector3<float> _rot);
 
-            [[nodiscard]] eng::Point3<float> process(eng::Point3<float> _pt);
+            [[nodiscard]] eng::Point3<float> project(eng::Point3<float> _pt);
 
             [[nodiscard]] eng::Point3<float> getPosition() const;
 
