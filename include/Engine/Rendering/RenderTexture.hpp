@@ -13,7 +13,7 @@ namespace eng
 
             void create(uint32_t _x, uint32_t _y);
 
-            [[nodiscard]] Texture &&getTexture() const;
+            [[nodiscard]] Texture getTexture() const;
             [[nodiscard]] Point2<uint32_t> getSize() const;
 
         private:

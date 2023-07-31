@@ -3,10 +3,19 @@
 
 namespace eng
 {
-    void Sprite::setTexture(Texture&_img)
+    void Sprite::setTexture(Texture &_img)
     {
+
         m_txtr = _img;
+
         processRect();
+        std::cout << "Sprite texture:" << std::endl;
+        for (uint32_t y = 0; y < 5; y++) {
+            for (uint32_t x = 0; x < 5; x++) {
+                std::cout << m_txtr.getPixel({ x, y }) << " ";
+            }
+            std::cout << std::endl;
+        }
     }
 
     void Sprite::setPosition(float _x, float _y)
@@ -41,9 +50,16 @@ namespace eng
         return m_scale;
     }
 
-    void Sprite::setTxtrRect(Rect &_rect)
+    void Sprite::setTxtrRect(Rect _rect)
     {
+        Point2<float> size = m_txtr.getSize().as<float>();
+
         m_rect = _rect;
+        m_vertex.clear();
+        m_vertex.append({ m_rect.pos, { 0, 0 } });
+        m_vertex.append({ { m_rect.pos.x + m_rect.size.x - 1, m_rect.pos.y }, { size.x, 0 } });
+        m_vertex.append({ m_rect.pos + m_rect.size - 1, size });
+        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y - 1}, { 0, size.y } });
     }
 
     Rect Sprite::getTxtrRect() const
@@ -65,8 +81,8 @@ namespace eng
         m_rect = { m_pos, size * m_scale };
         m_vertex.clear();
         m_vertex.append({ m_rect.pos, { 0, 0 } });
-        m_vertex.append({ { m_rect.pos.x + m_rect.size.x, m_rect.pos.y }, { size.x, 0 } });
-        m_vertex.append({ m_rect.pos + m_rect.size.x, size });
-        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y }, { 0, size.y } });
+        m_vertex.append({ { m_rect.pos.x + m_rect.size.x - 1, m_rect.pos.y }, { size.x, 0 } });
+        m_vertex.append({ m_rect.pos + m_rect.size - 1, size });
+        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y - 1}, { 0, size.y } });
     }
 }

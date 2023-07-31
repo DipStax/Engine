@@ -34,13 +34,13 @@ namespace eng
         RenderTarget3D::clear(_clr);
     }
 
-    void RenderWindow::display() const
+    void RenderWindow::display()
     {
-        Sprite sprt;
+        /*Sprite sprt;
         Texture txtr = getTexture();
 
         sprt.setTexture(txtr);
-        RenderTarget::draw(sprt, txtr);
+        draw(sprt);*/
         InvalidateRect(getWindow(), NULL, FALSE);
     }
 

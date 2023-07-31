@@ -39,7 +39,7 @@ namespace eng
     void RenderTarget3D::draw(const Vertex3D *_vtx, size_t _size, const Texture *_txtr)
     {
         std::ignore = _size;
-        std::vector<Vertex3D> vtx(_vtx, _vtx + _size * sizeof(Vertex3D));
+        std::vector<Vertex3D> vtx(_vtx, _vtx + _size);
 
         for (auto &_mvtx : vtx)
             _mvtx.pos = m_camera.project(_mvtx.pos);
@@ -72,15 +72,19 @@ namespace eng
         float ratio3 = 0;
         float depth = 0;
 
+        //std::cout << "Range draw: " << _range << std::endl;
         for (; vtx.pos.x <= static_cast<float>(_range.y); vtx.pos.x++) {
             // calculate depth
             ratio1 = area(_vtx[2].pos.as2(), _vtx[0].pos.as2(), vtx.pos) / abc;
             ratio2 = area(_vtx[0].pos.as2(), _vtx[1].pos.as2(), vtx.pos) / abc;
             ratio3 = 1 - ratio1 - ratio2;
             depth = _vtx[1].pos.z * ratio1 + _vtx[2].pos.z * ratio2 + _vtx[0].pos.z * ratio3;
+            //std::cout << "Depth calculated for " << vtx.pos << ": " << depth << std::endl;
+            //std::cout << "\tDepth at this pos: " << m_depth[vtx.pos.as<uint32_t>().y * getSize().x + vtx.pos.as<uint32_t>().x] << std::endl;
             if (depth > m_depth[vtx.pos.as<uint32_t>().y * getSize().x + vtx.pos.as<uint32_t>().x]) {
                 pos = _vtx[1].txtrPos * ratio1 + _vtx[2].txtrPos * ratio2 + _vtx[0].txtrPos * ratio3;
                 vtx.clr = _txtr->getPixel(pos.as<uint32_t>());
+                m_depth[vtx.pos.as<uint32_t>().y * getSize().x + vtx.pos.as<uint32_t>().x] = depth;
                 m_rdTxtr.draw(&vtx, 1, VertexArray::Type::point);
             }
         }

@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <iostream>
 
 #include "Engine/Container/CircleList.hpp"
 #include "Engine/Maths/Maths.hpp"
@@ -22,6 +23,7 @@ namespace eng
         bmi.bmiHeader.biCompression = BI_RGB;
         m_dib = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, reinterpret_cast<void **>(&m_data), NULL, NULL);
         ReleaseDC(NULL, hdc);
+        std::cout << "[RenderTarget] create | size: " << getSize() << std::endl;
     }
 
     void RenderTarget::clear(const Color &_clr)
@@ -29,25 +31,26 @@ namespace eng
         std::fill(m_data, m_data + getSize().x * getSize().y * 4, CLR(_clr));
     }
 
-    void RenderTarget::draw(const IDrawable & _elem, const Image *_img)
+    void RenderTarget::draw(const IDrawable & _elem, const Texture *_txtr)
     {
-        _elem.draw(*this, _img);
+        _elem.draw(*this, _txtr);
     }
 
-    void RenderTarget::draw(const Vertex *_vtx, size_t _size, const Image *_img)
+    void RenderTarget::draw(const Vertex *_vtx, size_t _size, const Texture * _txtr)
     {
         Point2<int32_t> min;
         Point2<int32_t> max;
 
         if (_size > 3) {
             for (const auto &_tri : polyTri(_vtx, _size))
-                draw(_tri.data(), 3, _img);
+                draw(_tri.data(), 3, _txtr);
         } else {
-            min = Point2<float>(std::min({ _vtx[0].pos.x, _vtx[1].pos.x, _vtx[2].pos.x }), std::min({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y })).as<int32_t>();
-            max = Point2<float>(std::max({ _vtx[0].pos.x, _vtx[1].pos.x, _vtx[2].pos.x }), std::max({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y })).as<int32_t>();
+            // caluclate minimal range of the drawing on y axes
+            int32_t ystart = static_cast<int32_t>(std::max(std::min({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y }), 0.f));
+            int32_t yend = static_cast<int32_t>(std::min(std::max({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y }), static_cast<float>(getSize().y)));
 
-            for (int32_t it = min.y; it < max.y; it++)
-                triRangeApply(_vtx, it, triRange(_vtx, it), _img);
+            for (; ystart < yend; ystart++)
+                triRangeApply(_vtx, ystart, triRange(_vtx, ystart), _txtr);
         }
     }
 
@@ -95,20 +98,26 @@ namespace eng
         DeleteDC(hdc);
     }
 
-    void RenderTarget::triRangeApply(const Vertex *_vtx, int32_t _line, const Point2<uint32_t> &_range, const Image *_img)
+    void RenderTarget::triRangeApply(const Vertex *_vtx, int32_t _line, const Point2<uint32_t> &_range, const Texture * _txtr)
     {
         Point2<float> pos;
         float abc = area(_vtx[0].pos, _vtx[1].pos, _vtx[2].pos);
         float ratio1 = 0;
         float ratio2 = 0;
         float ratio3 = 0;
+        Point2<uint32_t> size = getSize() - 1;
 
-        for (Point2<float> px = { static_cast<float>(_range.x), static_cast<float>(_line) }; px.x <= static_cast<float>(_range.y); px.x++) {
+        // caluclate minimal range of the drawing on x axes
+        float xstart = static_cast<float>(std::max(_range.x, 0U));
+        float xend = static_cast<float>(std::min(_range.y, size.x));
+        for (Point2<float> px = { xstart, static_cast<float>(_line) }; px.x <= xend; px.x++) {
+            // calculating mapping of the texture
             ratio1 = area(_vtx[2].pos, _vtx[0].pos, px) / abc;
             ratio2 = area(_vtx[0].pos, _vtx[1].pos, px) / abc;
             ratio3 = 1 - ratio1 - ratio2;
             pos = _vtx[1].txtrPos * ratio1 + _vtx[2].txtrPos * ratio2 + _vtx[0].txtrPos * ratio3;
-            drawPixel(px.as<uint32_t>(), _img->getPixel(pos.as<uint32_t>()));
+            // px position is assured by calculation the minimal range in x and y axes;
+            drawPixel(px.as<uint32_t>(), _txtr->getPixel(pos.as<uint32_t>()));
         }
     }
 }

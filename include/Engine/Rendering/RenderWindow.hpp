@@ -19,7 +19,7 @@ namespace eng
 
             void clear(const Color& _clr = { 0, 0, 0, 255 });
 
-            void display() const;
+            void display();
 
         protected:
             void render(HDC _draw) const;

@@ -24,7 +24,7 @@ namespace eng
             void setScale(float _rh, float _rw);
             [[nodiscard]] Point2<float> getScale() const;
 
-            void setTxtrRect(Rect &_rect);
+            void setTxtrRect(Rect _rect);
             [[nodiscard]] Rect getTxtrRect() const;
 
         protected:

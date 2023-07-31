@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "Engine/Rendering/RenderTexture.hpp"
 
 namespace eng
@@ -8,12 +10,12 @@ namespace eng
         RenderTarget::create(_x, _y);
     }
 
-    Texture &&RenderTexture::getTexture() const
+    Texture RenderTexture::getTexture() const
     {
         Texture txtr;
 
-        txtr.load(getData(), m_size * 4);
-        return std::move(txtr);
+        txtr.load(getData(), m_size);
+        return txtr;
     }
 
     Point2<uint32_t> RenderTexture::getSize() const
