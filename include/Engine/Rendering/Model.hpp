@@ -30,7 +30,7 @@ namespace eng
             [[nodiscard]] std::shared_ptr<Texture> getTexture() const;
 
         protected:
-            void draw(RenderTarget3D &_target, const Texture *_txtr) const override;
+            void draw(RenderTarget &_target, const Texture *_txtr) const;
 
         private:
             using FnParsing = void (Model::*)(const std::string &);

@@ -1,4 +1,3 @@
-#include <iostream>
 
 #include "Engine/Rendering/RenderTexture.hpp"
 

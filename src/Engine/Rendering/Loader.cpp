@@ -1,5 +1,4 @@
 #include <fstream>
-#include <iostream>
 
 #include "Engine/Rendering/Loader.hpp"
 #include "Tool/Splitter.hpp"
@@ -8,8 +7,6 @@ namespace eng
 {
     Data Loader::load(const std::string &_path)
     {
-        std::cout << "[rsc::Loader] load - start" << std::endl;
-        std::cout << "[rsc::Loader] File: " << _path << std::endl;
         std::ifstream file;
         Data data{};
         std::string line = "";
@@ -17,7 +14,6 @@ namespace eng
 
         file.open(_path);
         while (std::getline(file, line)) {
-            std::cout << "[rsc::Loader] parsing: '" << line << "'" << std::endl;
             if (line == "Texture:")
                 fn = &Loader::fnLoadTexture;
             else if (line == "Model:")

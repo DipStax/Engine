@@ -1,9 +1,8 @@
 #include <fstream>
-#include <iostream>
 
 #include "Tool/Splitter.hpp"
 #include "Engine/Rendering/Model.hpp"
-#include "Engine/Rendering/RenderTarget3D.hpp"
+#include "Engine/Rendering/RenderTarget.hpp"
 
 namespace eng
 {
@@ -40,7 +39,6 @@ namespace eng
         std::string line;
         std::pair<std::string, std::string> pair;
 
-        std::cout << "[rsc::Model] load - start" << std::endl;
         file.open(_path);
         while (std::getline(file, line)) {
             pair = split::noSpace(line, ' ');
@@ -57,7 +55,6 @@ namespace eng
                 throw std::runtime_error("[Mdoel](" + _path + "): Unknow flag: '" + line + "'");
             }
         }
-        std::cout << "[rsc::Model] load - done" << std::endl;
     }
 
     void Model::setTextureId(size_t _id)
@@ -80,7 +77,7 @@ namespace eng
         return m_txtr;
     }
 
-    void Model::draw(RenderTarget3D &_target, const Texture *_txtr) const
+    void Model::draw(RenderTarget &_target, const Texture *_txtr) const
     {
         std::ignore = _txtr;
 
@@ -127,7 +124,6 @@ namespace eng
             }
             f.push_back(vtx);
         }
-        std::cout << "f loaded: " << m_f.size() << std::endl;
         m_f.push_back(f);
     }
 

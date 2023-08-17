@@ -10,9 +10,9 @@ namespace eng
     class IDrawable3D
     {
         protected:
-            friend class RenderTarget3D;
+            friend class RenderTarget;
 
-            virtual void draw(RenderTarget3D &_target, const Texture *_txtr) const = 0;
+            virtual void draw(RenderTarget &_target, const Texture *_txtr) const = 0;
     };
 }
 

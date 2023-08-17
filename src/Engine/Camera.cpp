@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 #include <numbers>
 
 #include "Engine/Camera.hpp"
@@ -16,37 +15,41 @@ namespace eng
         rotate({ 0, 0, 0 });
     }
 
-    void Camera::setFov(float _fov)
+    Camera &Camera::setFov(float _fov)
     {
         m_fov = _fov;
         calculatProject();
+        return *this;
     }
 
-    void Camera::setRange(float _near, float _far)
+    Camera &Camera::setRange(float _near, float _far)
     {
         m_near = _near;
         m_far = _far;
         calculatProject();
+        return *this;
     }
 
-    void Camera::setSize(float _x, float _y)
+    Camera &Camera::setSize(float _x, float _y)
     {
         m_sizeX = _x;
         m_sizeY = _y;
         m_raspect = m_sizeX / m_sizeY;
         calculatProject();
+        return *this;
     }
 
-    void Camera::move(eng::Vector3<float> _move)
+    Camera &Camera::move(eng::Vector3<float> _move)
     {
         m_pos += _move;
         m_mpos[3][0] = m_pos.x;
         m_mpos[3][1] = m_pos.y;
         m_mpos[3][2] = m_pos.z;
         calculatWorld();
+        return *this;
     }
 
-    void Camera::rotate(eng::Vector3<float> _rot)
+    Camera &Camera::rotate(eng::Vector3<float> _rot)
     {
         Matrix<4, 4> rotX;
         Matrix<4, 4> rotY;
@@ -74,6 +77,7 @@ namespace eng
 
         m_mrot = rotZ * rotY * rotX;
         calculatWorld();
+        return *this;
     }
 
     eng::Point3<float> Camera::project(eng::Point3<float> _pt)

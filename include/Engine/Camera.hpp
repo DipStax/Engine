@@ -15,12 +15,12 @@ namespace eng
             Camera();
             ~Camera() = default;
 
-            void setFov(float _fov);
-            void setRange(float _near, float _far);
-            void setSize(float _x, float _y);
+            Camera &setFov(float _fov);
+            Camera &setRange(float _near, float _far);
+            Camera &setSize(float _x, float _y);
 
-            void move(eng::Vector3<float> _move);
-            void rotate(eng::Vector3<float> _rot);
+            Camera &move(eng::Vector3<float> _move);
+            Camera &rotate(eng::Vector3<float> _rot);
 
             [[nodiscard]] eng::Point3<float> project(eng::Point3<float> _pt);
 

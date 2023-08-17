@@ -1,8 +1,5 @@
 #include "ECS/System/RenderModel.hpp"
 
-#include <iostream>
-#include <algorithm>
-
 namespace ecs::sys
 {
     void RenderModel::run(MainRegister &_reg, Entity *_entity, eng::RenderWindow *_target)

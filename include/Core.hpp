@@ -22,6 +22,7 @@ class Core
 
         ecs::Manager m_manager{};
         // Player m_player{};
+        eng::Camera m_cam;
         eng::Data m_data{};
 
         bool m_pause = false;

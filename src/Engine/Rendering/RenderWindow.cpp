@@ -9,8 +9,7 @@ namespace eng
     {
         Point2<uint32_t> size = getSize();
 
-        RenderTarget::create(size.y, size.x);
-        RenderTarget3D::create(size.y, size.x);
+        create(size.y, size.x);
     }
 
     Point2<uint32_t> RenderWindow::getSize() const
@@ -18,29 +17,8 @@ namespace eng
         return Window::getSize();
     }
 
-    void RenderWindow::draw(const IDrawable &_elem, const Texture *_txtr)
-    {
-        RenderTarget::draw(_elem, _txtr);
-    }
-
-    void RenderWindow::draw(const IDrawable3D &_elem, const Texture *_txtr)
-    {
-        RenderTarget3D::draw(_elem, _txtr);
-    }
-
-    void RenderWindow::clear(const Color& _clr)
-    {
-        RenderTarget::clear(_clr);
-        RenderTarget3D::clear(_clr);
-    }
-
     void RenderWindow::display()
     {
-        /*Sprite sprt;
-        Texture txtr = getTexture();
-
-        sprt.setTexture(txtr);
-        draw(sprt);*/
         InvalidateRect(getWindow(), NULL, FALSE);
     }
 
