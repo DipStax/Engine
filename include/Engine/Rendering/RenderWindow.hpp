@@ -14,10 +14,15 @@ namespace eng
 
             [[nodiscard]] Point2<uint32_t> getSize() const;
 
+            void setCamera(const Camera& _cam);
+
             void display();
 
         protected:
             void render(HDC _draw) const;
+
+        private:
+            Camera m_cam;
     };
 }
 

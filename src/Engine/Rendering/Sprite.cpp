@@ -3,6 +3,11 @@
 
 namespace eng
 {
+    Sprite::Sprite()
+    {
+        processRect();
+    }
+
     void Sprite::setTexture(Texture &_img)
     {
 
@@ -48,11 +53,7 @@ namespace eng
         Point2<float> size = m_txtr.getSize().as<float>();
 
         m_rect = _rect;
-        m_vertex.clear();
-        m_vertex.append({ m_rect.pos, { 0, 0 } });
-        m_vertex.append({ { m_rect.pos.x + m_rect.size.x - 1, m_rect.pos.y }, { size.x, 0 } });
-        m_vertex.append({ m_rect.pos + m_rect.size - 1, size });
-        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y - 1}, { 0, size.y } });
+        buildVertex();
     }
 
     Rect Sprite::getTxtrRect() const
@@ -72,10 +73,18 @@ namespace eng
         Point2<float> size = m_txtr.getSize().as<float>();
 
         m_rect = { m_pos, size * m_scale };
+        buildVertex();
+    }
+
+    void Sprite::buildVertex()
+    {
+        // known bug:
+        // - when inversing the pos of the addition for vertex 2 and 4
+        // - when inversing m_rect.size for vertex 2 and 4
         m_vertex.clear();
         m_vertex.append({ m_rect.pos, { 0, 0 } });
-        m_vertex.append({ { m_rect.pos.x + m_rect.size.x - 1, m_rect.pos.y }, { m_rect.size.x, 0 } });
-        m_vertex.append({ m_rect.pos + m_rect.size - 1, m_rect.size });
-        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y - 1 }, { 0, m_rect.size.y } });
+        m_vertex.append({ { m_rect.pos.x + m_rect.size.x, m_rect.pos.y }, { m_rect.size.x, 0 } });
+        m_vertex.append({ m_rect.pos + m_rect.size, m_rect.size });
+        m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y }, { 0, m_rect.size.y } });
     }
 }

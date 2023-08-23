@@ -16,6 +16,16 @@ namespace eng
         m_cam = _cam;
     }
 
+    void RenderTarget::setBpp(uint8_t _bpp)
+    {
+        m_bpp = _bpp;
+    }
+
+    uint8_t RenderTarget::getBpp() const
+    {
+        return m_bpp;
+    }
+
     void RenderTarget::draw(const IDrawable & _elem, const Texture *_txtr)
     {
         _elem.draw(*this, _txtr);
@@ -67,19 +77,18 @@ namespace eng
         for (auto &_mvtx : vtx)
             _mvtx.pos = m_cam.project(_mvtx.pos);
         // caluclate minimal range of the drawing on y axes
-        int32_t ystart = static_cast<int32_t>(std::max(std::min({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y }), 0.f));
-        int32_t yend = static_cast<int32_t>(std::min(std::max({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y }), static_cast<float>(getSize().y)));
+        int32_t ystart = static_cast<int32_t>(std::max(std::min({ vtx[0].pos.y, vtx[1].pos.y, vtx[2].pos.y }), 0.f));
+        int32_t yend = static_cast<int32_t>(std::min(std::max({ vtx[0].pos.y, vtx[1].pos.y, vtx[2].pos.y }), static_cast<float>(getSize().y)));
 
         for (; ystart < yend; ystart++)
             triRangeApply(vtx.data(), ystart, triRange(vtx.data(), ystart), _txtr);
-    }
+     }
 
     void RenderTarget::clear(const Color &_clr)
     {
         uint32_t clr = CLR(_clr);
         size_t size = getSize().x * getSize().y * 4; // change bpp
 
-        std::cout << "clear size: " << size << " for: " << getSize() << std::endl;
         for (size_t it = 0; it < size; it += sizeof(uint32_t))
             std::memcpy(m_data + it, &clr, sizeof(uint32_t));
         std::fill(m_depth.begin(), m_depth.end(), std::numeric_limits<float>::lowest());
@@ -89,12 +98,13 @@ namespace eng
      * PROTECTED
     ********************************/
 
-    void RenderTarget::create(uint32_t _x, uint32_t _y, const Camera &_cam)
+    void RenderTarget::create(uint32_t _x, uint32_t _y, const Camera &_cam, uint8_t _bpp)
     {
         HDC hdc = GetDC(NULL);
         BITMAPINFO bmi;
 
         m_cam = _cam;
+        m_bpp = _bpp;
         bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         bmi.bmiHeader.biWidth = _x;
         bmi.bmiHeader.biHeight = -static_cast<int32_t>(_y);
@@ -103,7 +113,6 @@ namespace eng
         bmi.bmiHeader.biCompression = BI_RGB;
         m_dib = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, reinterpret_cast<void **>(&m_data), NULL, NULL);
         ReleaseDC(NULL, hdc);
-        std::cout << "[RenderTarget] create | size: " << getSize() << std::endl;
         m_depth.resize(_x * _y, std::numeric_limits<float>::lowest());
     }
 
@@ -112,10 +121,10 @@ namespace eng
         return m_data;
     }
 
-    HBITMAP RenderTarget::getDib() const
-    {
-        return m_dib;
-    }
+    // HBITMAP RenderTarget::getDib() const
+    // {
+    //     return m_dib;
+    // }
 
     /*******************************
      * PRIVATE
@@ -126,13 +135,10 @@ namespace eng
         // handling of alpha
         uint32_t pos = _pos.y * getSize().x + _pos.x;
         uint32_t clr = CLR(_clr);
-        uint32_t rclr = CLR(_clr);
 
-        if (m_depth[pos] <= _depth)
-            for (size_t it = 0; it < sizeof(uint32_t); it++) {
-                rclr |= ((clr >> it) & 1) << (sizeof(uint32_t) - 1 - it);
+        if (m_depth[pos] <= _depth) {
             m_depth[pos] = _depth;
-            std::memcpy(m_data + pos, &rclr, sizeof(uint32_t)); // add bpp to the copy to
+            std::memcpy(m_data + (pos * static_cast<uint32_t>(m_bpp / 8)), &clr, sizeof(uint32_t));
         }
     }
 
@@ -197,7 +203,7 @@ namespace eng
             if (depth > m_depth[arrPos]) {
                 // calculating mapping of the texture
                 rpos = _vtx[1].txtrPos * ratio1 + _vtx[2].txtrPos * ratio2 + _vtx[0].txtrPos * ratio3;
-                setPixel(rpos.as<uint32_t>(), _txtr->getPixel(pos.as<uint32_t>()), depth); // double checking m_depth
+                setPixel(pos.as<uint32_t>(), _txtr->getPixel(rpos.as<uint32_t>()), depth); // double checking m_depth
             }
         }
     }

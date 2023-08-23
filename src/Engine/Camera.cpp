@@ -11,7 +11,7 @@ namespace eng
         m_mworld.identity();
         m_mrot.identity();
         m_mpos.identity();
-        move({ 0, 0, -10 });
+        move({ 0, 0, 0 });
         rotate({ 0, 0, 0 });
     }
 
@@ -89,11 +89,9 @@ namespace eng
         // http://www.codinglabs.net/article_world_view_projection_matrix.aspx
         cam = transform(_pt, m_mworld);
         proj = transform(cam, m_mproj);
-        res.x = (proj.x + 1.f) * 0.5f * m_sizeX;
-        res.y = (1.f - (proj.y + 1.f) * 0.5f) * m_sizeY;
+        res.x = std::floor((proj.x + 1.f) * 0.5f * m_sizeX);
+        res.y = std::floor((1.f - (proj.y + 1.f) * 0.5f) * m_sizeY);
         res.z = (proj.z + 1) / 2;
-        res.x = static_cast<float>(static_cast<int>(res.x * 100) / 100);
-        res.y = static_cast<float>(static_cast<int>(res.y * 100) / 100);
         return res;
     }
 
@@ -127,7 +125,7 @@ namespace eng
 
     void Camera::perspective(float &_b, float &_t, float &_l, float &_r)
     {
-        float scale = static_cast<float>(tan(m_fov * 0.5 * std::numbers::pi / 180) * m_near);
+        float scale = static_cast<float>(tan(m_fov * 0.5 * (std::numbers::pi / 180)) * m_near);
 
         _r = m_raspect * scale;
         _l = -_r;
@@ -138,7 +136,6 @@ namespace eng
     eng::Point3<float> Camera::transform(eng::Point3<float> &_pt, const Matrix<4, 4> &_matrix)
     {
         eng::Point3<float> res;
-        Matrix<1, 4> mpt;
         float w = _pt.x * _matrix[0][3] + _pt.y * _matrix[1][3] + _pt.z * _matrix[2][3] + _matrix[3][3];
 
         res.x = _pt.x * _matrix[0][0] + _pt.y * _matrix[1][0] + _pt.z * _matrix[2][0] + _matrix[3][0];

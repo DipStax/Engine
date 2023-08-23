@@ -8,13 +8,20 @@ namespace eng
         : Window(_x, _y, _title)
     {
         Point2<uint32_t> size = getSize();
+        Camera cam{};
 
-        create(size.y, size.x);
+        cam.setFov(110.f).setRange(0.1f, 100.f).setSize(static_cast<float>(size.x), static_cast<float>(size.y)).move({ 0, 0, -10 });
+        create(size.y, size.x, cam);
     }
 
     Point2<uint32_t> RenderWindow::getSize() const
     {
         return Window::getSize();
+    }
+
+    void RenderWindow::setCamera(const Camera &_cam)
+    {
+        m_cam = _cam;
     }
 
     void RenderWindow::display()
@@ -25,11 +32,14 @@ namespace eng
     void RenderWindow::render(HDC _draw) const
     {
         Point2<uint32_t> size = getSize();
-        HDC hdc = CreateCompatibleDC(_draw);
-        HBITMAP olddib = static_cast<HBITMAP>(SelectObject(hdc, getDib()));
+        BITMAPINFO bmi;
 
-        BitBlt(_draw, 0, 0, size.x, size.y, hdc, 0, 0, SRCCOPY);
-        SelectObject(hdc, olddib);
-        DeleteDC(hdc);
+        bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        bmi.bmiHeader.biWidth = size.x;
+        bmi.bmiHeader.biHeight = -static_cast<int32_t>(size.y);
+        bmi.bmiHeader.biPlanes = 1;
+        bmi.bmiHeader.biBitCount = getBpp();
+        bmi.bmiHeader.biCompression = BI_RGB;
+        SetDIBitsToDevice(_draw, 0, 0, size.x, size.y, 0, 0, 0, size.y, getData(), &bmi, DIB_RGB_COLORS);
     }
 }

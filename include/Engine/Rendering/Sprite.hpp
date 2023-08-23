@@ -11,7 +11,7 @@ namespace eng
     class Sprite : public IDrawable
     {
         public:
-            Sprite() = default;
+            Sprite();
             ~Sprite() = default;
 
             void setTexture(Texture &_img);
@@ -31,14 +31,15 @@ namespace eng
             void draw(RenderTarget &_target, const Texture *_txtr) const override;
 
         private:
+            void buildVertex();
             void processRect();
 
-            Texture m_txtr;
+            Texture m_txtr{};
 
-            VertexArray m_vertex;
+            VertexArray m_vertex{};
 
             Rect m_rect;
-            Point2<float> m_pos;
+            Point2<float> m_pos = { 0.f, 0.f };
             Point2<float> m_scale = { 1, 1 };
     };
 }
