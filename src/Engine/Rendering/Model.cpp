@@ -1,6 +1,6 @@
 #include <fstream>
 
-#include "Tool/Splitter.hpp"
+#include "Engine/Tool/Splitter.hpp"
 #include "Engine/Rendering/Model.hpp"
 #include "Engine/Rendering/RenderTarget.hpp"
 

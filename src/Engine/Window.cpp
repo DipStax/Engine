@@ -65,7 +65,7 @@ namespace eng
     {
         Point2<uint32_t> pos = getPosition();
 
-       setPosition(pos.x + _y, pos.y + _y);
+       setPosition(pos.x + _x, pos.y + _y);
     }
 
     void Window::setPosition(uint32_t _x, uint32_t _y)
