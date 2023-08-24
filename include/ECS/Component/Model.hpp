@@ -3,11 +3,11 @@
 
 #include <cstdint>
 
-#include "Engine/Ressource/Model.hpp"
+#include "Engine/Rendering/Model.hpp"
 
 namespace ecs::comp
 {
-    struct Model
+    struct PROJECT_API Model
     {
         eng::Model mod;
     };

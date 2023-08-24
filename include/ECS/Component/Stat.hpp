@@ -1,11 +1,12 @@
-#ifndef ECS_COMP_STAT_HPP
-#define ECS_COMP_STAT_HPP
+#pragma once
+
+#include "Tool/Export.hpp"
 
 namespace ecs::comp
 {
     using StatType = size_t;
 
-    struct Stat
+    struct PROJECT_API Stat
     {
         StatType Health;
         StatType Mana;
@@ -13,5 +14,3 @@ namespace ecs::comp
         StatType Stamina;
     };
 }
-
-#endif

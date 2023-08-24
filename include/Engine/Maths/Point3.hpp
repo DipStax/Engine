@@ -1,10 +1,6 @@
-#ifndef ENG_MATHS_POINT3_HPP
-#define ENG_MATHS_POINT3_HPP
-
-#include <SFML/System/Vector3.hpp>
+#pragma once
 
 #include "Engine/Maths/Point2.hpp"
-#include "Tool/PreProcessing.hpp"
 
 namespace eng
 {
@@ -44,9 +40,6 @@ namespace eng
         friend std::ostream &operator<<(std::ostream &_os, const Point3<_T> &_pt);
 
         Point2<T> as2() const;
-
-        operator sf::Vector3<T>() const;
-        operator Vector2<T>() const;
     };
 
     template<NumericType T>
@@ -54,5 +47,3 @@ namespace eng
 }
 
 #include "Engine/Maths/Point3.inl"
-
-#endif

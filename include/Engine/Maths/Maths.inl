@@ -8,13 +8,13 @@ namespace eng
     template<NumericType T>
     T toRad(T _deg)
     {
-        return _deg * (std::numbers::pi / 180);
+        return _deg * (static_cast<float>(std::numbers::pi) / 180.f);
     }
 
     template<NumericType T>
     T toDeg(T _rad)
     {
-        return _rad * (180 / std::numbers::pi);
+        return _rad * (180.f / static_cast<float>(std::numbers::pi));
     }
 
     template<NumericType T>

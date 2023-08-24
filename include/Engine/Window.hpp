@@ -1,36 +1,62 @@
-#ifndef ENG_WINDOW_HPP
-#define ENG_WINDOW_HPP
+#pragma once
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <string>
+#include <thread>
 
-#include "Engine/Rendering/ZBuffer.hpp"
-#include "Engine/Ressource/Model.hpp"
-#include "Engine/Camera.hpp"
+#include <windows.h>
+
+#include "Engine/Maths/Point2.hpp"
+#include "Engine/Rendering/Color.hpp"
+#include "Engine/Event/Event.hpp"
+
+#ifndef WIN_MAXTITLE
+    #define WIN_MAXTITLE 256
+#endif
 
 namespace eng
 {
-    class Window : public sf::RenderWindow
+    class PROJECT_API Window
     {
         public:
-            Window() = default;
-            Window(sf::VideoMode _vmode, const std::string &_title, uint32_t _style = sf::Style::Default,
-                const sf::ContextSettings &_set = sf::ContextSettings());
-            ~Window() = default;
+            Window(uint32_t _x, uint32_t _y, const std::string& _title);
+            ~Window();
 
-            void setCamera(float _fov, Point2<float> _range);
-            void moveCamera(Vector3<float> _move);
-            void rotateCamera(Point3<float> _rot);
+            void open(uint32_t _x, uint32_t _y, const std::string& _title);
+            [[nodiscard]] bool isOpen() const;
 
-            [[nodiscard]] Point3<float> project(const Point3<float> &_pt);
+            void setTitle(const std::string& _title);
+            [[nodiscard]] std::string getTitle() const;
 
-            void drawModel(const Model &_model);
-            void render();
+            void move(uint32_t _x, int32_t _y);
+            void setPosition(uint32_t _x, uint32_t _y);
+            [[nodiscard]] Point2<uint32_t> getPosition() const;
+
+            void setSize(uint32_t _x, uint32_t _y);
+            [[nodiscard]] Point2<uint32_t> getSize() const;
+
+            bool pollEvent(Event &_event);
+
+            void close();
+
+        protected:
+            [[nodiscard]] HWND getWindow() const;
 
         private:
-            ZBuffer m_zbuffer;
+            static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
-            Camera m_camera;
+            static constexpr char WIN_className[] = "Sample Window Class";
+
+            [[nodiscard]] HDC getDc() const;
+
+            bool peekMessage(LPMSG _msg) const;
+            bool winRect(LPRECT _rect) const;
+            bool move(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height) const;
+
+            virtual void render(HDC _draw) const = 0;
+
+            WNDCLASS m_winClass{};
+            HWND m_win;
+            HDC m_dc;
+            bool m_open = false;
     };
 }
-
-#endif
