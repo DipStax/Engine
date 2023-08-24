@@ -3,9 +3,11 @@
 
 #include <cstdint>
 
+#include "Tool/Export.hpp"
+
 namespace ecs::comp
 {
-    struct Id
+    struct PROJECT_API Id
     {
         uint32_t Id;
     };

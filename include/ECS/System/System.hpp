@@ -1,11 +1,6 @@
-#ifndef ECS_SYS_SYSTEM_HPP
-#define ECS_SYS_SYSTEM_HPP
-
-#include "ECS/System/RenderModel.hpp"
+#pragma once
 
 namespace ecs
 {
-    using System = std::tuple<sys::RenderModel>;
+    using System = std::tuple<>;
 };
-
-#endif

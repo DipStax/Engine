@@ -1,5 +1,4 @@
-#ifndef ECS_REGISTER_HPP
-#define ECS_REGISTER_HPP
+#pragma once
 
 #include <map>
 #include <tuple>
@@ -40,5 +39,3 @@ namespace ecs
 }
 
 #include "ECS/Register.inl"
-
-#endif

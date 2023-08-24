@@ -1,5 +1,4 @@
-#ifndef ENG_MATHS_ANGLE_HPP
-#define ENG_MATHS_ANGLE_HPP
+#pragma once
 
 #include "Engine/Maths/Point2.hpp"
 #include "Tool/PreProcessing.hpp"
@@ -16,5 +15,3 @@ namespace eng
 }
 
 #include "Engine/Maths/Maths.inl"
-
-#endif

@@ -1,9 +1,10 @@
-#ifndef PREPROCESSING_HPP
-#define PREPROCESSING_HPP
+#pragma once
 
 #include <optional>
 #include <tuple>
 #include <type_traits>
+
+#include "Tool/Export.hpp"
 
 // template<class, class>
 // struct tuple_prepend;
@@ -64,12 +65,6 @@ namespace ecs::sys
     class ISystem;
 }
 
-namespace eng
-{
-    template<class ...Ts>
-    class Event;
-}
-
 template<class ...Ts>
 using Tuple = std::tuple<std::optional<Ts>...>;
 
@@ -105,8 +100,3 @@ concept KeyType = requires (T r, T l)
 {
     r < l;
 };
-
-template<class T>
-concept IsEvent = is_base_of_template<eng::Event, T>::value;
-
-#endif

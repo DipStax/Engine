@@ -1,6 +1,6 @@
 Texture:
 {
-    Path: ../rsc/txtr.png
+    Path: ../rsc/txtr.bmp
     Id: 1
 }
 

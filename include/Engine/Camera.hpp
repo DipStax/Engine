@@ -1,28 +1,26 @@
-#ifndef ENG_CAMERA_HPP
-#define ENG_CAMERA_HPP
+#pragma once
 
 #include <array>
 
 #include "Maths/Point3.hpp"
-#include "Maths/Point2.hpp"
 #include "Engine/Maths/Matrix.hpp"
 
 namespace eng
 {
-    class Camera
+    class PROJECT_API Camera
     {
         public:
             Camera();
             ~Camera() = default;
 
-            void setFov(float _fov);
-            void setRange(float _near, float _far);
-            void setSize(float _x, float _y);
+            Camera &setFov(float _fov);
+            Camera &setRange(float _near, float _far);
+            Camera &setSize(float _x, float _y);
 
-            void move(eng::Vector3<float> _move);
-            void rotate(eng::Vector3<float> _rot);
+            Camera &move(eng::Vector3<float> _move);
+            Camera &rotate(eng::Vector3<float> _rot);
 
-            [[nodiscard]] eng::Point3<float> process(eng::Point3<float> _pt);
+            [[nodiscard]] eng::Point3<float> project(eng::Point3<float> _pt);
 
             [[nodiscard]] eng::Point3<float> getPosition() const;
 
@@ -50,5 +48,3 @@ namespace eng
             Matrix<4, 4> m_mpos;
     };
 }
-
-#endif
