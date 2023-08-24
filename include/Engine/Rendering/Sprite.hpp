@@ -1,14 +1,13 @@
-#ifndef ENG_REND_SPRITE_HPp
-#define ENG_REND_SPRITE_HPp
+#pragma once
 
-#include "VertexArray.hpp"
-#include "Rect.hpp"
+#include "Engine/Rendering/VertexArray.hpp"
+#include "Engine/Rendering/Rect.hpp"
 #include "Engine/Rendering/IDrawable.hpp"
 #include "Engine/Rendering/Texture.hpp"
 
 namespace eng
 {
-    class Sprite : public IDrawable
+    class PROJECT_API Sprite : public IDrawable
     {
         public:
             Sprite();
@@ -43,5 +42,3 @@ namespace eng
             Point2<float> m_scale = { 1, 1 };
     };
 }
-
-#endif

@@ -1,7 +1,6 @@
 #include <algorithm>
-#include <iostream>
 
-#include "Engine/Tool/Splitter.hpp"
+#include "Tool/Splitter.hpp"
 
 namespace split
 {

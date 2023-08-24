@@ -1,8 +1,7 @@
-#ifndef ENG_MATH_MATRIX_HPP
-#define ENG_MATH_MATRIX_HPP
+#pragma once
 
 #include <array>
-#include <iostream>
+#include <ostream>
 
 namespace eng
 {
@@ -27,5 +26,3 @@ namespace eng
 
 
 #include "Engine/Maths/Matrix.inl"
-
-#endif

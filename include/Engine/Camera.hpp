@@ -1,15 +1,13 @@
-#ifndef ENG_CAMERA_HPP
-#define ENG_CAMERA_HPP
+#pragma once
 
 #include <array>
 
 #include "Maths/Point3.hpp"
-#include "Maths/Point2.hpp"
 #include "Engine/Maths/Matrix.hpp"
 
 namespace eng
 {
-    class Camera
+    class PROJECT_API Camera
     {
         public:
             Camera();
@@ -50,5 +48,3 @@ namespace eng
             Matrix<4, 4> m_mpos;
     };
 }
-
-#endif

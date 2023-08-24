@@ -5,14 +5,14 @@
 
 namespace eng
 {
-    struct Vertex
+    struct PROJECT_API Vertex
     {
         Point2<float> pos;
         Point2<float> txtrPos;
         Color clr;
     };
 
-    struct Vertex3D
+    struct PROJECT_API Vertex3D
     {
         Point3<float> pos;
         Point2<float> txtrPos;

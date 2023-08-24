@@ -7,7 +7,7 @@
 
 namespace ecs::comp
 {
-    struct Model
+    struct PROJECT_API Model
     {
         eng::Model mod;
     };

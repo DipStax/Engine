@@ -1,5 +1,4 @@
-#ifndef ENG_RSC_MODEL_HPP
-#define ENG_RSC_MODEL_HPP
+#pragma once
 
 #include <istream>
 #include <map>
@@ -12,7 +11,7 @@
 
 namespace eng
 {
-    class Model : public IDrawable3D
+    class PROJECT_API Model : public IDrawable3D
     {
         public:
             Model();
@@ -57,5 +56,3 @@ namespace eng
             size_t m_txtrId = 0;
     };
 }
-
-#endif

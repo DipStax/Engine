@@ -1,5 +1,4 @@
-#ifndef ECS_SYS_ISYSTEM_HPP
-#define ECS_SYS_ISYSTEM_HPP
+#pragma once
 
 #include "ECS/Component/Component.hpp"
 #include "ECS/Register.hpp"
@@ -12,12 +11,10 @@ namespace ecs
 
     namespace sys
     {
-        class ISystem
+        class PROJECT_API ISystem
         {
             public:
                 virtual void run(MainRegister &_reg, Entity *_entity, eng::RenderWindow *_window) = 0;
         };
     }
 }
-
-#endif

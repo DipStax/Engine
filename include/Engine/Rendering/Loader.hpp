@@ -1,5 +1,4 @@
-#ifndef ENG_RSC_LOADER_HPP
-#define ENG_RSC_LOADER_HPP
+#pragma once
 
 #include <istream>
 #include <memory>
@@ -8,7 +7,7 @@
 
 namespace eng
 {
-    class Loader
+    class PROJECT_API Loader
     {
         public:
             Loader() = default;
@@ -26,5 +25,3 @@ namespace eng
             void fnLoadModel(Data &_data, std::istream &_file);
     };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef ENG_REND_IDRAWABLE_HPP
-#define ENG_REND_IDRAWABLE_HPP
+#pragma once
 
 #include "Engine/Rendering/Texture.hpp"
 
@@ -15,5 +14,3 @@ namespace eng
             virtual void draw(RenderTarget &_target, const Texture *_txtr) const = 0;
     };
 }
-
-#endif

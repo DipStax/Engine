@@ -4,7 +4,7 @@
 
 namespace eng
 {
-    struct Rect
+    struct PROJECT_API Rect
     {
         Point2<float> pos;
         Point2<float> size;

@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "Engine/Rendering/Loader.hpp"
-#include "Engine/Tool/Splitter.hpp"
+#include "Tool/Splitter.hpp"
 
 namespace eng
 {

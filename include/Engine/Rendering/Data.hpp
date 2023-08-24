@@ -1,5 +1,4 @@
-#ifndef ENG_RSC_DATA_HPP
-#define ENG_RSC_DATA_HPP
+#pragma once
 
 #include <vector>
 
@@ -7,11 +6,9 @@
 
 namespace eng
 {
-    struct Data
+    struct PROJECT_API Data
     {
         std::map<size_t, std::shared_ptr<Texture>> Texture;
-        std::map<size_t, std::unique_ptr<Model>> Model;
+        std::map<size_t, std::shared_ptr<Model>> Model;
     };
 }
-
-#endif

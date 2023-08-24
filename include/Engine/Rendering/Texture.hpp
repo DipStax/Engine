@@ -1,5 +1,4 @@
-#ifndef ENG_REND_TEXTURE_HPP
-#define ENG_REND_TEXTURE_HPP
+#pragma once
 
 #include "Engine/Rendering/Image.hpp"
 
@@ -7,5 +6,3 @@ namespace eng
 {
     using Texture = Image;
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef ENG_REND_RENDERTARGET_HPP
-#define ENG_REND_RENDERTARGET_HPP
+#pragma once
 
 #include <vector>
 #include <Windows.h>
@@ -10,7 +9,7 @@
 
 namespace eng
 {
-    class RenderTarget
+    class PROJECT_API RenderTarget
     {
         public:
             void setCamera(const Camera &_cam);
@@ -52,5 +51,3 @@ namespace eng
             uint8_t m_bpp;
     };
 }
-
-#endif

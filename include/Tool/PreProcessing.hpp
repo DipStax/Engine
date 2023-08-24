@@ -1,9 +1,10 @@
-#ifndef PREPROCESSING_HPP
-#define PREPROCESSING_HPP
+#pragma once
 
 #include <optional>
 #include <tuple>
 #include <type_traits>
+
+#include "Tool/Export.hpp"
 
 // template<class, class>
 // struct tuple_prepend;
@@ -99,5 +100,3 @@ concept KeyType = requires (T r, T l)
 {
     r < l;
 };
-
-#endif

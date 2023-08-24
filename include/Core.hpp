@@ -5,7 +5,6 @@
 #include "Engine/Event/Event.hpp"
 #include "Engine/Rendering/RenderWindow.hpp"
 #include "Engine/Rendering/Data.hpp"
-//#include "Player.hpp"
 
 class Core
 {

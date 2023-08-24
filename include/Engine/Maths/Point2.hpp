@@ -1,11 +1,8 @@
-#ifndef ENG_MATHS_POINT2_HPP
-#define ENG_MATHS_POINT2_HPP
+#pragma once
 
 #include <ostream>
 
-// #include <sfml/System/Vector2.hpp>
-
-#include "Engine/Tool/PreProcessing.hpp"
+#include "Tool/PreProcessing.hpp"
 
 namespace eng
 {
@@ -54,5 +51,3 @@ namespace eng
 }
 
 #include "Engine/Maths/Point2.inl"
-
-#endif

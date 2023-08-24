@@ -1,8 +1,6 @@
-#ifndef ENG_MATHS_POINT3_HPP
-#define ENG_MATHS_POINT3_HPP
+#pragma once
 
 #include "Engine/Maths/Point2.hpp"
-#include "Engine/Tool/PreProcessing.hpp"
 
 namespace eng
 {
@@ -49,5 +47,3 @@ namespace eng
 }
 
 #include "Engine/Maths/Point3.inl"
-
-#endif

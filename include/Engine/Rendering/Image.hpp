@@ -11,7 +11,7 @@
 
 namespace eng
 {
-    class Image
+    class PROJECT_API Image
     {
         public:
             Image() = default;

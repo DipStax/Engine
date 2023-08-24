@@ -1,5 +1,3 @@
-include(ECS_build.cmake)
-
 file(GLOB_RECURSE SRC_TESTCORE
     src/*.cpp
     include/*.hpp
@@ -11,7 +9,7 @@ add_executable(TestCore
 
 target_include_directories(TestCore PRIVATE include)
 
-target_link_libraries(TestCore PRIVATE ${ECS_LIB})
+target_link_libraries(TestCore PRIVATE Engine)
 
 if (MSVC)
     target_compile_options(TestCore PRIVATE /W4)

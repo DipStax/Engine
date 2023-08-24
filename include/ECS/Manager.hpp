@@ -1,15 +1,17 @@
-#ifndef ECS_MANAGER_HPP
-#define ECS_MANAGER_HPP
+#pragma once
 
 #include <functional>
 #include <vector>
 
+#include "ECS/Component/Component.hpp"
 #include "ECS/System/System.hpp"
-#include "Engine/Tool/PreProcessing.hpp"
+#include "ECS/Entity.hpp"
+#include "ECS/Register.hpp"
+#include "Engine/Rendering/RenderTarget.hpp"
 
 namespace ecs
 {
-    class Manager
+    class PROJECT_API Manager
     {
         public:
             Manager() = default;
@@ -37,5 +39,3 @@ namespace ecs
 }
 
 #include "ECS/Manager.inl"
-
-#endif

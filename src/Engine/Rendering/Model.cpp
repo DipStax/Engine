@@ -1,8 +1,8 @@
 #include <fstream>
 
-#include "Engine/Tool/Splitter.hpp"
 #include "Engine/Rendering/Model.hpp"
 #include "Engine/Rendering/RenderTarget.hpp"
+#include "Tool/Splitter.hpp"
 
 namespace eng
 {
@@ -77,12 +77,12 @@ namespace eng
         return m_txtr;
     }
 
-    void Model::draw(RenderTarget &_target, const Texture *_txtr) const
+    void Model::draw(RenderTarget& _target, const Texture* _txtr) const
     {
         std::ignore = _txtr;
 
-        for (const auto &_f : m_f)
-            _target.draw(_f.data(), _f.size(),  m_txtr.get());
+        for (const auto& _f : m_f)
+            _target.draw(_f.data(), _f.size(), m_txtr.get());
     }
 
     void Model::Init()

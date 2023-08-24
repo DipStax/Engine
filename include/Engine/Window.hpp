@@ -1,5 +1,4 @@
-#ifndef ENG_WINDOW_HPP
-#define ENG_WINDOW_HPP
+#pragma once
 
 #include <string>
 #include <thread>
@@ -11,12 +10,12 @@
 #include "Engine/Event/Event.hpp"
 
 #ifndef WIN_MAXTITLE
-#define WIN_MAXTITLE 256
+    #define WIN_MAXTITLE 256
 #endif
 
 namespace eng
 {
-    class Window
+    class PROJECT_API Window
     {
         public:
             Window(uint32_t _x, uint32_t _y, const std::string& _title);
@@ -61,5 +60,3 @@ namespace eng
             bool m_open = false;
     };
 }
-
-#endif

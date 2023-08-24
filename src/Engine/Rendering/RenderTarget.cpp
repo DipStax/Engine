@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <iostream>
 
 #include "Engine/Rendering/RenderTarget.hpp"
 #include "Engine/Maths/Maths.hpp"

@@ -1,11 +1,10 @@
-#ifndef ENG_REND_RENDERTEXTURE_HPP
-#define ENG_REND_RENDERTEXTURE_HPP
+#pragma once
 
 #include "Engine/Rendering/RenderTarget.hpp"
 
 namespace eng
 {
-    class RenderTexture : public RenderTarget
+    class PROJECT_API RenderTexture : public RenderTarget
     {
         public:
             RenderTexture() = default;
@@ -20,5 +19,3 @@ namespace eng
             Point2<uint32_t> m_size;
     };
 }
-
-#endif

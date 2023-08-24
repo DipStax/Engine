@@ -1,5 +1,4 @@
 #include <map>
-#include <iostream>
 
 #include "Window.hpp"
 

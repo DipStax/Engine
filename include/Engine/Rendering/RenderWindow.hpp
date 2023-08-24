@@ -1,12 +1,11 @@
-#ifndef ENG_REND_RENDERWINDOW_HPP
-#define ENG_REND_RENDERWINDOW_HPP
+#pragma once
 
 #include "Engine/Rendering/RenderTarget.hpp"
 #include "Engine/Window.hpp"
 
 namespace eng
 {
-    class RenderWindow : public Window, public RenderTarget
+    class PROJECT_API RenderWindow : public Window, public RenderTarget
     {
         public:
             RenderWindow(uint32_t _x, uint32_t _y, const std::string& _title);
@@ -25,5 +24,3 @@ namespace eng
             Camera m_cam;
     };
 }
-
-#endif

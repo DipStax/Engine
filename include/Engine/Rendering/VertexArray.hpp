@@ -2,12 +2,12 @@
 
 #include <vector>
 
-#include "Vertex.hpp"
-#include "IDrawable.hpp"
+#include "Engine/Rendering/Vertex.hpp"
+#include "Engine/Rendering/IDrawable.hpp"
 
 namespace eng
 {
-    class VertexArray : public IDrawable
+    class PROJECT_API VertexArray : public IDrawable
     {
         public:
             enum class Type

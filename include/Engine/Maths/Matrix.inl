@@ -38,18 +38,18 @@ namespace eng
 
     template<size_t Y, size_t X>
     std::ostream& operator<<(std::ostream& _os, const Matrix<Y, X>& _mat) {
-        std::cout << "[ ";
+        _os << "[ ";
         for (size_t y = 0; y < Y; y++) {
-            std::cout << "[ ";
+            _os << "[ ";
             for (size_t x = 0; x < X; x++) {
                 _os << _mat[y][x];
                 if (x != X - 1)
-                    std::cout << ",";
-                std::cout << " ";
+                    _os << ",";
+                _os << " ";
             }
-            std::cout << "]";
+            _os << "]";
             if (y != Y - 1)
-                std::cout << std::endl;
+                _os << std::endl;
         }
         return _os;
     }
