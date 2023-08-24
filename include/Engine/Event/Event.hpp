@@ -2,6 +2,9 @@
 
 namespace eng
 {
+    struct IEvent
+    {};
+
     class Mouse
     {
         public:
@@ -12,7 +15,7 @@ namespace eng
             };
     };
 
-    class Event
+    class Event : public IEvent
     {
         public:
             struct MouseButtonEvent {

@@ -2,7 +2,7 @@
 #include <cmath>
 #include <numbers>
 
-#include "Engine/Camera.hpp"
+#include "Engine/Rendering/Camera.hpp"
 
 namespace eng
 {

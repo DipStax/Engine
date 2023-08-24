@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Rendering/RenderTarget.hpp"
-#include "Engine/Window.hpp"
+#include "Engine/System/Window.hpp"
 
 namespace eng
 {

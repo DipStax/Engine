@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "Maths/Point3.hpp"
+#include "Engine/Maths/Point3.hpp"
 #include "Engine/Maths/Matrix.hpp"
 
 namespace eng
