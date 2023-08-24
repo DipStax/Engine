@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Event.hpp"
-#include "Trigger.hpp"
-#include "TriggerMap.hpp"
+#include "Engine/Container/TriggerMap.hpp"
+#include "Engine/Event/Event.hpp"
+#include "Engine/Event/Trigger.hpp"
 
 namespace eng
 {

@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Tool/Export.hpp"
+
 namespace eng
 {
-    struct IEvent
+    struct PROJECT_API IEvent
     {};
 
-    class Mouse
+    class PROJECT_API Mouse
     {
         public:
             enum class Button {
@@ -15,7 +17,7 @@ namespace eng
             };
     };
 
-    class Event : public IEvent
+    class PROJECT_API Event : public IEvent
     {
         public:
             struct MouseButtonEvent {

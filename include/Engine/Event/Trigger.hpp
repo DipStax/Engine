@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-#include "Event.hpp"
-#include "ThreadPool.hpp"
+#include "Engine/Event/Event.hpp"
+#include "Engine/System/ThreadPool.hpp"
 
 template<class T>
 concept IsIEvent = std::is_base_of<tester::IEvent, T>::value;

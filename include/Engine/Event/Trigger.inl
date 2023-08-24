@@ -1,5 +1,5 @@
-#include "Trigger.hpp"
-#include "ThreadPool.hpp"
+#include "Engine/Event/Trigger.hpp"
+#include "Engine/System/ThreadPool.hpp"
 
 namespace eng
 {
