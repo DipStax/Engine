@@ -5,7 +5,7 @@
 
 #include "Engine/Rendering/IDrawable3D.hpp"
 #include "Engine/Rendering/VertexArray.hpp"
-#include "Engine/Camera.hpp"
+#include "Engine/Rendering/Camera.hpp"
 
 namespace eng
 {
