@@ -3,10 +3,10 @@
 #include "Engine/Container/TriggerMap.hpp"
 #include "Engine/Event/Event.hpp"
 #include "Engine/Event/Trigger.hpp"
+#include "Tool/PreProcessing.hpp"
 
 namespace eng
 {
-    // check for tuple inside of ts
     template<class ...Ts>
     class EventPool
     {
@@ -23,7 +23,7 @@ namespace eng
             void unsubscribe(Trigger<T>::sTask _task);
 
         private:
-            TriggerMap<Trigger, std::tuple<Ts...>> m_map;
+            TriggerMap<Trigger, tuple_unpacked<Ts...>> m_map;
     };
 }
 

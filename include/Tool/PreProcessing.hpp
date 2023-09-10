@@ -60,6 +60,21 @@
 //     }
 // }
 
+template<class ...Ts>
+struct tuple_unpacked;
+
+template<>
+struct tuple_unpacked<>
+{
+    using type = std::tuple<>;
+};
+
+template<class ...Ts, class ..._Ts>
+struct tuple_unpacked<std::tuple<Ts...>, _Ts...>
+{
+    using type = typename tuple_unpacked<Ts..., _Ts...>::type;
+};
+
 namespace ecs::sys
 {
     class ISystem;
@@ -98,5 +113,201 @@ concept NumericType = std::is_arithmetic<T>::value;
 template<class T>
 concept KeyType = requires (T r, T l)
 {
+    { r < l } -> bool;
+};
+
+#pragma region Operator concept
+
+template<class T, class _T>
+concept AssignOp = requires (T r, _T l)
+{
+    r = l;
+}
+
+template<class T, class _T>
+concept EqOp = requires (T r, _T l)
+{
+    r == l;
+};
+
+template<class T, class _T>
+concept NEqOp = requires (T r, _T l)
+{
+    r != l;
+};
+
+template<class T, class _T>
+concept LsOp = requires (T r, _T l)
+{
     r < l;
 };
+
+template<class T, class _T>
+concept GtOp = requires (T r, _T l)
+{
+    r > l;
+};
+
+template<class T, class _T>
+concept LsEqOp = requires (T r, _T l)
+{
+    r <= l;
+};
+
+template<class T, class _T>
+concept GtEqOp = requires (T r, _T l)
+{
+    r >= l;
+};
+
+template<class T, class _T>
+concept GlobCompOp = requires (T r, _T l)
+{
+    r <=> l;
+};
+
+template<class T, class _T>
+concept AddOp = requires (T r, _T l)
+{
+    r + l;
+};
+
+template<class T, class _T>
+concept SubOp = requires (T r, _T l)
+{
+    r - l;
+};
+
+template<class T, class _T>
+concept MulOp = requires (T r, _T l)
+{
+    r * l;
+};
+
+template<class T, class _T>
+concept DivOp = requires (T r, _T l)
+{
+    r / l;
+};
+
+template<class T, class _T>
+concept ModOp = requires (T r, _T l)
+{
+    r % l;
+};
+
+template<class T, class _T>
+concept BitAndOp = requires (T r, _T l)
+{
+    r & l;
+};
+
+template<class T, class _T>
+concept BitOrOp = requires (T r, _T l)
+{
+    r | l;
+};
+
+template<class T, class _T>
+concept BitXorOp = requires (T r, _T l)
+{
+    r ^ l;
+};
+
+template<class T, class _T>
+concept LShiftOp = requires (T r, _T l)
+{
+    r << l;
+};
+
+template<class T, class _T>
+concept RShiftOp = requires (T r, _T l)
+{
+    r >> l;
+};
+
+template<class T, class _T>
+concept AssignAddOp = requires (T r, _T l)
+{
+    r += l;
+};
+
+template<class T, class _T>
+concept AssignSubOp = requires (T r, _T l)
+{
+    r -= l;
+};
+
+template<class T, class _T>
+concept AssignMulOp = requires (T r, _T l)
+{
+    r *= l;
+};
+
+template<class T, class _T>
+concept AssignDivOp = requires (T r, _T l)
+{
+    r /= l;
+};
+
+template<class T, class _T>
+concept AssignModOp = requires (T r, _T l)
+{
+    r %= l;
+};
+
+template<class T, class _T>
+concept AssignBitAndOp = requires (T r, _T l)
+{
+    r &= l;
+};
+
+template<class T, class _T>
+concept AssignBitOrOp = requires (T r, _T l)
+{
+    r |= l;
+};
+
+template<class T, class _T>
+concept AssignBitXorOp = requires (T r, _T l)
+{
+    r ^= l;
+};
+
+template<class T, class _T>
+concept AssignLShiftOp = requires (T r, _T l)
+{
+    r <<= l;
+};
+
+template<class T, class _T>
+concept AssignRShiftOp = requires (T r, _T l)
+{
+    r >>= l;
+};
+
+template<class T>
+concept PreIncOp = requires (T r)
+{
+    r++;
+};
+
+template<class T>
+concept PostIncOp = requires (T r)
+{
+    ++r;
+};
+
+template<class T>
+concept PreDecOp = requires (T r)
+{
+    r--;
+};
+
+template<class T>
+concept PostDecOp = requires (T r)
+{
+    --r;
+};
+
+#pragma endregion

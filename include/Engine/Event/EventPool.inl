@@ -25,7 +25,6 @@ namespace eng
     template<IsIEvent T>
     Trigger<T>::sTask EventPool<Ts...>::subscribe(Trigger<T>::Task _task)
     {
-        std::cout << "Event::Subscribe" << std::endl;
         return m_map.at<T>().subscribe(_task);
     }
 
@@ -33,7 +32,6 @@ namespace eng
     template<IsIEvent T>
     void EventPool<Ts...>::unsubscribe(Trigger<T>::sTask _task)
     {
-        std::cout << "Event::Unsubscribe" << std::endl;
         if (m_map.contains<T>())
             m_map.at<T>().unsubscribe(_task);
     }
