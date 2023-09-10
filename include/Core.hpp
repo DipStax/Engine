@@ -1,10 +1,8 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include "ECS/Manager.hpp"
-#include "Engine/Event/Event.hpp"
-#include "Engine/Rendering/RenderWindow.hpp"
-#include "Engine/Rendering/Data.hpp"
+#include "Engine/System/ThreadPool.hpp"
+#include "Engine/Network/tcp/Socket.hpp"
 
 class Core
 {
@@ -15,16 +13,12 @@ class Core
         void init(const std::string &_path);
         void run();
 
+        void client();
+
     private:
-        eng::RenderWindow m_win;
-        eng::Event m_event{};
-
-        ecs::Manager m_manager{};
-        // Player m_player{};
-        eng::Camera m_cam;
-        eng::Data m_data{};
-
-        bool m_pause = false;
+        eng::ThreadPool m_tp;
+        std::unique_ptr<eng::tcp::Socket> m_socket = nullptr;
+        std::thread m_thread;
 };
 
 #endif

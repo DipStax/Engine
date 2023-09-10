@@ -1,42 +1,54 @@
-#include "Engine/Rendering/Loader.hpp"
-#include "Engine/Rendering/Sprite.hpp"
-#include "Engine/Rendering/RenderTexture.hpp"
+#include <iostream>
+#include <memory>
+
 #include "Core.hpp"
+#include "Engine/Network/tcp/Acceptor.hpp"
+#include "Engine/Network/Ip.hpp"
+
 
 Core::Core()
-    : m_win(400, 400, "Test ECS")
 {
 }
 
 void Core::init(const std::string &_path)
 {
-    eng::Loader loader;
-    //ecs::Component &player = m_manager.get(m_manager.spawn());
+    std::ignore = _path;
 
-    m_data = loader.load(_path);
-    // opt::get<ecs::comp::Id>(player).emplace(1);
-    // opt::get<ecs::comp::Model>(player).emplace(ecs::comp::Model{ .mod = m_data.Model.at(1)->copy() });
+    WSADATA wsaData;
+    int wsa = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
+    if (wsa != 0) {
+        std::cout << "Error: wsa error: " << wsa << std::endl;
+        exit(1);
+    }
+    m_thread = std::thread(&Core::client, this);
 }
 
 void Core::run()
 {
-    eng::Sprite sprt;
-    eng::Model model = m_data.Model.at(1)->copy();
+    eng::tcp::Acceptor acceptor(m_tp, 8080);
+    int val = 2593;
+    eng::Buffer buff{};
+    std::string str;
+    eng::tcp::Socket socket(m_tp);
 
-    sprt.setPosition(0, 150);
-    //sprt.setScale(1.5, 1.5);
-    sprt.setTexture(*(m_data.Texture.at(1)));
-    while (m_win.isOpen()) {
-        while (m_win.pollEvent(m_event)) {}
-        if (!m_pause) {
-            m_win.clear();
-            //for (auto &[_, _mod] : m_data.Model)
-            //    m_win.draw(*_mod);
-             // m_manager.runSystem<ecs::sys::RenderModel>(nullptr, &m_win);
-            m_win.draw(sprt);
-            m_win.draw(model);
-            m_win.display();
-        }
-    }
+    acceptor.accept(socket);
+    socket.read(buff, 5);
+
+    buff >> str;
+    std::cout << str << std::endl;
 }
+
+void Core::client()
+{
+    eng::Buffer buff{};
+    eng::tcp::Socket socket(m_tp);
+
+    if (!socket.connect(eng::Ip("127.0.0.1"), 8080)) {
+        std::cerr << "Error: unable to connect to the endpoint" << std::endl;
+        return;
+    }
+    buff << "data";
+    socket.write(buff);
+    while (true) {}
+ }
