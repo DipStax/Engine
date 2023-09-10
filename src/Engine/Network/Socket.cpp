@@ -2,33 +2,33 @@
 
 namespace eng
 {
-    Socket::~Socket()
+    BasicSocket::~Socket()
     {
         close();
     }
 
-    void Socket::close()
+    void BasicSocket::close()
     {
         if (m_socket != INVALID_SOCKET)
             closesocket(m_socket);
     }
 
-    Socket::Socket()
+    BasicSocket::BasicSocket()
     {
         create(socket(PF_INET, SOCK_STREAM, NULL));
     }
 
-    RawSocket Socket::getRawSocket() const
+    RawSocket BasicSocket::getRawSocket() const
     {
         return m_socket;
     }
 
-    void Socket::create()
+    void BasicSocket::create()
     {
         create(socket(PF_INET, SOCK_STREAM, NULL));
     }
 
-    void Socket::create(RawSocket _socket)
+    void BasicSocket::create(RawSocket _socket)
     {
         m_socket = _socket;
     }

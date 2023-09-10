@@ -6,12 +6,12 @@
 
 #include "Engine/Network/Buffer.hpp"
 #include "Engine/Network/Ip.hpp"
-#include "Engine/Network/Socket.hpp"
+#include "Engine/Network/BasicSocket.hpp"
 #include "Engine/System/ThreadPool.hpp"
 
 namespace eng::tcp
 {
-    class PROJECT_API Socket : public ::eng::Socket
+    class PROJECT_API Socket : public ::eng::BasicSocket
     {
         public:
             using Read_cb = std::function<void(Buffer &, ExitCode)>;

@@ -15,17 +15,17 @@ namespace eng
         class Acceptor;
     }
 
-    class PROJECT_API Socket
+    class PROJECT_API BasicSocket
     {
         public:
-            virtual ~Socket();
+            virtual ~BasicSocket();
 
             void close();
 
         protected:
             friend tcp::Acceptor;
 
-            Socket();
+            BasicSocket();
 
             [[nodiscard]] RawSocket getRawSocket() const;
 

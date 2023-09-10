@@ -6,7 +6,7 @@
 
 namespace eng::tcp
 {
-    class PROJECT_API Acceptor
+    class PROJECT_API BasicSocket
     {
         public:
             using Accept_cb = std::function<void(Socket)>;
