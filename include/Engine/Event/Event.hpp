@@ -1,29 +1,37 @@
-#ifndef ENG_EVT_EVENT_HPP
-#define ENG_EVT_EVENT_HPP
+#pragma once
 
-#include "Tool/PreProcessing.hpp"
+#include "Tool/Export.hpp"
 
 namespace eng
 {
-    template<IsEvent ...TEvent>
-    class EventHubImpl;
-
-    template<class ...Ts>
-    class Event
+    class PROJECT_API Mouse
     {
         public:
-            template<class ...TEvent>;
-            friend EventHubImpl;
+            enum class Button {
+                Left,
+                Right,
+                Middle
+            };
+    };
 
-            ~Event() = default;
+    class PROJECT_API Event
+    {
+        public:
+            struct MouseButtonEvent {
+                bool press;
+                Mouse::Button button;
+            };
 
-            using FPtr = void (*)(const Ts &&...);
+            enum class Type
+            {
+                MouseButton
+            };
 
-        private:
-            Event() = default;
+            Type type;
 
-            std::vector<FPtr> m_func;
+            union
+            {
+                MouseButtonEvent mouseButton;
+            };
     };
 }
-
-#endif

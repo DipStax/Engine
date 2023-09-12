@@ -1,22 +1,24 @@
-#ifndef ECS_MANAGER_HPP
-#define ECS_MANAGER_HPP
+#pragma once
 
 #include <functional>
 #include <vector>
 
+#include "ECS/Component/Component.hpp"
 #include "ECS/System/System.hpp"
-#include "Tool/PreProcessing.hpp"
+#include "ECS/Entity.hpp"
+#include "ECS/Register.hpp"
+#include "Engine/Rendering/RenderTarget.hpp"
 
 namespace ecs
 {
-    class Manager
+    class PROJECT_API Manager
     {
         public:
             Manager() = default;
             ~Manager() = default;
 
             template<SystemType T>
-            void runSystem(Entity *_entity = nullptr, eng::Window *_win = nullptr);
+            void runSystem(Entity *_entity = nullptr, eng::RenderTarget *_target = nullptr);
 
             Entity::IdType spawn();
             void kill(Entity::IdType _id);
@@ -37,5 +39,3 @@ namespace ecs
 }
 
 #include "ECS/Manager.inl"
-
-#endif

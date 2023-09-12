@@ -144,18 +144,6 @@ namespace eng
     template<NumericType T>
     Point2<T> Point3<T>::as2() const
     {
-        return static_cast<Point2<T>>(*this);
-    }
-
-    template<NumericType T>
-    inline Point3<T>::operator sf::Vector3<T>() const
-    {
-        return sf::Vector3<T>(x, y, z);
-    }
-
-    template<NumericType T>
-    inline Point3<T>::operator Point2<T>() const
-    {
-        return Point2<T>(x, y);
+        return { x, y };
     }
 }

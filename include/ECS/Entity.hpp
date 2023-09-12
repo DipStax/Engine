@@ -1,9 +1,10 @@
-#ifndef ECS_ENTITY_HPP
-#define ECS_ENTITY_HPP
+#pragma once
+
+#include "Tool/Export.hpp"
 
 namespace ecs
 {
-    class Entity
+    class PROJECT_API Entity
     {
         friend class Manager;
 
@@ -22,5 +23,3 @@ namespace ecs
             Entity(size_t _id);
     };
 }
-
-#endif

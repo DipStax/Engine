@@ -1,5 +1,4 @@
-#ifndef ECS_REGISTER_HPP
-#define ECS_REGISTER_HPP
+#pragma once
 
 #include <map>
 #include <tuple>
@@ -9,7 +8,8 @@
 
 namespace ecs
 {
-    template<KeyType T, class _T>
+    template<class T, class _T>
+    requires LsOp<T, T>
     class Register
     {
         public:
@@ -40,5 +40,3 @@ namespace ecs
 }
 
 #include "ECS/Register.inl"
-
-#endif

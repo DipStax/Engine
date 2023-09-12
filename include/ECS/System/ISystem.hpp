@@ -1,12 +1,9 @@
-#ifndef ECS_SYS_ISYSTEM_HPP
-#define ECS_SYS_ISYSTEM_HPP
-
-#include <SFML/Graphics.hpp>
+#pragma once
 
 #include "ECS/Component/Component.hpp"
 #include "ECS/Register.hpp"
 #include "ECS/Entity.hpp"
-#include "Engine/Window.hpp"
+#include "Engine/Rendering/RenderWindow.hpp"
 
 namespace ecs
 {
@@ -14,12 +11,10 @@ namespace ecs
 
     namespace sys
     {
-        class ISystem
+        class PROJECT_API ISystem
         {
             public:
-                virtual void run(MainRegister &_reg, Entity *_entity, eng::Window *_window) = 0;
+                virtual void run(MainRegister &_reg, Entity *_entity, eng::RenderWindow *_window) = 0;
         };
     }
 }
-
-#endif

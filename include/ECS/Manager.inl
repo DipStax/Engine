@@ -3,9 +3,9 @@
 namespace ecs
 {
     template<SystemType T>
-    void Manager::runSystem(Entity *_entity, eng::Window *_win)
+    void Manager::runSystem(Entity *_entity, eng::RenderTarget *_target)
     {
-        std::get<T>(m_system).run(m_register, _entity, _win);
+        std::get<T>(m_system).run(m_register, _entity, _target);
     }
 
     template<class T>

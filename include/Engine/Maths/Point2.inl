@@ -134,8 +134,16 @@ namespace eng
     }
 
     template<NumericType T>
-    inline Point2<T>::operator sf::Vector2<T>() const
+    template<NumericType _T>
+    Point2<_T> Point2<T>::as(const Point2<T>& _pt)
     {
-        return sf::Vector2<T>(x, y);
+        return Point2<_T>{ static_cast<_T>(_pt.x), static_cast<_T>(_pt.y) };
+    }
+
+    template<NumericType T>
+    template<NumericType _T>
+    Point2<_T> Point2<T>::as() const
+    {
+        return Point2<T>::as<_T>(*this);
     }
 }
