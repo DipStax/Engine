@@ -6,14 +6,28 @@
 
 #include "Tool/Export.hpp"
 
-// template<class, class>
-// struct tuple_prepend;
+#pragma region Binding definition
 
-// template<class T, class ...Ts>
-// struct tuple_prepend<T, std::tuple<Ts...>>
-// {
-//     using type = std::tuple<T, Ts...>;
-// };
+namespace ecs::sys
+{
+    class ISystem;
+}
+
+template<class ...Ts>
+using Tuple = std::tuple<std::optional<Ts>...>;
+
+#pragma endregion
+
+#pragma region Metaprogramming
+
+template<class, class>
+struct tuple_prepend;
+
+template<class T, class ...Ts>
+struct tuple_prepend<T, std::tuple<Ts...>>
+{
+    using type = std::tuple<T, Ts...>;
+};
 
 // template<class ...Ts>
 // struct tuple_optional_impl;
@@ -60,13 +74,103 @@
 //     }
 // }
 
+template<class, class ...>
+struct tuple_contain;
+
+template<class T, class _T, class ...Ts>
+struct tuple_contain<T, _T, Ts...>
+{
+    static constexpr bool value = std::is_same<T, _T>::value || tuple_contain<T, Ts...>::value;
+};
+
+template<class T, class _T>
+struct tuple_contain<T, _T>
+{
+    static constexpr bool value = std::is_same<T, _T>::value;
+};
+
+namespace imp
+{
+    template<size_t I, class T, class ...Ts>
+    struct tuple_find;
+
+    template<size_t I, class T, class _T, class ...Ts>
+    struct tuple_find<I, T, _T, Ts...>
+    {
+        static constexpr size_t value = std::is_same<T, _T>::value ? I : imp::tuple_find<I, T, Ts...>::value;
+    };
+
+    template<size_t I, class T, class _T>
+    struct tuple_find<I, T, _T>
+    {
+        static constexpr size_t value = std::is_same<T, _T>::value ? I : I + 1;
+    };
+}
+
+template<class T, class ...Ts>
+struct tuple_find
+{
+    static constexpr size_t value = imp::tuple_find<0, T, Ts...>::value;
+};
+
+template<class ...Ts>
+struct tuple_size;
+
+template<class T, class ...Ts>
+struct tuple_size<T, Ts...>
+{
+    static constexpr size_t value = 1 + tuple_size<Ts...>::value;
+};
+
+template<class T>
+struct tuple_size<T>
+{
+    static constexpr size_t value = 1;
+};
+
+template<class, class>
+struct tuple_append;
+
+template<class T, class ...Ts>
+struct tuple_append<T, std::tuple<Ts...>>
+{
+    using type = std::tuple<T, Ts...>;
+};
+
+// template<template<class> class T, class ...Ts>
+// struct tuple_apply_template;
+
+// template<template<class> class T, class _T, class ...Ts>
+// struct tuple_apply_template<T, _T, Ts...>
+// {
+//     using type = typename tuple_append<T<_T>, typename tuple_apply_template<T, Ts...>::type>::type;
+// };
+
+// template<template<class> class T, class _T>
+// struct tuple_apply_template<T, _T>
+// {
+//     using type = std::tuple<T<_T>>;
+// };
+
+// template<>
+// struct tuple_unpacked<>
+// {
+//     using type = std::tuple<>;
+// };
+
 template<class ...Ts>
 struct tuple_unpacked;
 
-template<>
-struct tuple_unpacked<>
+template<class T>
+struct tuple_unpacked<T>
 {
-    using type = std::tuple<>;
+    using type = std::tuple<T>;
+};
+
+template<class T>
+struct tuple_unpacked<std::tuple<T>>
+{
+    using type = std::tuple<T>;
 };
 
 template<class ...Ts, class ..._Ts>
@@ -75,22 +179,22 @@ struct tuple_unpacked<std::tuple<Ts...>, _Ts...>
     using type = typename tuple_unpacked<Ts..., _Ts...>::type;
 };
 
-namespace ecs::sys
+template<class T, class ...Ts>
+struct tuple_unpacked<T, Ts...>
 {
-    class ISystem;
-}
+    using type = typename tuple_prepend<T, typename tuple_unpacked<Ts...>::type>::type;
+};
 
-template<class ...Ts>
-using Tuple = std::tuple<std::optional<Ts>...>;
 
-namespace opt
-{
-    template<class T, class ...Ts>
-    std::optional<T> &get(Tuple<Ts...> &_tuple) noexcept
-    {
-        return std::get<std::optional<T>>(_tuple);
-    }
-}
+
+
+
+
+
+
+
+
+
 
 template<template<typename...> class base, typename derived>
 struct is_base_of_template_impl
@@ -104,17 +208,24 @@ struct is_base_of_template_impl
 template<template<typename ...> class base, typename derived>
 using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
 
+#pragma endregion
+
+namespace opt
+{
+    template<class T, class ...Ts>
+    std::optional<T> &get(Tuple<Ts...> &_tuple) noexcept
+    {
+        return std::get<std::optional<T>>(_tuple);
+    }
+}
+
+#pragma region Concept
+
 template<class T>
 concept SystemType = std::is_base_of<ecs::sys::ISystem, T>::value;
 
 template<class T>
 concept NumericType = std::is_arithmetic<T>::value;
-
-template<class T>
-concept KeyType = requires (T r, T l)
-{
-    { r < l } -> bool;
-};
 
 #pragma region Operator concept
 
@@ -122,7 +233,7 @@ template<class T, class _T>
 concept AssignOp = requires (T r, _T l)
 {
     r = l;
-}
+};
 
 template<class T, class _T>
 concept EqOp = requires (T r, _T l)
@@ -310,4 +421,5 @@ concept PostDecOp = requires (T r)
     --r;
 };
 
+#pragma endregion
 #pragma endregion

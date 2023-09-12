@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Container/TriggerMap.hpp"
-#include "Engine/Event/Event.hpp"
 #include "Engine/Event/Trigger.hpp"
 #include "Tool/PreProcessing.hpp"
 
@@ -14,16 +13,16 @@ namespace eng
             EventPool(ThreadPool &_tp);
             ~EventPool() = default;
 
-            template<IsIEvent T>
+            template<class T>
             bool raise(const T &_event);
 
-            template<IsIEvent T>
+            template<class T>
             Trigger<T>::sTask subscribe(Trigger<T>::Task _task);
-            template<IsIEvent T>
+            template<class T>
             void unsubscribe(Trigger<T>::sTask _task);
 
         private:
-            TriggerMap<Trigger, tuple_unpacked<Ts...>> m_map;
+           TriggerMap<Trigger, typename tuple_unpacked<Ts...>::type> m_map;
     };
 }
 

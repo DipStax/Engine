@@ -6,18 +6,16 @@
 
 #include "Engine/Event/Event.hpp"
 #include "Engine/System/ThreadPool.hpp"
-
-template<class T>
-concept IsIEvent = std::is_base_of<tester::IEvent, T>::value;
+#include "Tool/PreProcessing.hpp"
 
 namespace eng
 {
-    template<IsIEvent T>
+    template<class T>
     class Trigger
     {
         public:
-            using Task = std::function<void(const T&)>;
-            using sTask = std::shared_ptr<std::function<void(const T&)>>;
+            using Task = std::function<void(const T &)>;
+            using sTask = std::shared_ptr<std::function<void(const T &)>>;
 
             Trigger(ThreadPool &_tp);
             ~Trigger() = default;

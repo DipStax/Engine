@@ -4,9 +4,6 @@
 
 namespace eng
 {
-    struct PROJECT_API IEvent
-    {};
-
     class PROJECT_API Mouse
     {
         public:
@@ -17,7 +14,7 @@ namespace eng
             };
     };
 
-    class PROJECT_API Event : public IEvent
+    class PROJECT_API Event
     {
         public:
             struct MouseButtonEvent {

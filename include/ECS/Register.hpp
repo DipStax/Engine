@@ -8,7 +8,8 @@
 
 namespace ecs
 {
-    template<KeyType T, class _T>
+    template<class T, class _T>
+    requires LsOp<T, T>
     class Register
     {
         public:
