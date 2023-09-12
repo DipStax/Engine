@@ -1,10 +1,7 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include "ECS/Manager.hpp"
-#include "Engine/Event/Event.hpp"
-#include "Engine/Rendering/RenderWindow.hpp"
-#include "Engine/Rendering/Data.hpp"
+#include "Engine/Event/Property.hpp"
 
 class Core
 {
@@ -16,15 +13,8 @@ class Core
         void run();
 
     private:
-        eng::RenderWindow m_win;
-        eng::Event m_event{};
-
-        ecs::Manager m_manager{};
-        // Player m_player{};
-        eng::Camera m_cam;
-        eng::Data m_data{};
-
-        bool m_pause = false;
+        eng::ThreadPool m_tp{};
+        eng::EventPool<eng::PropertyEvent> m_epProp;
 };
 
 #endif

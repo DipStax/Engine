@@ -13,93 +13,101 @@ namespace eng
     class Property
     {
         public:
+            using PropEventPool = EventPool<PropertyEvent>;
+            using PropTrigger = Trigger<PropertyEvent>;
+
+            Property(PropEventPool &_ep, const std::string &_name, T &_val);
             template<class ...Ts>
-            Property(EventPool<PropertyEvent> &_ep, std::string_view &_name, Ts &&..._args);
+            Property(PropEventPool &_ep, const std::string &_name, Ts &&..._args);
             Property(const Property &_prop) = delete;
             ~Property() = default;
 
+            [[nodiscard]] PropTrigger::sTask subscribe(PropTrigger::Task _task);
+            void unsubscribe(PropTrigger::sTask _task);
+
             void trigger();
+
 
             [[nodiscard]] const std::string &getName() const;
 
-            template<AssignOp _T>
+            template<AssignOp<T> _T>
             Property<T> &operator=(const _T &_val);
-            template<AssignOp _T>
+            template<AssignOp<T> _T>
             Property<T> &operator=(const Property<_T> &_val);
 
             operator T&();
             explicit operator T() const;
 
             // need to return a template value?
-            template<EqOp _T>
+            template<EqOp<T> _T>
             [[nodiscard]] bool operator==(const _T &_val) const;
-            template<NEqOp _T>
+            template<NEqOp<T> _T>
             [[nodiscard]] bool operator!=(const _T &_val) const;
-            template<LsOp _T>
+            template<LsOp<T> _T>
             [[nodiscard]] bool operator<(const _T &_val) const;
-            template<GtOp _T>
+            template<GtOp<T> _T>
             [[nodiscard]] bool operator>(const _T &_val) const;
-            template<LsEqOp _T>
+            template<LsEqOp<T> _T>
             [[nodiscard]] bool operator<=(const _T &_val) const;
-            template<GtEqOp _T>
+            template<GtEqOp<T> _T>
             [[nodiscard]] bool operator>=(const _T &_val) const;
-            template<GlobCompOp _T>
+            template<GlobCompOp<T> _T>
             [[nodiscard]] bool operator<=>(const _T &_val) const;
 
-            template<AddOp _T>
+            template<AddOp<T> _T>
             [[nodiscard]] T operator+(const _T &_val) const;
-            template<SubOp _T>
+            template<SubOp<T> _T>
             [[nodiscard]] T operator-(const _T &_val) const;
-            template<MulOp _T>
+            template<MulOp<T> _T>
             [[nodiscard]] T operator*(const _T &_val) const;
-            template<DivOp _T>
+            template<DivOp<T> _T>
             [[nodiscard]] T operator/(const _T &_val) const;
-            template<ModOp _T>
+            template<ModOp<T> _T>
             [[nodiscard]] T operator%(const _T &_val) const;
-            template<BitAndOp _T>
+            template<BitAndOp<T> _T>
             [[nodiscard]] T operator&(const _T &_val) const;
-            template<BitOrOp _T>
+            template<BitOrOp<T> _T>
             [[nodiscard]] T operator|(const _T &_val) const;
-            template<BitXorOp _T>
+            template<BitXorOp<T> _T>
             [[nodiscard]] T operator^(const _T &_val) const;
-            template<LShiftOp _T>
+            template<LShiftOp<T> _T>
             [[nodiscard]] T operator<<(const _T &_val) const;
-            template<RShiftOp _T>
+            template<RShiftOp<T> _T>
             [[nodiscard]] T operator>>(const _T &_val) const;
 
-            template<AssignAddOp _T>
+            template<AssignAddOp<T> _T>
             Property<T> operator+=(const _T &_val);
-            template<AssignSubOp _T>
+            template<AssignSubOp<T> _T>
             Property<T> operator-=(const _T &_val);
-            template<AssignMulOp _T>
+            template<AssignMulOp<T> _T>
             Property<T> operator*=(const _T &_val);
-            template<AssignDivOp _T>
+            template<AssignDivOp<T> _T>
             Property<T> operator/=(const _T &_val);
-            template<AssignModOp _T>
+            template<AssignModOp<T> _T>
             Property<T> operator%=(const _T &_val);
-            template<AssignBitAndOp _T>
+            template<AssignBitAndOp<T> _T>
             Property<T> operator&=(const _T &_val);
-            template<AssignBitOrOp _T>
+            template<AssignBitOrOp<T> _T>
             Property<T> operator|=(const _T &_val);
-            template<AssignBitXorOp _T>
+            template<AssignBitXorOp<T> _T>
             Property<T> operator^=(const _T &_val);
-            template<AssignLShiftOp _T>
+            template<AssignLShiftOp<T> _T>
             Property<T> operator<<=(const _T &_val);
-            template<AssignRShiftOp _T>
+            template<AssignRShiftOp<T> _T>
             Property<T> operator>>=(const _T &_val);
 
-            template<PreIncOp _T>
-            T operator++();
-            template<PostIncOp _T>
-            Property<T> operator++(int);
-            template<PreDecOp _T>
-            T operator--();
-            template<PostDecOp _T>
-            Property<T> operator--(int);
+            // requires PreIncOp<T>
+            // T operator++();
+            // requires PostIncOp<T>
+            // Property<T> operator++(int);
+            // requires PreDecOp<T>
+            // T operator--();
+            // requires PostDecOp<T>
+            // Property<T> operator--(int);
 
         private:
             const std::string m_name;
-            EventPool<PropertyEvent> &m_ep;
+            PropEventPool &m_ep;
 
             T m_value;
     };

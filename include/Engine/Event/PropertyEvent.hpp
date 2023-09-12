@@ -7,9 +7,9 @@
 
 namespace eng
 {
-    struct PropertyEvent : public IEvent
+    struct PropertyEvent
     {
         const std::string &name;
-        const std::any value;
+        std::any value;
     };
 }
