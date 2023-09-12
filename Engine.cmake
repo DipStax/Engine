@@ -1,6 +1,8 @@
 file(GLOB_RECURSE SRC_ENGINE
     include/ECS/**.hpp
+    include/ECS/**.inl
     include/Engine/**.hpp
+    include/Engine/**.inl
     include/Tool/**.hpp
     src/ECS/**.cpp
     src/Engine/**.cpp
