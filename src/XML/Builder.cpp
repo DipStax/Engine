@@ -21,6 +21,7 @@ namespace eng::xml
     Balise Builder::run(const std::vector<Token> &_token, size_t &_it)
     {
         Balise balise;
+        Balise::Type type;
 
         if (_token[_it].type == Token::Type::Open && _token[++_it].type == Token::Type::Word) {
             balise.setName(_token[_it].value);
@@ -39,17 +40,13 @@ namespace eng::xml
             if (_token[_it].type == Token::Type::CloseSign) {
                 if (_token[++_it].type != Token::Type::Close)
                     throw std::runtime_error("error: wrong syntax on single balise end");
-                _it++;
-                balise.setType(Balise::Type::Single);
+                type = Balise::Type::Single;
             } else {
-                // content of the balise
-                balise.addChildren(run(_token, ++_it));
-                balise.setType(Balise::Type::Children);
-                if (_token[_it].type != Token::Type::Open || _token[_it + 1].type != Token::Type::CloseSign &&
-                    _token[_it + 2].type != Token::Type::Word && balise.getName() != _token[_it + 2].value &&
-                    _token[_it + 3].type != Token::Type::Close)
-                    throw std::runtime_error("error: no end balise for non Single balise");
+                while (_token[++_it].type == Token::Type::Open && _token[_it + 1].type != Token::Type::CloseSign)
+                    balise.addChildren(run(_token, _it));
+                type = Balise::Type::Children;
             }
+            balise.setType(type);
             return balise;
         }
         throw std::runtime_error("error: this element isn't a baliser");

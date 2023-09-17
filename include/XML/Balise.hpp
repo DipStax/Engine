@@ -16,7 +16,6 @@ namespace eng::xml
             enum PROJECT_API Type
             {
                 Single,
-                Content,
                 Children,
                 NoSub
             };
@@ -37,12 +36,10 @@ namespace eng::xml
 
             std::string &operator[](const std::string &_id);
 
-#if defined(_DEBUG)
             PROJECT_API friend std::ostream &operator<<(std::ostream &_os, const Balise &_balise);
 
         protected:
             static std::ostream &writeBalise(std::ostream &_os, const Balise &_balise, size_t _it = 0);
-#endif
 
         private:
             std::map<std::string, std::string> m_value;

@@ -55,7 +55,6 @@ namespace eng::xml
         return m_value[_id];
     }
 
-#if defined(_DEBUG)
     std::ostream &Balise::writeBalise(std::ostream &_os, const Balise &_balise, size_t _it)
     {
         std::string marge(_it * 4, ' ');
@@ -74,9 +73,6 @@ namespace eng::xml
                     for (auto _child : _balise.m_child)
                         writeBalise(_os, _child, _it + 1) << std::endl;
                 }
-                if (_balise.m_type == Balise::Type::Content) {
-                    _os << std::endl << marge << _balise.m_content << std::endl;
-                }
             } else {
                 _os << std::endl;
             }
@@ -90,5 +86,4 @@ namespace eng::xml
         Balise::writeBalise(_os, _balise) << std::endl;
         return _os;
     }
-#endif
 }

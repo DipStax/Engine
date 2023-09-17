@@ -12,6 +12,9 @@ void Core::init(const std::string &_path)
 {
     std::istringstream stream("<SimpleBalise value=\"Test LWord\">\
                                    <OtherBalise />\
+                                   <Balise val=\"test value\">\
+                                       <Single key=\"long value aa \" />\
+                                   </Balise>\
                                </Simple Balise>");
     eng::xml::Balise balise;
 
@@ -19,9 +22,7 @@ void Core::init(const std::string &_path)
     for (auto &_token : token)
         std::cout << "Token: " << static_cast<uint16_t>(_token.type) << ", '" << _token.value << "'" << std::endl;
     balise = eng::xml::Builder::run(token);
-    std::cout << balise << std::endl;
-    for (auto& _balise : balise.getChild())
-        std::cout << ">" << _balise << std::endl;
+    std::cout << balise;
 }
 
 void Core::run()
