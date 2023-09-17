@@ -1,5 +1,7 @@
 #include "XML/Builder.hpp"
 
+#include <iostream>
+
 namespace eng::xml
 {
     Balise Builder::run(const std::vector<Token> &_token)
@@ -26,9 +28,9 @@ namespace eng::xml
             while (_token[_it].type != Token::Type::CloseSign && _token[_it].type != Token::Type::Close) {
                 if (_token[_it].type != Token::Type::Word) {
                     throw std::runtime_error("error: should parse word for value");
-                } else if (_token[_it + 1].type == Token::Type::Equal) {
+                } else if (_token[_it + 1].type != Token::Type::Equal) {
                     throw std::runtime_error("error: should parse equal for value");
-                } else if (_token[_it + 2].type  == Token::Type::LWord) {
+                } else if (_token[_it + 2].type  != Token::Type::LWord) {
                     throw std::runtime_error("error: should parse lword for value");
                 }
                 balise.addValue({ _token[_it].value, _token[_it + 2].value });
@@ -37,6 +39,7 @@ namespace eng::xml
             if (_token[_it].type == Token::Type::CloseSign) {
                 if (_token[++_it].type != Token::Type::Close)
                     throw std::runtime_error("error: wrong syntax on single balise end");
+                _it++;
                 balise.setType(Balise::Type::Single);
             } else {
                 // content of the balise
@@ -51,4 +54,4 @@ namespace eng::xml
         }
         throw std::runtime_error("error: this element isn't a baliser");
     }
-}
+} 

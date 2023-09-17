@@ -108,7 +108,7 @@ namespace eng::xml
 
     bool Tokenizer::readEqual(std::istream &_stream, Token &_token)
     {
-        _token.type = Token::Type::Close;
+        _token.type = Token::Type::Equal;
         _token.value = "=";
         return isSingleToken(_stream, _token);
     }
