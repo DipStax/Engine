@@ -1,42 +1,31 @@
-#include "Engine/Rendering/Loader.hpp"
-#include "Engine/Rendering/Sprite.hpp"
-#include "Engine/Rendering/RenderTexture.hpp"
+#include <iostream>
+#include <sstream>
+
 #include "Core.hpp"
+#include "XML/Builder.hpp"
 
 Core::Core()
-    : m_win(400, 400, "Test ECS")
 {
 }
 
 void Core::init(const std::string &_path)
 {
-    eng::Loader loader;
-    //ecs::Component &player = m_manager.get(m_manager.spawn());
+    std::istringstream stream("<SimpleBalise value=\"Test LWord\">\
+                                   <OtherBalise />\
+                                   <Balise val=\"test value\">\
+                                       <Single key=\"long value aa \" />\
+                                   </Balise>\
+                               </Simple Balise>");
+    eng::xml::Balise balise;
 
-    m_data = loader.load(_path);
-    // opt::get<ecs::comp::Id>(player).emplace(1);
-    // opt::get<ecs::comp::Model>(player).emplace(ecs::comp::Model{ .mod = m_data.Model.at(1)->copy() });
-
+    auto token = eng::xml::Tokenizer::run(stream);
+    for (auto &_token : token)
+        std::cout << "Token: " << static_cast<uint16_t>(_token.type) << ", '" << _token.value << "'" << std::endl;
+    balise = eng::xml::Builder::run(token);
+    std::cout << balise;
 }
 
 void Core::run()
 {
-    eng::Sprite sprt;
-    eng::Model model = m_data.Model.at(1)->copy();
 
-    sprt.setPosition(0, 150);
-    //sprt.setScale(1.5, 1.5);
-    sprt.setTexture(*(m_data.Texture.at(1)));
-    while (m_win.isOpen()) {
-        while (m_win.pollEvent(m_event)) {}
-        if (!m_pause) {
-            m_win.clear();
-            //for (auto &[_, _mod] : m_data.Model)
-            //    m_win.draw(*_mod);
-             // m_manager.runSystem<ecs::sys::RenderModel>(nullptr, &m_win);
-            m_win.draw(sprt);
-            m_win.draw(model);
-            m_win.display();
-        }
-    }
 }

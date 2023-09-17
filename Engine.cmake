@@ -1,10 +1,16 @@
 file(GLOB_RECURSE SRC_ENGINE
     include/ECS/**.hpp
+    include/ECS/**.inl
     include/Engine/**.hpp
+    include/Engine/**.inl
     include/Tool/**.hpp
+    include/Tool/**.inl
+    include/XML/**.hpp
+    include/XML/**.inl
     src/ECS/**.cpp
     src/Engine/**.cpp
     src/Tool/**.cpp
+    src/XML/**.cpp
 )
 
 add_library(Engine SHARED

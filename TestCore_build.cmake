@@ -1,6 +1,7 @@
 file(GLOB_RECURSE SRC_TESTCORE
-    src/*.cpp
-    include/*.hpp
+    src/Core.cpp
+    src/main.cpp
+    include/Core.hpp
 )
 
 add_executable(TestCore
