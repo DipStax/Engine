@@ -11,7 +11,7 @@ namespace eng
     template<class T>
     void CircleList<T>::push_back(const T &_data)
     {
-        std::shared_ptr<priv::CLNode<T>> node = std::make_shared<priv::CLNode<T>>(priv::CLNode<T>{ .data = _data });
+        std::shared_ptr<priv::CLNode<T>> node = std::make_shared<priv::CLNode<T>>(_data);
 
         if (m_head) {
             node->next = m_head;
@@ -107,16 +107,16 @@ namespace eng
                 m_head->next->prev = m_head->prev;
                 m_head->prev->next = m_head->next;
                 m_head = m_head->next;
-            }
-            ptr->next = nullptr;
-            ptr->prev = nullptr;
-            if (m_size == 1)
+            } else if (m_size == 1) {
                 m_head = nullptr;
+            }
         } else {
             ptr = iat(_idx);
             ptr->next->prev = ptr->prev;
             ptr->prev->next = ptr->next;
         }
+        ptr->next = nullptr;
+        ptr->prev = nullptr;
         m_size--;
     }
 
