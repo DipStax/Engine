@@ -104,15 +104,18 @@ namespace eng
 
     bool Window::pollEvent(Event &_event)
     {
-        using MsgFn = bool (Window::*)(size_t, uint32_t, Event &);
+        using MsgFn = bool (Window::*)(uint64_t, int64_t, Event &);
 
-        static std::map<size_t, MsgFn> mapfn = {};
+        static const std::map<uint32_t, MsgFn> mapfn = {
+            { WM_SIZE, &Window::resized }
+        };
         MSG msg;
+        std::map<uint32_t, MsgFn>::const_iterator it;
 
         while (peekMessage(&msg)) {
-            if (mapfn.contains(msg.message))
-                if ((this->*(mapfn[msg.message]))(msg.lParam, msg.wParam, _event))
-                    return true;
+            it = mapfn.find(msg.message);
+            if (it != mapfn.end() && (this->*(it->second))(msg.lParam, msg.wParam, _event))
+                return true;
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
@@ -129,6 +132,20 @@ namespace eng
     HWND Window::getWindow() const
     {
         return m_win;
+    }
+
+    bool Window::resized(uint64_t _lparam, int64_t _wparam, Event &_event)
+    {
+        if (_lparam == SIZE_MAXHIDE || _lparam == SIZE_MAXSHOW)
+            return false;
+        _event.resize.height = HIWORD(_lparam);
+        _event.resize.width = LOWORD(_lparam);
+        onResize(_event);
+        return true;
+    }
+
+    void Window::onResize(const Event &_event)
+    {
     }
 
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)

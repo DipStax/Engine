@@ -81,7 +81,12 @@ namespace eng
 
         for (; ystart < yend; ystart++)
             triRangeApply(vtx.data(), ystart, triRange(vtx.data(), ystart), _txtr);
-     }
+    }
+
+    Camera &RenderTarget::getCamera()
+    {
+        return m_cam;
+    }
 
     void RenderTarget::clear(const Color &_clr)
     {
@@ -99,10 +104,15 @@ namespace eng
 
     void RenderTarget::create(uint32_t _x, uint32_t _y, const Camera &_cam, uint8_t _bpp)
     {
+        m_cam = _cam;
+        create(_x, _y, _bpp);
+    }
+
+    void RenderTarget::create(uint32_t _x, uint32_t _y, uint8_t _bpp)
+    {
         HDC hdc = GetDC(NULL);
         BITMAPINFO bmi;
-
-        m_cam = _cam;
+        
         m_bpp = _bpp;
         bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         bmi.bmiHeader.biWidth = _x;
@@ -112,6 +122,7 @@ namespace eng
         bmi.bmiHeader.biCompression = BI_RGB;
         m_dib = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, reinterpret_cast<void **>(&m_data), NULL, NULL);
         ReleaseDC(NULL, hdc);
+        m_depth.clear();
         m_depth.resize(_x * _y, std::numeric_limits<float>::lowest());
     }
 

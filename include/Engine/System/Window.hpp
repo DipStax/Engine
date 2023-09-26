@@ -34,12 +34,15 @@ namespace eng
             void setSize(uint32_t _x, uint32_t _y);
             [[nodiscard]] Point2<uint32_t> getSize() const;
 
-            bool pollEvent(Event &_event);
+            bool pollEvent(Event &_event);  
 
             void close();
 
         protected:
             [[nodiscard]] HWND getWindow() const;
+
+            bool resized(uint64_t _lparam, int64_t _wparam, Event &_event);
+            virtual void onResize(const Event &_event);
 
         private:
             static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
