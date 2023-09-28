@@ -20,7 +20,7 @@ namespace eng
         protected:
             void render(HDC _draw) const;
 
-            void onResize(const Event &_event) override;
+            void onResize(Event _event) override;
 
         private:
             Camera m_cam;

@@ -31,7 +31,7 @@ namespace eng
         InvalidateRect(getWindow(), NULL, FALSE);
     }
 
-    void RenderWindow::onResize(const Event &_event)
+    void RenderWindow::onResize(Event _event)
     {
         m_size = { _event.resize.width, _event.resize.height };
         create(_event.resize.width, _event.resize.height);

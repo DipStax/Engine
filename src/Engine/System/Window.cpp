@@ -127,25 +127,44 @@ namespace eng
         return m_win;
     }
 
-    bool Window::resized(uint64_t _lparam, int64_t _wparam, Event &_event)
+    void Window::resized(uint64_t _wparam, uint64_t _lparam)
     {
-        if (_lparam == SIZE_MAXHIDE || _lparam == SIZE_MAXSHOW)
-            return false;
-        _event.resize.height = HIWORD(_lparam);
-        _event.resize.width = LOWORD(_lparam);
-        onResize(_event);
-        return true;
+        Event ev;
+
+        if (_wparam == SIZE_MAXHIDE || _wparam == SIZE_MAXSHOW)
+            return;
+        ev.type = Event::Type::Resize;
+        ev.resize.height = HIWORD(_lparam);
+        ev.resize.width = LOWORD(_lparam);
+        onResize(ev);
     }
 
-    void Window::onResize(Event &_event)
+    void Window::onResize(Event _event)
     {
+        std::ignore = _event;
+    }
+
+    void Window::mouseButtonEvent(Mouse::State _state, int64_t _wparam)
+    {
+        Event ev;
+
+        if (_wparam == MK_CONTROL || _wparam == MK_SHIFT)
+            return;
+        ev.type = Event::Type::MouseButton;
+        ev.mouse.state = _state;
+        ev.mouse.button = priv::mouseButtonConvert(_wparam);
+        OnMouseButtonEvent(ev);
+    }
+
+    void Window::OnMouseButtonEvent(Event _event)
+    {
+        std::ignore = _event;
     }
 
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         PAINTSTRUCT ps;
         Window *pthis;
-        Event _event;
 
         if (_msg == WM_NCCREATE) {
             CREATESTRUCT* create = (CREATESTRUCT*)_lparam;
@@ -160,10 +179,29 @@ namespace eng
                     HDC hdc = BeginPaint(_win, &ps);
                     pthis->render(hdc);
                     EndPaint(_win, &ps);
+                    ReleaseDC(pthis->getWindow(), hdc);
                 }
                 break;
             case WM_SIZE:
-                pthis->resized(_lparam, _wparam, _event);
+                pthis->resized(_wparam, _lparam);
+                break;
+            case WM_RBUTTONDOWN:
+            case WM_MBUTTONDOWN:
+            case WM_LBUTTONDOWN:
+            case WM_XBUTTONDOWN:
+                pthis->mouseButtonEvent(Mouse::State::Press, _wparam);
+                break;
+            case WM_RBUTTONUP:
+            case WM_MBUTTONUP:
+            case WM_LBUTTONUP:
+            case WM_XBUTTONUP:
+                pthis->mouseButtonEvent(Mouse::State::Release, _wparam);
+                break;
+            case WM_RBUTTONDBLCLK:
+            case WM_LBUTTONDBLCLK:
+            case WM_MBUTTONDBLCLK:
+            case WM_XBUTTONDBLCLK:
+                pthis->mouseButtonEvent(Mouse::State::DoubleClick, _wparam);
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);
@@ -172,7 +210,6 @@ namespace eng
             default:
                 return DefWindowProc(_win, _msg, _wparam, _lparam);
         }
-
         return 0;
     }
 
