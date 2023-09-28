@@ -19,7 +19,7 @@ namespace eng
     {
         public:
             CircleList() = default;
-            ~CircleList() = default;
+            ~CircleList();
 
             [[nodiscard]] size_t size() const;
 

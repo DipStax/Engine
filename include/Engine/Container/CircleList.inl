@@ -3,6 +3,12 @@
 namespace eng
 {
     template<class T>
+    CircleList<T>::~CircleList()
+    {
+        clear();
+    }
+
+    template<class T>
     size_t CircleList<T>::size() const
     {
         return m_size;
@@ -11,15 +17,16 @@ namespace eng
     template<class T>
     void CircleList<T>::push_back(const T &_data)
     {
-        std::shared_ptr<priv::CLNode<T>> node = std::make_shared<priv::CLNode<T>>(priv::CLNode<T>{ .data = _data });
+        std::shared_ptr<priv::CLNode<T>> node = nullptr;
 
         if (m_head) {
+            node = std::make_shared<priv::CLNode<T>>(_data);
             node->next = m_head;
             node->prev = m_head->prev;
             m_head->prev->next = node;
             m_head->prev = node;
         } else {
-            m_head = node;
+            m_head = std::make_shared<priv::CLNode<T>>(_data);
             m_head->next = m_head;
             m_head->prev = m_head;
         }
@@ -30,26 +37,27 @@ namespace eng
     template<class ...Ts>
     void CircleList<T>::emplace(int32_t _idx, Ts ..._args)
     {
-        std::shared_ptr<priv::CLNode<T>> ptr = m_head;
-        std::shared_ptr<priv::CLNode<T>> node = std::make_shared<priv::CLNode<T>>({ T(std::forward<Ts>(_args)...) });
+        std::shared_ptr<priv::CLNode<T>> ptr = nullptr;
+        std::shared_ptr<priv::CLNode<T>> node = nullptr;
 
         if (_idx == 0) {
             push_back(T(std::forward<Ts>(_args)...));
             m_head = m_head->prev;
-            return;
+        } else {
+            node = std::make_shared<priv::CLNode<T>>(T(std::forward<Ts>(_args)...));
+            ptr = at(_idx);
+            node->next = ptr;
+            node->prev = ptr->prev;
+            ptr->prev->next = node;
+            ptr->prev = node;
         }
-        ptr = at(_idx);
-        node->next = ptr;
-        node->prev = ptr->prev;
-        ptr->prev->next = node;
-        ptr->prev = node;
     }
 
     template<class T>
     template<class ...Ts>
     void CircleList<T>::emplace_back(Ts ..._args)
     {
-        emplace(m_size++, std::forward<Ts>(_args)...);
+        emplace(m_size, std::forward<Ts>(_args)...);
     }
 
     template<class T>
@@ -97,7 +105,6 @@ namespace eng
     template<class T>
     void CircleList<T>::erase(int32_t _idx)
     {
-        // memory leak ?
         std::shared_ptr<priv::CLNode<T>> ptr = m_head;
 
         if (m_size == 0)
@@ -107,16 +114,17 @@ namespace eng
                 m_head->next->prev = m_head->prev;
                 m_head->prev->next = m_head->next;
                 m_head = m_head->next;
-            }
-            ptr->next = nullptr;
-            ptr->prev = nullptr;
-            if (m_size == 1)
+            } else if (m_size == 1) {
                 m_head = nullptr;
+            }
         } else {
             ptr = iat(_idx);
             ptr->next->prev = ptr->prev;
             ptr->prev->next = ptr->next;
         }
+        ptr->next = nullptr;
+        ptr->prev = nullptr;
+        ptr.reset();
         m_size--;
     }
 
