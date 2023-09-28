@@ -102,24 +102,17 @@ namespace eng
         return Point2<uint32_t>{ static_cast<uint32_t>(rect.right - rect.left), static_cast<uint32_t>(rect.bottom - rect.top) };
     }
 
-    bool Window::pollEvent(Event &_event)
+    void Window::disptachEvent()
     {
         using MsgFn = bool (Window::*)(uint64_t, int64_t, Event &);
 
-        static const std::map<uint32_t, MsgFn> mapfn = {
-            { WM_SIZE, &Window::resized }
-        };
         MSG msg;
         std::map<uint32_t, MsgFn>::const_iterator it;
 
-        while (peekMessage(&msg)) {
-            it = mapfn.find(msg.message);
-            if (it != mapfn.end() && (this->*(it->second))(msg.lParam, msg.wParam, _event))
-                return true;
+        while (PeekMessage(&msg, m_win, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        return false;
     }
 
     void Window::close()
@@ -144,7 +137,7 @@ namespace eng
         return true;
     }
 
-    void Window::onResize(const Event &_event)
+    void Window::onResize(Event &_event)
     {
     }
 
@@ -152,6 +145,7 @@ namespace eng
     {
         PAINTSTRUCT ps;
         Window *pthis;
+        Event _event;
 
         if (_msg == WM_NCCREATE) {
             CREATESTRUCT* create = (CREATESTRUCT*)_lparam;
@@ -163,10 +157,13 @@ namespace eng
         }
         switch (_msg) {
             case WM_PAINT: {
-                HDC hdc = BeginPaint(_win, &ps);
-                pthis->render(hdc);
-                EndPaint(_win, &ps);
-            }
+                    HDC hdc = BeginPaint(_win, &ps);
+                    pthis->render(hdc);
+                    EndPaint(_win, &ps);
+                }
+                break;
+            case WM_SIZE:
+                pthis->resized(_lparam, _wparam, _event);
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);

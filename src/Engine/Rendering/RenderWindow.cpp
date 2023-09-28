@@ -10,11 +10,10 @@ namespace eng
         : Window(_x, _y, _title)
     {
         Point2<uint32_t> size = getSize();
-        Camera cam{};
 
-        cam.setFov(110.f).setRange(0.1f, 100.f).setSize(static_cast<float>(size.x), static_cast<float>(size.y)).move({ 0, 0, -10 });
-        m_size = size;
-        create(m_size.y, m_size.x, cam);
+        getCamera().setFov(110.f).setRange(0.1f, 100.f).setSize(static_cast<float>(size.x), static_cast<float>(size.y)).move({ 0, 0, -10 });
+        m_size = { _x, _y };
+        create(m_size.y, m_size.x);
     }
 
     Point2<uint32_t> RenderWindow::getSize() const
