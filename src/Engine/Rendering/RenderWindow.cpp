@@ -2,21 +2,23 @@
 #include "Engine/Rendering/RenderWindow.hpp"
 #include "Engine/Rendering/Sprite.hpp"
 
+#include <iostream>
+
 namespace eng
 {
     RenderWindow::RenderWindow(uint32_t _x, uint32_t _y, const std::string &_title)
         : Window(_x, _y, _title)
     {
         Point2<uint32_t> size = getSize();
-        Camera cam{};
 
-        cam.setFov(110.f).setRange(0.1f, 100.f).setSize(static_cast<float>(size.x), static_cast<float>(size.y)).move({ 0, 0, -10 });
-        create(size.y, size.x, cam);
+        getCamera().setFov(110.f).setRange(0.1f, 100.f).setSize(static_cast<float>(size.x), static_cast<float>(size.y)).move({ 0, 0, -10 });
+        m_size = { _x, _y };
+        create(m_size.y, m_size.x);
     }
 
     Point2<uint32_t> RenderWindow::getSize() const
     {
-        return Window::getSize();
+        return m_size;
     }
 
     void RenderWindow::setCamera(const Camera &_cam)
@@ -27,6 +29,13 @@ namespace eng
     void RenderWindow::display()
     {
         InvalidateRect(getWindow(), NULL, FALSE);
+    }
+
+    void RenderWindow::onResize(const Event &_event)
+    {
+        m_size = { _event.resize.width, _event.resize.height };
+        create(_event.resize.width, _event.resize.height);
+        getCamera().setSize(static_cast<float>(_event.resize.width), static_cast<float>(_event.resize.height));
     }
 
     void RenderWindow::render(HDC _draw) const

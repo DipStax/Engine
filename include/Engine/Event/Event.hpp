@@ -25,6 +25,11 @@ namespace eng
                 Mouse::Button button;
             };
 
+            struct ResizeEvent {
+                uint32_t height;
+                uint32_t width;
+            };
+
             enum class Type
             {
                 MouseButton
@@ -35,6 +40,7 @@ namespace eng
             union
             {
                 MouseButtonEvent mouseButton;
+                ResizeEvent resize;
             };
     };
 }

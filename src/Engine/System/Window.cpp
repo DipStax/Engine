@@ -102,21 +102,17 @@ namespace eng
         return Point2<uint32_t>{ static_cast<uint32_t>(rect.right - rect.left), static_cast<uint32_t>(rect.bottom - rect.top) };
     }
 
-    bool Window::pollEvent(Event &_event)
+    void Window::disptachEvent()
     {
-        using MsgFn = bool (Window::*)(size_t, uint32_t, Event &);
+        using MsgFn = bool (Window::*)(uint64_t, int64_t, Event &);
 
-        static std::map<size_t, MsgFn> mapfn = {};
         MSG msg;
+        std::map<uint32_t, MsgFn>::const_iterator it;
 
-        while (peekMessage(&msg)) {
-            if (mapfn.contains(msg.message))
-                if ((this->*(mapfn[msg.message]))(msg.lParam, msg.wParam, _event))
-                    return true;
+        while (PeekMessage(&msg, m_win, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        return false;
     }
 
     void Window::close()
@@ -131,10 +127,25 @@ namespace eng
         return m_win;
     }
 
+    bool Window::resized(uint64_t _lparam, int64_t _wparam, Event &_event)
+    {
+        if (_lparam == SIZE_MAXHIDE || _lparam == SIZE_MAXSHOW)
+            return false;
+        _event.resize.height = HIWORD(_lparam);
+        _event.resize.width = LOWORD(_lparam);
+        onResize(_event);
+        return true;
+    }
+
+    void Window::onResize(Event &_event)
+    {
+    }
+
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         PAINTSTRUCT ps;
         Window *pthis;
+        Event _event;
 
         if (_msg == WM_NCCREATE) {
             CREATESTRUCT* create = (CREATESTRUCT*)_lparam;
@@ -146,10 +157,13 @@ namespace eng
         }
         switch (_msg) {
             case WM_PAINT: {
-                HDC hdc = BeginPaint(_win, &ps);
-                pthis->render(hdc);
-                EndPaint(_win, &ps);
-            }
+                    HDC hdc = BeginPaint(_win, &ps);
+                    pthis->render(hdc);
+                    EndPaint(_win, &ps);
+                }
+                break;
+            case WM_SIZE:
+                pthis->resized(_lparam, _wparam, _event);
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);

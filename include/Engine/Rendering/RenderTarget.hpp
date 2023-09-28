@@ -28,13 +28,15 @@ namespace eng
             void draw(const Vertex3D *_vtx, size_t _size, VertexArray::Type _type);
 
             virtual [[nodiscard]] Point2<uint32_t> getSize() const = 0;
+            [[nodiscard]] Camera &getCamera();
 
             void clear(const Color &_clr = { 0, 0, 0, 255 });
 
         protected:
             RenderTarget() = default;
 
-            void create(uint32_t _x, uint32_t _y, const Camera& _cam = Camera(), uint8_t _bpp = 32);
+            void create(uint32_t _x, uint32_t _y, const Camera& _cam, uint8_t _bpp = 32);
+            void create(uint32_t _x, uint32_t _y, uint8_t _bpp = 32);
 
             [[nodiscard]] uint8_t *getData() const;
 
