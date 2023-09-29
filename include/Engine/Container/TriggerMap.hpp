@@ -6,6 +6,7 @@
 #include <cstddef>
 
 #include "Engine/System/ThreadPool.hpp"
+#include "Tool/PreProcessing.hpp"
 
 template<class T, class ...Ts>
 struct tuple_contain;
@@ -61,22 +62,13 @@ struct tuple_size<T>
     static constexpr size_t value = 1;
 };
 
-template<class, class>
-struct tuple_append;
-
-template<class T, class ...Ts>
-struct tuple_append<T, std::tuple<Ts...>>
-{
-    using type = std::tuple<T, Ts...>;
-};
-
 template<template<class> class T, class ...Ts>
 struct tuple_apply_template;
 
 template<template<class> class T, class _T, class ...Ts>
 struct tuple_apply_template<T, _T, Ts...>
 {
-    using type = typename tuple_append<T<_T>, typename tuple_apply_template<T, Ts...>::type>::type;
+    using type = typename tuple_prepend<T<_T>, typename tuple_apply_template<T, Ts...>::type>::type;
 };
 
 template<template<class> class T, class _T>
@@ -109,7 +101,8 @@ namespace eng
             [[nodiscard]] constexpr T<_T> &at() noexcept;
 
         private:
-            typename tuple_apply_template<T, Ts...>::type m_tup;
+            using TriggerMapImp = typename tuple_apply_template<T, Ts...>::type;
+            TriggerMapImp m_tup;
     };
 }
 #include "TriggerMap.inl"
