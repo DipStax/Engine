@@ -7,7 +7,7 @@
 
 namespace eng
 {
-    using EPWindow = EventPool<Event::MouseButton, Event::Resize>;
+    using EPWindow = EventPool<Event::MouseButton, Event::MouseMove, Event::Resize>;
 
     class PROJECT_API RenderWindow : public EPWindow, public Window, public RenderTarget
     {
@@ -28,6 +28,7 @@ namespace eng
 
             void onResize(Event _event) override;
             void onMouseButtonEvent(Event _event) override;
+            void onMouseMove(Event _event) override;
 
         private:
             Camera m_cam;

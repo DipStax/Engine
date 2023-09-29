@@ -49,7 +49,12 @@ namespace eng
 
     void RenderWindow::onMouseButtonEvent(Event _event)
     {
-        raise<Event::MouseButton>(_event.mouse);
+        raise<Event::MouseButton>(_event.mouseButton);
+    }
+
+    void RenderWindow::onMouseMove(Event _event)
+    {
+        raise<Event::MouseMove>(_event.mouseMove);
     }
 
     void RenderWindow::render(HDC _draw) const

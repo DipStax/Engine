@@ -1,4 +1,5 @@
 #include <map>
+#include <windowsx.h>
 
 #include "Engine/System/Window.hpp"
 
@@ -127,6 +128,21 @@ namespace eng
         return m_win;
     }
 
+    void Window::onResize(Event _event)
+    {
+        std::ignore = _event;
+    }
+
+    void Window::onMouseButtonEvent(Event _event)
+    {
+        std::ignore = _event;
+    }
+
+    void Window::onMouseMove(Event _event)
+    {
+        std::ignore = _event;
+    }
+
     void Window::resized(uint64_t _wparam, uint64_t _lparam)
     {
         Event ev{};
@@ -139,26 +155,26 @@ namespace eng
         onResize(ev);
     }
 
-    void Window::onResize(Event _event)
-    {
-        std::ignore = _event;
-    }
-
-    void Window::mouseButtonEvent(Mouse::State _state, int64_t _wparam)
+    void Window::mouseButtonEvent(Mouse::State _state, uint64_t _wparam)
     {
         Event ev{};
 
         if (_wparam == MK_CONTROL || _wparam == MK_SHIFT)
             return;
         ev.type = Event::Type::MouseButton;
-        ev.mouse.state = _state;
-        ev.mouse.button = priv::mouseButtonConvert(_wparam);
+        ev.mouseButton.state = _state;
+        ev.mouseButton.button = priv::mouseButtonConvert(_wparam);
         onMouseButtonEvent(ev);
     }
 
-    void Window::onMouseButtonEvent(Event _event)
+    void Window::mouseMove(uint64_t _lparam)
     {
-        std::ignore = _event;
+        Event ev{};
+
+        ev.type = Event::Type::MouseMove;
+        ev.mouseMove.x = GET_X_LPARAM(_lparam);
+        ev.mouseMove.y = GET_Y_LPARAM(_lparam);
+        onMouseMove(ev);
     }
 
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
@@ -202,6 +218,9 @@ namespace eng
             case WM_MBUTTONDBLCLK:
             case WM_XBUTTONDBLCLK:
                 pthis->mouseButtonEvent(Mouse::State::DoubleClick, _wparam);
+                break;
+            case WM_MOUSEMOVE:
+                pthis->mouseMove(_lparam);
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);
