@@ -7,12 +7,9 @@
 #include "Engine/Event/Event.hpp"
 #include "Engine/System/ThreadPool.hpp"
 
-template<class T>
-concept IsIEvent = std::is_base_of<tester::IEvent, T>::value;
-
 namespace eng
 {
-    template<IsIEvent T>
+    template<class T>
     class Trigger
     {
         public:
