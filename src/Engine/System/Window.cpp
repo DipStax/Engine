@@ -129,7 +129,7 @@ namespace eng
 
     void Window::resized(uint64_t _wparam, uint64_t _lparam)
     {
-        Event ev;
+        Event ev{};
 
         if (_wparam == SIZE_MAXHIDE || _wparam == SIZE_MAXSHOW)
             return;
@@ -146,17 +146,17 @@ namespace eng
 
     void Window::mouseButtonEvent(Mouse::State _state, int64_t _wparam)
     {
-        Event ev;
+        Event ev{};
 
         if (_wparam == MK_CONTROL || _wparam == MK_SHIFT)
             return;
         ev.type = Event::Type::MouseButton;
         ev.mouse.state = _state;
         ev.mouse.button = priv::mouseButtonConvert(_wparam);
-        OnMouseButtonEvent(ev);
+        onMouseButtonEvent(ev);
     }
 
-    void Window::OnMouseButtonEvent(Event _event)
+    void Window::onMouseButtonEvent(Event _event)
     {
         std::ignore = _event;
     }

@@ -42,7 +42,7 @@ namespace eng
             [[nodiscard]] HWND getWindow() const;
 
             virtual void onResize(Event _event);
-            virtual void OnMouseButtonEvent(Event _event);
+            virtual void onMouseButtonEvent(Event _event);
 
         private:
             void resized(uint64_t _wparam, uint64_t _lparam);

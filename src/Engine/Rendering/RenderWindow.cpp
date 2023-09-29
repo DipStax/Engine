@@ -6,8 +6,8 @@
 
 namespace eng
 {
-    RenderWindow::RenderWindow(uint32_t _x, uint32_t _y, const std::string &_title)
-        : Window(_x, _y, _title)
+    RenderWindow::RenderWindow(ThreadPool &_tp, uint32_t _x, uint32_t _y, const std::string &_title)
+        : EPWindow(_tp), Window(_x, _y, _title)
     {
         Point2<uint32_t> size = getSize();
 
@@ -26,6 +26,14 @@ namespace eng
         m_cam = _cam;
     }
 
+    bool RenderWindow::pollEvent(Event &_event)
+    {
+        disptachEvent();
+        if (!m_event.empty())
+            _event = m_event.pop_front();
+        return !m_event.empty();
+    }
+
     void RenderWindow::display()
     {
         InvalidateRect(getWindow(), NULL, FALSE);
@@ -36,6 +44,12 @@ namespace eng
         m_size = { _event.resize.width, _event.resize.height };
         create(_event.resize.width, _event.resize.height);
         getCamera().setSize(static_cast<float>(_event.resize.width), static_cast<float>(_event.resize.height));
+        raise<Event::Resize>(_event.resize);
+    }
+
+    void RenderWindow::onMouseButtonEvent(Event _event)
+    {
+        raise<Event::MouseButton>(_event.mouse);
     }
 
     void RenderWindow::render(HDC _draw) const
