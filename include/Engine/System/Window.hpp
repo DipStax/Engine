@@ -44,13 +44,17 @@ namespace eng
             virtual void onResize(Event _event);
             virtual void onMouseButtonEvent(Event _event);
             virtual void onMouseMove(Event _event);
+            virtual void onKeyboardEvent(Event _event);
 
         private:
             void resized(uint64_t _wparam, uint64_t _lparam);
             void mouseButtonEvent(Mouse::State _state, uint64_t _wparam);
             void mouseMove(uint64_t _wparam);
+            void keyboardEvent(KeyState _state, uint64_t _wparam);
 
             static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+
+            bool messageKeyBoard(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
             static constexpr char WIN_className[] = "Sample Window Class";
 

@@ -45,16 +45,25 @@ namespace eng
         create(_event.resize.width, _event.resize.height);
         getCamera().setSize(static_cast<float>(_event.resize.width), static_cast<float>(_event.resize.height));
         raise<Event::Resize>(_event.resize);
+        m_event.push(_event);
     }
 
     void RenderWindow::onMouseButtonEvent(Event _event)
     {
         raise<Event::MouseButton>(_event.mouseButton);
+        m_event.push(_event);
     }
 
     void RenderWindow::onMouseMove(Event _event)
     {
         raise<Event::MouseMove>(_event.mouseMove);
+        m_event.push(_event);
+    }
+
+    void RenderWindow::onKeyboardEvent(Event _event)
+    {
+        raise<Event::Keyboard>(_event.keyboard);
+        m_event.push(_event);
     }
 
     void RenderWindow::render(HDC _draw) const

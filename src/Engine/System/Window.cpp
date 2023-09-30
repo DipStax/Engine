@@ -1,6 +1,7 @@
 #include <map>
 #include <windowsx.h>
 
+#include "Engine/System/Key.hpp"
 #include "Engine/System/Window.hpp"
 
 namespace Win
@@ -143,6 +144,11 @@ namespace eng
         std::ignore = _event;
     }
 
+    void Window::onKeyboardEvent(Event _event)
+    {
+        std::ignore = _event;
+    }
+
     void Window::resized(uint64_t _wparam, uint64_t _lparam)
     {
         Event ev{};
@@ -177,6 +183,19 @@ namespace eng
         onMouseMove(ev);
     }
 
+    void Window::keyboardEvent(KeyState _state, uint64_t _wparam)
+    {
+        Event ev{};
+
+        ev.type = Event::Type::KeyBoard;
+        ev.keyboard.state = _state;
+        ev.keyboard.key = toKey(_wparam);
+        ev.keyboard.control = getKeyState(Key::Control);
+        ev.keyboard.alt = getKeyState(Key::Alt);
+        ev.keyboard.shift = getKeyState(Key::Shift);
+        onKeyboardEvent(ev);
+    }
+
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         PAINTSTRUCT ps;
@@ -190,6 +209,8 @@ namespace eng
         } else {
             pthis = (Window *)GetWindowLongPtr(_win, GWLP_USERDATA);
         }
+        if (pthis->messageKeyBoard(_win, _msg, _wparam, _lparam))
+            return 0;
         switch (_msg) {
             case WM_PAINT: {
                     HDC hdc = BeginPaint(_win, &ps);
@@ -230,6 +251,21 @@ namespace eng
                 return DefWindowProc(_win, _msg, _wparam, _lparam);
         }
         return 0;
+    }
+
+    bool Window::messageKeyBoard(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
+    {
+        switch (_msg) {
+            case WM_KEYDOWN:
+                keyboardEvent(KeyState::Down, _wparam);
+                break;
+            case WM_KEYUP:
+                keyboardEvent(KeyState::Up, _wparam);
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
     HDC Window::getDc() const

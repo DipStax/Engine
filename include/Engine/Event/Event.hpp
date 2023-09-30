@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/System/Mouse.hpp"
+#include "Engine/System/Key.hpp"
 
 namespace eng
 {
@@ -12,6 +13,22 @@ namespace eng
             Mouse::Button button = Mouse::Button::Other;
         };
 
+        struct MouseMove
+        {
+            int32_t x = 0;
+            int32_t y = 0;
+        };
+
+        struct Keyboard
+        {
+            Key key = Key::Other;
+            KeyState state = KeyState::Up;
+            KeyState control = KeyState::Up;
+            KeyState alt = KeyState::Up;
+            KeyState shift = KeyState::Up;
+            KeyState system = KeyState::Up;
+        };
+
         struct Resize
         {
             uint32_t height = 0;
@@ -21,6 +38,7 @@ namespace eng
         enum class Type
         {
             MouseButton,
+            MouseMove,
             KeyBoard,
             Resize,
         };
@@ -29,7 +47,9 @@ namespace eng
 
         union
         {
-            MouseButton mouse;
+            MouseButton mouseButton;
+            MouseMove mouseMove;
+            Keyboard keyboard;
             Resize resize;
         };
     };
