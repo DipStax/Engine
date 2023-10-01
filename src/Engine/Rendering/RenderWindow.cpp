@@ -66,6 +66,12 @@ namespace eng
         m_event.push(_event);
     }
 
+    void RenderWindow::onFocus(Event _event)
+    {
+        raise<Event::Focus>(_event.focus);
+        m_event.push(_event);
+    }
+
     void RenderWindow::render(HDC _draw) const
     {
         Point2<uint32_t> size = getSize();

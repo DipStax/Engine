@@ -7,6 +7,12 @@ namespace eng
 {
     struct PROJECT_API Event
     {
+        class Focus
+        {
+            public:
+                bool state = false;
+        };
+
         class MouseButton
         {
             public:
@@ -41,6 +47,7 @@ namespace eng
 
         enum class Type
         {
+            Focus,
             MouseButton,
             MouseMove,
             KeyBoard,
@@ -54,6 +61,7 @@ namespace eng
             MouseButton mouseButton;
             MouseMove mouseMove;
             Keyboard keyboard;
+            Focus focus;
             Resize resize;
         };
     };

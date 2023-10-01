@@ -1,4 +1,7 @@
 #include <map>
+#include <iostream>
+
+#include <Windows.h>
 #include <windowsx.h>
 
 #include "Engine/System/Key.hpp"
@@ -29,6 +32,7 @@ namespace eng
         if (m_open)
             close();
         m_winClass = {
+                .style = CS_VREDRAW | CS_DBLCLKS,
                 .lpfnWndProc = WIN_proc,
                 .hInstance = GetModuleHandle(NULL),
                 .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
@@ -106,10 +110,7 @@ namespace eng
 
     void Window::disptachEvent()
     {
-        using MsgFn = bool (Window::*)(uint64_t, int64_t, Event &);
-
         MSG msg;
-        std::map<uint32_t, MsgFn>::const_iterator it;
 
         while (PeekMessage(&msg, m_win, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
@@ -145,6 +146,11 @@ namespace eng
     }
 
     void Window::onKeyboardEvent(Event _event)
+    {
+        std::ignore = _event;
+    }
+
+    void Window::onFocus(Event _event)
     {
         std::ignore = _event;
     }
@@ -196,6 +202,15 @@ namespace eng
         onKeyboardEvent(ev);
     }
 
+    void Window::focus(bool _state)
+    {
+        Event ev{};
+
+        ev.type = Event::Type::Focus;
+        ev.focus.state = _state;
+        onFocus(ev);
+    }
+
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         PAINTSTRUCT ps;
@@ -206,10 +221,11 @@ namespace eng
 
             pthis = (Window *)create->lpCreateParams;
             SetWindowLongPtr(_win, GWLP_USERDATA, (LONG_PTR)pthis);
+            //pthis->enableMouseTracking();
         } else {
             pthis = (Window *)GetWindowLongPtr(_win, GWLP_USERDATA);
         }
-        if (pthis->messageKeyBoard(_win, _msg, _wparam, _lparam))
+        if (pthis->messageKeyBoard(_msg, _wparam, _lparam))
             return 0;
         switch (_msg) {
             case WM_PAINT: {
@@ -242,6 +258,12 @@ namespace eng
                 break;
             case WM_MOUSEMOVE:
                 pthis->mouseMove(_lparam);
+                break;
+            case WM_KILLFOCUS:
+                pthis->focus(false);
+                break;
+            case WM_SETFOCUS:
+                pthis->focus(true);
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);

@@ -33,6 +33,10 @@ void Core::run()
         std::cout << "Keyboard callback: { key: " << _kb.key << ", state: " << _kb.state << " { shift: " << _kb.shift << ", control: " << _kb.control << ", alt: " << _kb.alt << " } }" << std::endl;
     });
 
+    m_win.subscribe<eng::Event::Focus>([](const eng::Event::Focus& _focus) {
+        std::cout << "Focus callback: { focus: " << _focus.state << " }" << std::endl;
+    });
+
     while (m_win.isOpen()) {
         while (m_win.pollEvent(ev)) {}
         m_win.clear();
