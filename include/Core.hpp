@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "Engine/Rendering/RenderWindow.hpp"
+
 class Core
 {
     public:
@@ -13,6 +15,8 @@ class Core
         void run();
 
     private:
+        eng::RenderWindow m_win;
+        eng::ThreadPool m_tp;
 };
 
 #endif

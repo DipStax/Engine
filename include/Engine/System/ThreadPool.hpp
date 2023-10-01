@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "Engine/Container/tsQueue.hpp"
+#include "Tool/Export.hpp"
 
 #ifndef N_THREAD_TP
 #define N_THREAD_TP 1
@@ -14,7 +15,7 @@
 
 namespace eng
 {
-    class ThreadPool
+    class PROJECT_API ThreadPool
     {
         public:
             using Task = std::function<void()>;

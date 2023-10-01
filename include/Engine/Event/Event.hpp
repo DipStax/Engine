@@ -1,46 +1,68 @@
 #pragma once
 
-#include "Tool/Export.hpp"
+#include "Engine/System/Mouse.hpp"
+#include "Engine/System/Key.hpp"
 
 namespace eng
 {
-    struct PROJECT_API IEvent
-    {};
-
-    class PROJECT_API Mouse
+    struct PROJECT_API Event
     {
-        public:
-            enum class Button {
-                Left,
-                Right,
-                Middle
-            };
-    };
+        class Focus
+        {
+            public:
+                bool state = false;
+        };
 
-    class PROJECT_API Event : public IEvent
-    {
-        public:
-            struct MouseButtonEvent {
-                bool press;
-                Mouse::Button button;
-            };
+        class MouseButton
+        {
+            public:
+                Mouse::State state = Mouse::State::Neutral;
+                Mouse::Button button = Mouse::Button::Other;
+        };
 
-            struct ResizeEvent {
-                uint32_t height;
-                uint32_t width;
-            };
+        class MouseMove
+        {
+            public:
+                int32_t x = 0;
+                int32_t y = 0;
+        };
 
-            enum class Type
-            {
-                MouseButton
-            };
+        class Keyboard
+        {
+            public:
+                Key key = Key::Other;
+                KeyState state = KeyState::Up;
+                KeyState control = KeyState::Up;
+                KeyState alt = KeyState::Up;
+                KeyState shift = KeyState::Up;
+                KeyState system = KeyState::Up;
+        };
 
-            Type type;
+        class Resize
+        {
+            public:
+                uint32_t height = 0;
+                uint32_t width = 0;
+        };
 
-            union
-            {
-                MouseButtonEvent mouseButton;
-                ResizeEvent resize;
-            };
+        enum class Type
+        {
+            Focus,
+            MouseButton,
+            MouseMove,
+            KeyBoard,
+            Resize,
+        };
+
+        Type type;
+
+        union
+        {
+            MouseButton mouseButton;
+            MouseMove mouseMove;
+            Keyboard keyboard;
+            Focus focus;
+            Resize resize;
+        };
     };
 }

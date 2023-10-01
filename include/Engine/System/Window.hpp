@@ -34,7 +34,6 @@ namespace eng
             void setSize(uint32_t _x, uint32_t _y);
             [[nodiscard]] Point2<uint32_t> getSize() const;
 
-
             void close();
 
         protected:
@@ -42,11 +41,22 @@ namespace eng
 
             [[nodiscard]] HWND getWindow() const;
 
-            bool resized(uint64_t _lparam, int64_t _wparam, Event &_event);
-            virtual void onResize(Event &_event);
+            virtual void onResize(Event _event);
+            virtual void onMouseButtonEvent(Event _event);
+            virtual void onMouseMove(Event _event);
+            virtual void onKeyboardEvent(Event _event);
+            virtual void onFocus(Event _event);
 
         private:
+            void resized(uint64_t _wparam, uint64_t _lparam);
+            void mouseButtonEvent(Mouse::State _state, uint64_t _wparam);
+            void mouseMove(uint64_t _wparam);
+            void keyboardEvent(KeyState _state, uint64_t _wparam);
+            void focus(bool _state);
+
             static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+
+            bool messageKeyBoard(UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
             static constexpr char WIN_className[] = "Sample Window Class";
 

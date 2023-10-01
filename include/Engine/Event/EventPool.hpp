@@ -14,12 +14,12 @@ namespace eng
             EventPool(ThreadPool &_tp);
             ~EventPool() = default;
 
-            template<IsIEvent T>
+            template<class T>
             bool raise(const T &_event);
 
-            template<IsIEvent T>
+            template<class T>
             Trigger<T>::sTask subscribe(Trigger<T>::Task _task);
-            template<IsIEvent T>
+            template<class T>
             void unsubscribe(Trigger<T>::sTask _task);
 
         private:

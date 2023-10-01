@@ -6,7 +6,7 @@ namespace eng
 {
     template<template<class> class T, class ...Ts>
     TriggerMap<T, std::tuple<Ts...>>::TriggerMap(ThreadPool &_tp)
-        : m_tup(_tp)
+        : m_tup(T<Ts>(_tp)...)
     {
     }
 

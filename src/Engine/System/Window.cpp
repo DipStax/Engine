@@ -1,5 +1,10 @@
 #include <map>
+#include <iostream>
 
+#include <Windows.h>
+#include <windowsx.h>
+
+#include "Engine/System/Key.hpp"
 #include "Engine/System/Window.hpp"
 
 namespace Win
@@ -27,6 +32,7 @@ namespace eng
         if (m_open)
             close();
         m_winClass = {
+                .style = CS_VREDRAW | CS_DBLCLKS,
                 .lpfnWndProc = WIN_proc,
                 .hInstance = GetModuleHandle(NULL),
                 .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
@@ -104,10 +110,7 @@ namespace eng
 
     void Window::disptachEvent()
     {
-        using MsgFn = bool (Window::*)(uint64_t, int64_t, Event &);
-
         MSG msg;
-        std::map<uint32_t, MsgFn>::const_iterator it;
 
         while (PeekMessage(&msg, m_win, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
@@ -127,43 +130,140 @@ namespace eng
         return m_win;
     }
 
-    bool Window::resized(uint64_t _lparam, int64_t _wparam, Event &_event)
+    void Window::onResize(Event _event)
     {
-        if (_lparam == SIZE_MAXHIDE || _lparam == SIZE_MAXSHOW)
-            return false;
-        _event.resize.height = HIWORD(_lparam);
-        _event.resize.width = LOWORD(_lparam);
-        onResize(_event);
-        return true;
+        std::ignore = _event;
     }
 
-    void Window::onResize(Event &_event)
+    void Window::onMouseButtonEvent(Event _event)
     {
+        std::ignore = _event;
+    }
+
+    void Window::onMouseMove(Event _event)
+    {
+        std::ignore = _event;
+    }
+
+    void Window::onKeyboardEvent(Event _event)
+    {
+        std::ignore = _event;
+    }
+
+    void Window::onFocus(Event _event)
+    {
+        std::ignore = _event;
+    }
+
+    void Window::resized(uint64_t _wparam, uint64_t _lparam)
+    {
+        Event ev{};
+
+        if (_wparam == SIZE_MAXHIDE || _wparam == SIZE_MAXSHOW)
+            return;
+        ev.type = Event::Type::Resize;
+        ev.resize.height = HIWORD(_lparam);
+        ev.resize.width = LOWORD(_lparam);
+        onResize(ev);
+    }
+
+    void Window::mouseButtonEvent(Mouse::State _state, uint64_t _wparam)
+    {
+        Event ev{};
+
+        if (_wparam == MK_CONTROL || _wparam == MK_SHIFT)
+            return;
+        ev.type = Event::Type::MouseButton;
+        ev.mouseButton.state = _state;
+        ev.mouseButton.button = priv::mouseButtonConvert(_wparam);
+        onMouseButtonEvent(ev);
+    }
+
+    void Window::mouseMove(uint64_t _lparam)
+    {
+        Event ev{};
+
+        ev.type = Event::Type::MouseMove;
+        ev.mouseMove.x = GET_X_LPARAM(_lparam);
+        ev.mouseMove.y = GET_Y_LPARAM(_lparam);
+        onMouseMove(ev);
+    }
+
+    void Window::keyboardEvent(KeyState _state, uint64_t _wparam)
+    {
+        Event ev{};
+
+        ev.type = Event::Type::KeyBoard;
+        ev.keyboard.state = _state;
+        ev.keyboard.key = toKey(_wparam);
+        ev.keyboard.control = getKeyState(Key::Control);
+        ev.keyboard.alt = getKeyState(Key::Alt);
+        ev.keyboard.shift = getKeyState(Key::Shift);
+        onKeyboardEvent(ev);
+    }
+
+    void Window::focus(bool _state)
+    {
+        Event ev{};
+
+        ev.type = Event::Type::Focus;
+        ev.focus.state = _state;
+        onFocus(ev);
     }
 
     LRESULT CALLBACK Window::WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         PAINTSTRUCT ps;
         Window *pthis;
-        Event _event;
 
         if (_msg == WM_NCCREATE) {
             CREATESTRUCT* create = (CREATESTRUCT*)_lparam;
 
             pthis = (Window *)create->lpCreateParams;
             SetWindowLongPtr(_win, GWLP_USERDATA, (LONG_PTR)pthis);
+            //pthis->enableMouseTracking();
         } else {
             pthis = (Window *)GetWindowLongPtr(_win, GWLP_USERDATA);
         }
+        if (pthis->messageKeyBoard(_msg, _wparam, _lparam))
+            return 0;
         switch (_msg) {
             case WM_PAINT: {
                     HDC hdc = BeginPaint(_win, &ps);
                     pthis->render(hdc);
                     EndPaint(_win, &ps);
+                    ReleaseDC(pthis->getWindow(), hdc);
                 }
                 break;
             case WM_SIZE:
-                pthis->resized(_lparam, _wparam, _event);
+                pthis->resized(_wparam, _lparam);
+                break;
+            case WM_RBUTTONDOWN:
+            case WM_MBUTTONDOWN:
+            case WM_LBUTTONDOWN:
+            case WM_XBUTTONDOWN:
+                pthis->mouseButtonEvent(Mouse::State::Press, _wparam);
+                break;
+            case WM_RBUTTONUP:
+            case WM_MBUTTONUP:
+            case WM_LBUTTONUP:
+            case WM_XBUTTONUP:
+                pthis->mouseButtonEvent(Mouse::State::Release, _wparam);
+                break;
+            case WM_RBUTTONDBLCLK:
+            case WM_LBUTTONDBLCLK:
+            case WM_MBUTTONDBLCLK:
+            case WM_XBUTTONDBLCLK:
+                pthis->mouseButtonEvent(Mouse::State::DoubleClick, _wparam);
+                break;
+            case WM_MOUSEMOVE:
+                pthis->mouseMove(_lparam);
+                break;
+            case WM_KILLFOCUS:
+                pthis->focus(false);
+                break;
+            case WM_SETFOCUS:
+                pthis->focus(true);
                 break;
             case WM_DESTROY:
                 PostQuitMessage(0);
@@ -172,8 +272,22 @@ namespace eng
             default:
                 return DefWindowProc(_win, _msg, _wparam, _lparam);
         }
-
         return 0;
+    }
+
+    bool Window::messageKeyBoard(UINT _msg, WPARAM _wparam, LPARAM _lparam)
+    {
+        switch (_msg) {
+            case WM_KEYDOWN:
+                keyboardEvent(KeyState::Down, _wparam);
+                break;
+            case WM_KEYUP:
+                keyboardEvent(KeyState::Up, _wparam);
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 
     HDC Window::getDc() const

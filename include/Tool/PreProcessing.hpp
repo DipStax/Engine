@@ -6,14 +6,14 @@
 
 #include "Tool/Export.hpp"
 
-// template<class, class>
-// struct tuple_prepend;
+template<class, class>
+struct tuple_prepend;
 
-// template<class T, class ...Ts>
-// struct tuple_prepend<T, std::tuple<Ts...>>
-// {
-//     using type = std::tuple<T, Ts...>;
-// };
+template<class T, class ...Ts>
+struct tuple_prepend<T, std::tuple<Ts...>>
+{
+    using type = std::tuple<T, Ts...>;
+};
 
 // template<class ...Ts>
 // struct tuple_optional_impl;

@@ -11,7 +11,7 @@ namespace eng
     }
 
     template<class ...Ts>
-    template<IsIEvent T>
+    template<class T>
     bool EventPool<Ts...>::raise(const T &_event)
     {
         if (m_map.contains<T>()) {
@@ -22,7 +22,7 @@ namespace eng
     }
 
     template<class ...Ts>
-    template<IsIEvent T>
+    template<class T>
     Trigger<T>::sTask EventPool<Ts...>::subscribe(Trigger<T>::Task _task)
     {
         std::cout << "Event::Subscribe" << std::endl;
@@ -30,7 +30,7 @@ namespace eng
     }
 
     template<class ...Ts>
-    template<IsIEvent T>
+    template<class T>
     void EventPool<Ts...>::unsubscribe(Trigger<T>::sTask _task)
     {
         std::cout << "Event::Unsubscribe" << std::endl;
