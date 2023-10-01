@@ -50,7 +50,7 @@ namespace eng
             Focus,
             MouseButton,
             MouseMove,
-            KeyBoard,
+            Keyboard,
             Resize,
         };
 

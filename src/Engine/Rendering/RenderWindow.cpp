@@ -34,11 +34,6 @@ namespace eng
         return !m_event.empty();
     }
 
-    void RenderWindow::display()
-    {
-        InvalidateRect(getWindow(), NULL, FALSE);
-    }
-
     void RenderWindow::onResize(Event _event)
     {
         m_size = { _event.resize.width, _event.resize.height };
@@ -48,7 +43,7 @@ namespace eng
         m_event.push(_event);
     }
 
-    void RenderWindow::onMouseButtonEvent(Event _event)
+    void RenderWindow::onMouseButton(Event _event)
     {
         raise<Event::MouseButton>(_event.mouseButton);
         m_event.push(_event);
@@ -60,7 +55,7 @@ namespace eng
         m_event.push(_event);
     }
 
-    void RenderWindow::onKeyboardEvent(Event _event)
+    void RenderWindow::onKeyboard(Event _event)
     {
         raise<Event::Keyboard>(_event.keyboard);
         m_event.push(_event);

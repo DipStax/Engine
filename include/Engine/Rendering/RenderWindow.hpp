@@ -21,16 +21,14 @@ namespace eng
 
             bool pollEvent(Event &_event);
 
-            void display();
-
         protected:
             void render(HDC _draw) const;
 
-            void onResize(Event _event) override;
-            void onMouseButtonEvent(Event _event) override;
-            void onMouseMove(Event _event) override;
-            void onKeyboardEvent(Event _event) override;
             void onFocus(Event _event) override;
+            void onMouseButton(Event _event) override;
+            void onMouseMove(Event _event) override;
+            void onKeyboard(Event _event) override;
+            void onResize(Event _event) override;
 
         private:
             Camera m_cam;
