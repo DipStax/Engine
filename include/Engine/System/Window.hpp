@@ -54,7 +54,7 @@ namespace eng
 
             static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
-            bool messageKeyBoard(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
+            bool messageKeyBoard(UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
             static constexpr char WIN_className[] = "Sample Window Class";
 

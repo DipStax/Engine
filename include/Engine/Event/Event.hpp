@@ -7,32 +7,36 @@ namespace eng
 {
     struct PROJECT_API Event
     {
-        struct MouseButton
+        class MouseButton
         {
-            Mouse::State state = Mouse::State::Neutral;
-            Mouse::Button button = Mouse::Button::Other;
+            public:
+                Mouse::State state = Mouse::State::Neutral;
+                Mouse::Button button = Mouse::Button::Other;
         };
 
-        struct MouseMove
+        class MouseMove
         {
-            int32_t x = 0;
-            int32_t y = 0;
+            public:
+                int32_t x = 0;
+                int32_t y = 0;
         };
 
-        struct Keyboard
+        class Keyboard
         {
-            Key key = Key::Other;
-            KeyState state = KeyState::Up;
-            KeyState control = KeyState::Up;
-            KeyState alt = KeyState::Up;
-            KeyState shift = KeyState::Up;
-            KeyState system = KeyState::Up;
+            public:
+                Key key = Key::Other;
+                KeyState state = KeyState::Up;
+                KeyState control = KeyState::Up;
+                KeyState alt = KeyState::Up;
+                KeyState shift = KeyState::Up;
+                KeyState system = KeyState::Up;
         };
 
-        struct Resize
+        class Resize
         {
-            uint32_t height = 0;
-            uint32_t width = 0;
+            public:
+                uint32_t height = 0;
+                uint32_t width = 0;
         };
 
         enum class Type

@@ -10,14 +10,14 @@ namespace eng
     class PROJECT_API Mouse
     {
         public:
-            enum class State {
+            enum State {
                 Press,
                 Neutral,
                 Release,
                 DoubleClick
             };
 
-            enum class Button {
+            enum Button {
                 Right,
                 Left,
                 Middle,

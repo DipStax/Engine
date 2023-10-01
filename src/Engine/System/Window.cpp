@@ -253,7 +253,7 @@ namespace eng
         return 0;
     }
 
-    bool Window::messageKeyBoard(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam)
+    bool Window::messageKeyBoard(UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
         switch (_msg) {
             case WM_KEYDOWN:
