@@ -11,30 +11,33 @@ namespace eng
     }
 
     template<class ...Ts>
-    template<class T>
-    bool EventPool<Ts...>::raise(const T &_event)
+    EventPool<Ts...>::EventPool(EventPool<Ts...> &&_ep) noexcept
+        : m_map(std::move(_ep.m_map))
     {
-        if (m_map.contains<T>()) {
-            m_map.at<T>().raise(_event);
-            return true;
-        }
-        return false;
     }
 
     template<class ...Ts>
     template<class T>
+        requires ContainIn<T, Ts...>
+    bool EventPool<Ts...>::raise(const T &_event)
+    {
+        m_map.at<T>().raise(_event);
+        return true;
+    }
+
+    template<class ...Ts>
+    template<class T>
+        requires ContainIn<T, Ts...>
     Trigger<T>::sTask EventPool<Ts...>::subscribe(Trigger<T>::Task _task)
     {
-        std::cout << "Event::Subscribe" << std::endl;
         return m_map.at<T>().subscribe(_task);
     }
 
     template<class ...Ts>
     template<class T>
+        requires ContainIn<T, Ts...>
     void EventPool<Ts...>::unsubscribe(Trigger<T>::sTask _task)
     {
-        std::cout << "Event::Unsubscribe" << std::endl;
-        if (m_map.contains<T>())
-            m_map.at<T>().unsubscribe(_task);
+        m_map.at<T>().unsubscribe(_task);
     }
 }

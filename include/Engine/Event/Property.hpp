@@ -4,7 +4,6 @@
 #include <tuple>
 
 #include "Engine/Event/EventPool.hpp"
-#include "Engine/Event/PropertyEvent.hpp"
 #include "Tool/PreProcessing.hpp"
 
 namespace eng
@@ -13,11 +12,10 @@ namespace eng
     class Property
     {
         public:
-            class Event
+            struct Event
             {
-                public:
-                    const std::string name;
-                    const T &value;
+                const std::string name;
+                const T &value;
             };
 
             using PropEventPool = EventPool<Event>;
@@ -26,14 +24,14 @@ namespace eng
             Property(PropEventPool &_ep, const std::string &_name, T &_val);
             template<class ...Ts>
             Property(PropEventPool &_ep, const std::string &_name, Ts &&..._args);
-            Property(const Property &_prop) = delete;
+            Property(Property<T> &&_prop) noexcept;
+            Property<T>& operator=(Property<T> &&_prop) noexcept;
             ~Property() = default;
 
             [[nodiscard]] PropTrigger::sTask subscribe(PropTrigger::Task _task);
             void unsubscribe(PropTrigger::sTask _task);
 
             void trigger();
-
 
             [[nodiscard]] const std::string &getName() const;
 
@@ -43,7 +41,7 @@ namespace eng
             Property<T> &operator=(const Property<_T> &_val);
 
             operator T&();
-            explicit operator T() const;
+            operator const T&() const;
 
             // need to return a template value?
             template<EqOp<T> _T>
@@ -113,6 +111,9 @@ namespace eng
             // Property<T> operator--(int);
 
         private:
+            Property(const Property<T> &_prop);
+            Property<T> &operator=(const Property<T> &_prop) = delete;
+
             const std::string m_name;
             PropEventPool &m_ep;
 
