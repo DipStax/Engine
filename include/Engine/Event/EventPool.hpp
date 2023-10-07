@@ -12,15 +12,16 @@ namespace eng
     {
         public:
             EventPool(ThreadPool &_tp);
+            EventPool(EventPool<Ts...> &&_ep) noexcept;
             ~EventPool() = default;
 
             template<class T>
-            bool raise(const T &_event);
+            bool raise(const T &_event) requires ContainIn<T, Ts...>;
 
             template<class T>
-            Trigger<T>::sTask subscribe(Trigger<T>::Task _task);
+            Trigger<T>::sTask subscribe(Trigger<T>::Task _task) requires ContainIn<T, Ts...>;
             template<class T>
-            void unsubscribe(Trigger<T>::sTask _task);
+            void unsubscribe(Trigger<T>::sTask _task) requires ContainIn<T, Ts...>;
 
         private:
             TriggerMap<Trigger, std::tuple<Ts...>> m_map;

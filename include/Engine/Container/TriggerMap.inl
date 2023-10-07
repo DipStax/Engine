@@ -11,30 +11,28 @@ namespace eng
     }
 
     template<template<class> class T, class ...Ts>
-    template<class _T>
-    constexpr bool TriggerMap<T, std::tuple<Ts...>>::contains() const noexcept
+    TriggerMap<T, std::tuple<Ts...>>::TriggerMap(TriggerMap<T, std::tuple<Ts...>> &&_tm) noexcept
+        : m_tup(std::move(_tm.m_tup))
     {
-        return tuple_contain<_T, Ts...>::value;
     }
 
     template<template<class> class T, class ...Ts>
     template<class _T>
-    constexpr size_t TriggerMap<T, std::tuple<Ts...>>::find() const noexcept
+    constexpr size_t TriggerMap<T, std::tuple<Ts...>>::find() const noexcept requires ContainIn<_T, Ts...>
     {
-        if (contains<_T>())
-            return tuple_find<_T, Ts...>::value;
-        return std::numeric_limits<size_t>::max();
+        return tuple_find<_T, Ts...>::value;
     }
 
     template<template<class> class T, class ...Ts>
     template<class _T>
+        requires ContainIn<_T, Ts...>
     constexpr const T<_T> &TriggerMap<T, std::tuple<Ts...>>::at() const noexcept
     {
         return std::get<T<_T>>(m_tup);
     }
 
     template<template<class> class T, class ...Ts>
-    template<class _T>
+    template<ContainIn<Ts...> _T>
     constexpr T<_T> &TriggerMap<T, std::tuple<Ts...>>::at() noexcept
     {
         return std::get<T<_T>>(m_tup);

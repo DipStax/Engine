@@ -16,6 +16,24 @@ namespace eng
     }
 
     template<class T>
+    Property<T>::Property(Property<T> &&_prop) noexcept
+        : m_name(std::move(_prop.m_name)), m_ep(_prop.m_ep), m_value(std::move(_prop.m_value))
+    {
+    }
+
+    template<class T>
+    Property<T> &Property<T>::operator=(Property<T> &&_prop) noexcept
+    {
+        if (this != &_prop) {
+            m_name = std::move(_prop.m_name);
+            m_ep = _prop.m_ep;
+            m_value = std::move(_prop.m_value);
+            _prop.m_ep = nullptr;
+        }
+        return *this;
+    }
+
+    template<class T>
     Property<T>::PropTrigger::sTask Property<T>::subscribe(PropTrigger::Task _task)
     {
         return m_ep.subscribe<Event>(_task);
@@ -30,7 +48,7 @@ namespace eng
     template<class T>
     void Property<T>::trigger()
     {
-        m_ep.raise<Event>({ m_name, std::make_any<T>(m_value) });
+        m_ep.raise<Event>({ m_name, m_value });
     }
 
     template<class T>
@@ -57,6 +75,18 @@ namespace eng
         m_value = _val.m_value;
         trigger();
         return *this;
+    }
+
+    template<class T>
+    Property<T>::operator T&()
+    {
+        return m_value;
+    }
+
+    template<class T>
+    Property<T>::operator const T&() const
+    {
+        return m_value;
     }
 
     template<class T>
