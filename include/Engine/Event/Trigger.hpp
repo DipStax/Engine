@@ -31,5 +31,4 @@ namespace eng
     };
 }
 
-
-#include "Trigger.inl"
+#include "Engine/Event/Trigger.inl"
