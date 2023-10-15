@@ -18,21 +18,23 @@ namespace eng
 
     template<template<class> class T, class ...Ts>
     template<class _T>
-    constexpr size_t TriggerMap<T, std::tuple<Ts...>>::find() const noexcept requires ContainIn<_T, Ts...>
+    requires ContainIn<_T, Ts...>
+    constexpr size_t TriggerMap<T, std::tuple<Ts...>>::find() const noexcept
     {
         return tuple_find<_T, Ts...>::value;
     }
 
     template<template<class> class T, class ...Ts>
     template<class _T>
-        requires ContainIn<_T, Ts...>
+    requires ContainIn<_T, Ts...>
     constexpr const T<_T> &TriggerMap<T, std::tuple<Ts...>>::at() const noexcept
     {
         return std::get<T<_T>>(m_tup);
     }
 
     template<template<class> class T, class ...Ts>
-    template<ContainIn<Ts...> _T>
+    template<class _T>
+    requires ContainIn<_T, Ts...>
     constexpr T<_T> &TriggerMap<T, std::tuple<Ts...>>::at() noexcept
     {
         return std::get<T<_T>>(m_tup);

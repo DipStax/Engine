@@ -22,17 +22,18 @@ namespace eng
             ~TriggerMap() = default;
 
             template<class _T>
-            constexpr size_t find() const noexcept requires ContainIn<_T, Ts..>;
+            requires ContainIn<_T, Ts...>
+            constexpr size_t find() const noexcept;
 
             template<class _T>
-            [[nodiscard]] constexpr const T<_T> &at() const noexcept requires ContainIn<_T, Ts..>;
+            requires ContainIn<_T, Ts...>
+            [[nodiscard]] constexpr const T<_T> &at() const noexcept;
             template<class _T>
-            [[nodiscard]] constexpr T<_T> &at() noexcept requires ContainIn<_T, Ts..>;
+            requires ContainIn<_T, Ts...>
+            [[nodiscard]] constexpr T<_T> &at() noexcept;
 
         private:
-            using TriggerMapImp = typename tuple_apply_template<T, Ts...>::type;
             std::tuple<T<Ts>...> m_tup;
-            // TriggerMapImp m_tup;
     };
 }
-#include "TriggerMap.inl"
+#include "Engine/Container/TriggerMap.inl"
