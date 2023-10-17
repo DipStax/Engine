@@ -12,9 +12,10 @@ namespace eng
         public:
             enum class Type
             {
-                point,
-                polygone,
-                line
+                Point,
+                Lines,
+                LineStrip,
+                Polygone
             };
 
             VertexArray(size_t _n = 0);
@@ -26,7 +27,12 @@ namespace eng
             void resize(size_t _n);
             void append(const Vertex &_px);
 
+            [[nodiscard]] size_t size() const;
+
             [[nodiscard]] Vertex &operator[](size_t _idx);
+
+            [[nodiscard]] Vertex *data();
+            [[nodiscard]] const Vertex *data() const;
 
             void clear();
 
@@ -35,6 +41,6 @@ namespace eng
 
         private:
             std::vector<Vertex> m_pos;
-            Type m_type = Type::point;
+            Type m_type = Type::Point;
     };
 }
