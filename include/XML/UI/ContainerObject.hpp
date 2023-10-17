@@ -1,5 +1,7 @@
 #pragma once
 
+#define CONTAINER_EVENT Property<std::string>::Event, Property<uint32_t>::Event, Ts..
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -8,9 +10,11 @@
 
 namespace eng::ui
 {
-    using PropObject = PropertyObject<Property<std::string>::Event, Property<uint32_t>::Event>;
+    using ContainerEvent = typename single_type<CONTAINER_EVENT>::type;
+    using PropObject = PropertyObject<ContainerEvent>;
 
-    class ContainerObject : public PropObject
+    template<class ...Ts>
+    class ContainerObject : public PropObject, public IAcceptEvent<ContainerEvent>
     {
         public:
             ContainerObject(const std::string &_type, Vector2<uint32_t> m_size, ThreadPool &_tp);
@@ -28,8 +32,6 @@ namespace eng::ui
             Property<uint32_t> Width;
             [[nodiscard]] Vector2<uint32_t> getSize() const;
 
-            // implementation of visitor for sending event down?
-
         protected:
             // friend class ui::Factory;
 
@@ -39,6 +41,8 @@ namespace eng::ui
 
         private:
             void ownProperty();
+
+            void onSizeChange(const Property<uint32_t>::Event &_size);
 
             Property<std::string>::PropTrigger::sTask m_bind_class;
             Property<uint32_t>::PropTrigger::sTask m_bind_height;
