@@ -44,6 +44,7 @@ namespace eng
             void setPixel(const Point2<uint32_t> &_pos, Color _clr, float _depth = 0.f);
             void drawLine(const Point2<uint32_t> &_first, const Point2<uint32_t> &_sec);
             void triRangeApply(const Vertex *_vtx, int32_t _line, const Point2<uint32_t> &_range, const Texture *_txtr);
+            void triRangeApply(const Vertex *_vtx, int32_t _line, const Point2<uint32_t> &_range)
             void triRangeApply(const Vertex3D *_vtx, int32_t _line, const Point2<uint32_t> &_range, const Texture * _txtr);
 
             Camera m_cam;

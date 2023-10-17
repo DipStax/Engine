@@ -28,9 +28,24 @@ namespace eng
         m_pos.emplace_back(_px);
     }
 
+    size_t VertexArray::size() const
+    {
+        return m_pos.size();
+    }
+
     Vertex &VertexArray::operator[](size_t _idx)
     {
         return m_pos[_idx];
+    }
+
+    Vertex *VertexArray::data()
+    {
+        return m_pos.data();
+    }
+
+    const Vertex *VertexArray::data() const
+    {
+        return m_pos.data();
     }
 
     void VertexArray::clear()
