@@ -53,11 +53,23 @@ namespace eng
         if (_type == VertexArray::Type::point) {
             for (size_t it = 0; it < _size; it++)
                 setPixel(_vtx[it].pos.as<uint32_t>(), _vtx[it].clr);
-        } else if (_type == VertexArray::Type::line || _type == VertexArray::Type::polygone) {
+        } else if (_type == VertexArray::Type::Lines || _type == VertexArray::Type::LineStrip) {
             for (size_t it = 1; it < _size; it++)
                 drawLine(_vtx[it - 1].pos.as<uint32_t>(), _vtx[it].pos.as<uint32_t>());
-            if (_type == VertexArray::Type::polygone)
+            if (_type == VertexArray::Type::LineStrip)
                 drawLine(_vtx[_size - 1].pos.as<uint32_t>(), _vtx[0].pos.as<uint32_t>());
+        } else if (_type == VertexArray::Type::Polygone) {
+            if (_size > 3) {
+                for (const auto &_tri : polyTri(_vtx, _size))
+                    draw(_tri.data(), 3, _type);
+            } else {
+                // caluclate minimal range of the drawing on y axes
+                int32_t ystart = static_cast<int32_t>(std::max(std::min({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y }), 0.f));
+                int32_t yend = static_cast<int32_t>(std::min(std::max({ _vtx[0].pos.y, _vtx[1].pos.y, _vtx[2].pos.y }), static_cast<float>(getSize().y)));
+
+                for (; ystart < yend; ystart++)
+                    triRangeApply(_vtx, ystart, triRange(_vtx, ystart));
+            }
         }
     }
 
@@ -185,6 +197,33 @@ namespace eng
             pos = _vtx[1].txtrPos * ratio1 + _vtx[2].txtrPos * ratio2 + _vtx[0].txtrPos * ratio3;
             // px position is assured by calculation the minimal range in x and y axes;
             setPixel(px.as<uint32_t>(), _txtr->getPixel(pos.as<uint32_t>()));
+        }
+    }
+
+    void RenderTarget::triRangeApply(const Vertex *_vtx, int32_t _line, const Point2<uint32_t> &_range)
+    {
+        Point2<float> pos;
+        float abc = area(_vtx[0].pos, _vtx[1].pos, _vtx[2].pos);
+        float ratio1 = 0;
+        float ratio2 = 0;
+        float ratio3 = 0;
+        Color clr = { 0, 0, 0, 0 }
+        Point2<uint32_t> size = g;etSize() - 1;
+
+        // caluclate minimal range of the drawing on x axes
+        float xstart = static_cast<float>(std::max(_range.x, 0U));
+        float xend = static_cast<float>(std::min(_range.y, size.x));
+
+        for (Point2<float> px = { xstart, static_cast<float>(_line) }; px.x <= xend; px.x++) {
+            // calculating mapping of the texture
+            ratio1 = area(_vtx[2].pos, _vtx[0].pos, px) / abc;
+            ratio2 = area(_vtx[0].pos, _vtx[1].pos, px) / abc;
+            ratio3 = 1 - ratio1 - ratio2;
+            clr.R = _vtx[1].clr.R * ratio1 + _vtx[2].clr.R * ratio2 + _vtx[0].clr.R * ratio3;
+            clr.G = _vtx[1].clr.G * ratio1 + _vtx[2].clr.G * ratio2 + _vtx[0].clr.G * ratio3;
+            clr.B = _vtx[1].clr.B * ratio1 + _vtx[2].clr.B * ratio2 + _vtx[0].clr.B * ratio3;
+            clr.A = _vtx[1].clr.A * ratio1 + _vtx[2].clr.A * ratio2 + _vtx[0].clr.A * ratio3;
+            setPixel(px.as<uint32_t>(), clr);
         }
     }
 
