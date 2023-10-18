@@ -13,13 +13,13 @@
     static_assert(false, "Platforme not supported");
 #endif
 
-namespace eng::impl
+namespace eng
 {
 #if defined(WIN32)
-        using WEDevice = win::WEDevice;
-        using WERender = win::WERender;
-        using WindowClass = win::WindowClass<WEDevice, WERender>;
-        using EventPack = win::EventPack;
+        using WEDevice = impl::win::WEDevice;
+        using WERender = impl::win::WERender;
+        using WindowClass = impl::win::WindowClass<WEDevice, WERender>;
+        using EventPack = impl::win::EventPack;
 #elif defined(UNIX) || defined(MACOS)
         using WindowEvent = unix::WindowEvent;
         using WindowCreate = unix::WindowCreate;

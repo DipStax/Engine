@@ -10,7 +10,10 @@
 #include "Tool/PreProcessing.hpp"
 
 template<class T>
-concept IsWE = std::is_base_of<eng::impl::IWindowEvent<T>, T>::value;
+concept IsWERender = std::is_base_of<eng::impl::IWERender, T>::value;
+
+template<class T>
+concept IsWEDevice = std::is_base_of<eng::impl::IWEDevice, T>::value;
 
 namespace eng::impl::win
 {
@@ -44,10 +47,15 @@ namespace eng::impl::win
 
             static LRESULT CALLBACK WIN_proc(HWND _win, UINT _msg, WPARAM _wparam, LPARAM _lparam);
 
-            template<IsWE _T, class ..._TS>
-            static bool CallHandle(_T &_win, const EventPack& _ep);
-            template<IsWE _T>
-            static bool CallHandle(_T &_win, const EventPack& _ep);
+            template<IsWEDevice T>
+            bool callHandle(T &_win, const EventPack& _ep);
+            template<IsWEDevice T, class ..._TS>
+            bool callHandle(T &_win, const EventPack& _ep);
+
+            template<IsWERender  T>
+            bool callHandle(T& _win, const EventPack& _ep);
+            template<IsWERender T, class ..._Ts>
+            bool callHandle(T& _win, const EventPack& _ep);
 
         private:
             bool winRect(LPRECT _rect) const;

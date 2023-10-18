@@ -2,10 +2,11 @@
 
 namespace eng::impl
 {
-    template<class T>
     class IWindowEvent
     {
         protected:
-            virtual [[nodiscard]] bool handle(T &_win) = 0;
+            friend class IWindowClass;
+
+            virtual [[nodiscard]] bool handle(const win::EventPack &_win) = 0;
     };
 }

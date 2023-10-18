@@ -17,7 +17,7 @@
 
 namespace eng
 {
-    class PROJECT_API Window : public impl::WindowClass
+    class PROJECT_API Window : public WindowClass
     {
         public:
             Window(uint32_t _x, uint32_t _y, const std::string& _title);

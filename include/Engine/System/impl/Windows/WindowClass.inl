@@ -65,7 +65,7 @@ namespace eng::impl::win
             pthis = (WindowClass<Ts...> *)GetWindowLongPtr(_win, GWLP_USERDATA);
         }
         // handle here
-        if (WindowClass<Ts...>::CallHandle(*pthis, ep))
+        if (pthis->callHandle<Ts...>(*pthis, ep))
             return 0;
         if (_msg != WM_DESTROY)
             return DefWindowProc(_win, _msg, _wparam, _lparam);
@@ -75,17 +75,31 @@ namespace eng::impl::win
     }
 
     template<class ...Ts>
-    template<IsWE _T, class ..._Ts>
-    bool WindowClass<Ts...>::CallHandle(_T &_win, const EventPack &_ep)
+    template<IsWEDevice T>
+    bool WindowClass<Ts...>::callHandle(T &_win, const EventPack &_ep)
     {
-        return static_cast<_T>(m_win).handle(_ep) || WindowClass<Ts...>::CallHandle<_Ts...>(_win, _ep);
+        return _win.handle(_ep);
     }
 
     template<class ...Ts>
-    template<IsWE _T>
-    static bool WindowClass<Ts...>::CallHandle(_T &_win, const EventPack &_ep)
+    template<IsWEDevice T, class ..._Ts>
+    bool WindowClass<Ts...>::callHandle(T &_win, const EventPack &_ep)
     {
-        return static_cast<_T>(m_win).handle(_ep);
+        return _win.handle(_ep) || callHandle<_Ts...>(*this, _ep);
+    }
+
+    template<class ...Ts>
+    template<IsWERender T>
+    bool WindowClass<Ts...>::callHandle(T &_win, const EventPack &_ep)
+    {
+        return _win.handle(_ep);
+    }
+
+    template<class ...Ts>
+    template<IsWERender T, class ..._Ts>
+    bool WindowClass<Ts...>::callHandle(T &_win, const EventPack &_ep)
+    {
+        return _win.handle(_ep) || callHandle<_Ts...>(*this, _ep);
     }
 
     template<class ...Ts>

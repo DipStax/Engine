@@ -7,8 +7,7 @@
 
 namespace eng::impl
 {
-    template<class T>
-    class IWEDevice : public IWindowEvent<T>
+    class IWEDevice : public IWindowEvent
     {
         protected:
             virtual void onFocus(Event _event) = 0;

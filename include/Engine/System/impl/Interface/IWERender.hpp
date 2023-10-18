@@ -5,8 +5,7 @@
 
 namespace eng::impl
 {
-    template<class T>
-    class IWERender : public IWindowEvent<T>
+    class IWERender : public IWindowEvent
     {
         public:
             virtual void display() = 0;

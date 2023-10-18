@@ -7,7 +7,7 @@
 
 namespace eng::impl::win
 {
-    class PROJECT_API WEDevice : public IWEDevice<WEDevice>
+    class PROJECT_API WEDevice : public IWEDevice
     {
         protected:
             WEDevice() = default;

@@ -7,11 +7,11 @@
 
 namespace eng::impl::win
 {
-    class PROJECT_API WERender : public IWERender<WERender>
+    class PROJECT_API WERender : public IWERender
     {
+
         protected:
             [[nodiscard]] bool handle(const EventPack &_ep);
-
             void onDraw(Event _event);
 
             virtual void render(HDC _hdc) = 0;
