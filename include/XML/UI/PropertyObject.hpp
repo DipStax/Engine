@@ -1,5 +1,7 @@
 #pragma once
 
+#define PROPERTY_EVENT Ts...
+
 #include "XML/UI/EventObject.hpp"
 
 namespace eng::ui
