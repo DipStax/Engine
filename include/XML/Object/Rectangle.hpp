@@ -1,59 +1,59 @@
 #pragma once
 
-#define RECTANGLE_EVENT float, eng::Color
+#define RECTANGLE_EVENT Property<std::string>::Event, Property<float>::Event, Property<Color>::Event, Property<uint32_t>::Event, Ts...
 
 #include "Engine/Rendering/Color.hpp"
-#include "Engine/Rendering/IDrawable.hpp"
-#include "XML/UI/ContainerObject.hpp"
+#include "XML/UI/Object.hpp"
 
 namespace eng::ui
 {
-    using RectangleEvent = typename single_type<RECTANGLE_EVENT>::type;
+    template<class ...Ts>
+    using RectangleEvent = typename unique_type<RECTANGLE_EVENT>::type;
 
-    class Rectangle : public ContainerObject<RectangleEvent>, public eng::IDrawable
+    class Rectangle : public Object<RectangleEvent<>>
     {
         public:
-            Rectangle(const std::string &_type, eng::Vector2<uint32_t> m_size, eng::ThreadPool &_tp);
-            Rectangle(const Rectangle &&_obj) noexcept;
+            Rectangle(const std::string &_type, eng::ThreadPool &_tp);
+            Rectangle(Rectangle &&_obj) noexcept;
             ~Rectangle();
 
-            eng::Property<uint32_t> PositionX;
-            eng::Property<uint32_t> PositionY;
-            [[nodiscard]] eng::Point2<uint32_t> getPosition() const;
+            Property<uint32_t> PositionX;
+            Property<uint32_t> PositionY;
+            [[nodiscard]] Point2<uint32_t> getPosition() const;
 
-            eng::Property<uint32_t> OriginX;
-            eng::Property<uint32_t> OriginY;
-            [[nodiscard]] eng::Point2<uint32_t> getOrigin() const;
+            Property<uint32_t> OriginX;
+            Property<uint32_t> OriginY;
+            [[nodiscard]] Point2<uint32_t> getOrigin() const;
 
-            eng::Property<float> ScaleX;
-            eng::Property<float> ScaleY;
-            [[nodiscard]] eng::Point2<float> getScale() const;
+            Property<float> ScaleX;
+            Property<float> ScaleY;
+            [[nodiscard]] Point2<float> getScale() const;
 
-            eng::Property<float> Rotation;
+            Property<float> Rotation;
 
-            eng::Property<eng::Color> Color;
+            Property<Color> Color;
 
         protected:
             void draw(RenderTarget &_target, const Texture *_txtr) const override;
 
         private:
+            void ownProperty();
+
             void processRect();
             void buildVertex();
-
-            void ownProperty();
 
             void onPositionChange(const Property<uint32_t>::Event &_pos);
             void onOrigineChange(const Property<uint32_t>::Event &_ori);
             void onRotationChange(const Property<float>::Event &_rot);
 
-            Trigger<uint32_t>::sTask m_bind_posx;
-            Trigger<uint32_t>::sTask m_bind_posy;
-            Trigger<uint32_t>::sTask m_bind_originx;
-            Trigger<uint32_t>::sTask m_bind_originy;
-            Trigger<float>::sTask m_bind_scalex;
-            Trigger<float>::sTask m_bind_scaley;
-            Trigger<float>::sTask m_bind_rotation;
-            Trigger<eng::Color>::sTask m_bind_color;
+            PropertyBind<uint32_t> m_bind_posx;
+            PropertyBind<uint32_t> m_bind_posy;
+            PropertyBind<uint32_t> m_bind_originx;
+            PropertyBind<uint32_t> m_bind_originy;
+            PropertyBind<float> m_bind_scalex;
+            PropertyBind<float> m_bind_scaley;
+            PropertyBind<float> m_bind_rotation;
+            PropertyBind<eng::Color> m_bind_color;
 
             VertexArray m_vertex{};
 

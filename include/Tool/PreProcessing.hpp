@@ -6,20 +6,8 @@
 
 #include "Tool/Export.hpp"
 
-template<class T, class ...Ts>
-struct tuple_contain;
-
-template<class T, class _T, class ...Ts>
-struct tuple_contain<T, _T, Ts...>
-{
-    static constexpr bool value = std::is_same<T, _T>::value || tuple_contain<T, Ts...>::value;
-};
-
-template<class T, class _T>
-struct tuple_contain<T, _T>
-{
-    static constexpr bool value = std::is_same<T, _T>::value;
-};
+template<class T>
+using UniqueTypeTuple = std::tuple<T>;
 
 namespace imp
 {
@@ -37,6 +25,95 @@ namespace imp
     {
         static constexpr size_t value = std::is_same<T, _T>::value ? I : I + 1;
     };
+
+    template<class ...Ts>
+    struct tuple_size;
+
+    template<class T, class ...Ts>
+    struct tuple_size<T, Ts...>
+    {
+        static constexpr size_t value = 1 + tuple_size<Ts...>::value;
+    };
+
+    template<class T>
+    struct tuple_size<T>
+    {
+        static constexpr size_t value = 1;
+    };
+
+    template<class ...Ts>
+    struct tuple_prepend;
+
+    template<class T, class ...Ts>
+    struct tuple_prepend<T, std::tuple<Ts...>>
+    {
+        using type = std::tuple<T, Ts...>;
+    };
+
+    template<class ...Ts>
+    struct tuple_cat;
+
+    template<class ...Ts, class ..._Ts>
+    struct tuple_cat<std::tuple<Ts...>, std::tuple<_Ts...>>
+    {
+        using type = std::tuple<Ts..., _Ts...>;
+    };
+
+    template<class ...Ts>
+    struct tuple_contain;
+
+    template<class T, class ...Ts>
+    struct tuple_contain<T, T, Ts...>
+    {
+        using type = std::true_type;
+    };
+
+    template<class T, class _T, class ...Ts>
+    struct tuple_contain<T, _T, Ts...>
+    {
+        using type = typename tuple_contain<T, Ts...>::type;
+    };
+
+    template<class T>
+    struct tuple_contain<T>
+    {
+        using type = std::false_type;
+    };
+
+    template<class ...Ts>
+    struct unpack_type;
+
+    template<class ...Ts, class ..._Ts>
+    struct unpack_type<std::tuple<Ts...>, _Ts...>
+    {
+        using type = typename imp::tuple_cat<std::tuple<Ts...>, typename imp::unpack_type<_Ts...>::type>::type;
+    };
+
+    template<class T, class ...Ts>
+    struct unpack_type<T, Ts...>
+    {
+        using type = typename imp::tuple_prepend<T, typename imp::unpack_type<Ts...>::type>::type;
+    };
+
+    template<class T>
+    struct unpack_type<T>
+    {
+        using type = UniqueTypeTuple<T>;
+    };
+
+    template<class T, class ...Ts>
+    struct unique_type
+    {
+        using type = std::conditional_t<tuple_contain<T, Ts...>::type::value,
+            typename imp::unique_type<Ts...>::type,
+            typename imp::tuple_prepend<T, typename imp::unique_type<Ts...>::type>::type>;
+    };
+
+    template<class T>
+    struct unique_type<T>
+    {
+        using type = UniqueTypeTuple<T>;
+    };
 }
 
 template<class T, class ...Ts>
@@ -46,69 +123,39 @@ struct tuple_find
 };
 
 template<class ...Ts>
-struct tuple_size;
-
-template<class T, class ...Ts>
-struct tuple_size<T, Ts...>
+struct tuple_size
 {
-    static constexpr size_t value = 1 + tuple_size<Ts...>::value;
+    static constexpr size_t value = imp::tuple_size<Ts...>::value;
 };
 
-template<class T>
-struct tuple_size<T>
+template<class T, class ...Ts>
+struct tuple_contain
 {
-    static constexpr size_t value = 1;
+    using type = imp::tuple_contain<T, Ts...>::type;
 };
 
 template<class ...Ts>
-struct unpack_tuple;
-
-template<class, class>
-struct tuple_prepend;
-
-template<class T, class ...Ts>
-struct tuple_prepend<T, std::tuple<Ts...>>
+struct tuple_prepend
 {
-    using type = std::tuple<T, Ts...>;
+    using type = typename imp::tuple_prepend<Ts...>::type;
 };
-
-template<class, class>
-struct tuple_cat;
-
-template<class ...Ts, class ..._Ts>
-struct tuple_cat<std::tuple<Ts...>, std::tuple<_Ts...>>
-{
-    using type = std::tuple<Ts..., _Ts...>;
-};
-
-namespace imp
-{
-    template<class ...Ts>
-    struct unpack_tuple;
-
-    template<class ...Ts, class ..._Ts>
-    struct unpack_tuple<std::tuple<Ts...>, _Ts...>
-    {
-        using type = typename tuple_cat<Ts..., typename unpack_tuple<_Ts...>::type>::type;
-    };
-
-    template<class T, class ...Ts>
-    struct unpack_tuple<T, Ts...>
-    {
-        using type = typename tuple_prepend<T, typename unpack_tuple<Ts...>::type>::type;
-    };
-
-    template<class T>
-    struct unpack_tuple<T>
-    {
-        using type = std::tuple<T>;
-    };
-}
 
 template<class ...Ts>
-struct unpack_tuple<std::tuple<Ts...>>
+struct tuple_cat
 {
-    using type = typename imp::unpack_tuple<Ts...>::type;
+    using type = typename imp::tuple_cat<Ts...>::type;
+};
+
+template<class ...Ts>
+struct unpack_type
+{
+    using type = typename imp::unpack_type<Ts...>::type;
+};
+
+template<class ...Ts>
+struct unique_type
+{
+    using type = typename imp::unique_type<Ts...>::type;
 };
 
 namespace ecs::sys
@@ -141,7 +188,7 @@ template<template<typename ...> class base, typename derived>
 using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
 
 template<class T, class ...Ts>
-concept ContainIn = tuple_contain<T, Ts...>::value;
+concept ContainIn = tuple_contain<T, Ts...>::type::value;
 
 template<class T>
 concept SystemType = std::is_base_of<ecs::sys::ISystem, T>::value;

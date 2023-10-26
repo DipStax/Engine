@@ -28,7 +28,7 @@ namespace eng
     template<class T>
     void Trigger<T>::unsubscribe(const sTask _task)
     {
-        std::erase_if(m_sub, [_task] (const std::shared_ptr<Task> _ctask) {
+        std::erase_if(m_sub, [_task] (const sTask _ctask) {
             return _task == _ctask;
         });
     }
