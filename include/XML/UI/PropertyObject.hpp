@@ -1,12 +1,23 @@
 #pragma once
 
+#define PROPERTY_EVENT Ts...
+
 #include "XML/UI/EventObject.hpp"
 #include "Engine/Event/Property.hpp"
 
 namespace eng::ui
 {
     template<class ...Ts>
-    class PropertyObject : public EventObject<Ts...>
+    using PropertyEvent = typename unique_type<PROPERTY_EVENT>::type;
+
+    template<class T>
+    using PropertyBind = Trigger<typename Property<T>::Event>::sTask;
+
+    template<class ...Ts>
+    class PropertyObject;
+
+    template<class ...Ts>
+    class PropertyObject<std::tuple<Ts...>> : public EventObject<PropertyEvent<Ts...>>
     {
         public:
             PropertyObject(ThreadPool &_tp);
@@ -31,16 +42,17 @@ namespace eng::ui
             [[nodiscard]] void registerProperty(Property<T> &_prop, fn_conv<T> _conv);
 
             template<class T>
-            [[nodiscard]] Property<T>::PropTrigger::sTask bindProperty(Property<T> &_prop);
+            requires ContainIn<typename Property<T>::Event, Ts...>
+            [[nodiscard]] PropertyBind<T> bindProperty(Property<T> &_prop);
 
             template<class T>
             requires ContainIn<typename Property<T>::Event, Ts...>
-            void unregisterProperty(Property<T>::PropTrigger::sTask _stask);
+            void unbindProperty(PropertyBind<T> _stask);
 
             void setProperty(const std::string &_name, const std::string &_val);
 
         private:
-            std::unordered_map<std::string, fn_assign> m_conv;
+            std::unordered_map<std::string, fn_assign> m_conv{};
     };
 }
 
