@@ -277,6 +277,8 @@ namespace eng
 
     bool Window::messageKeyBoard(UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
+        std::ignore = _lparam;
+
         switch (_msg) {
             case WM_KEYDOWN:
                 keyboardEvent(KeyState::Down, _wparam);

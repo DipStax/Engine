@@ -1,13 +1,13 @@
-#include "XML/UI/Object.hpp"
+#include "XML/UI/BaseObject.hpp"
 
 namespace eng::ui
 {
-    Object::Object()
+    BaseObject::BaseObject()
     {
         create(0, 0, 32);
     }
 
-    void Object::draw(RenderTarget &_target, const Texture *_txtr) const
+    void BaseObject::draw(RenderTarget &_target, const Texture *_txtr) const
     {
         // cache?
         Texture txtr;

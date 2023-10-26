@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Engine/Event/EventPool.hpp"
-#include "XML/UI/IAcceptEvent.hpp"
-#include "XML/UI/Object.hpp"
+#include "XML/UI/BaseObject.hpp"
 
 namespace eng::ui
 {
     template<class ...Ts>
-    class EventObject : public EventPool<Ts>..., public Object, IAcceptEvent<Ts...>
+    class EventObject;
+
+    template<class ...Ts>
+    class EventObject<std::tuple<Ts...>> : public EventPool<Ts>..., public BaseObject
     {
         public:
             EventObject(ThreadPool &_tp);

@@ -50,7 +50,7 @@ namespace eng
 
     void RenderTarget::draw(const Vertex *_vtx, size_t _size, VertexArray::Type _type)
     {
-        if (_type == VertexArray::Type::point) {
+        if (_type == VertexArray::Type::Point) {
             for (size_t it = 0; it < _size; it++)
                 setPixel(_vtx[it].pos.as<uint32_t>(), _vtx[it].clr);
         } else if (_type == VertexArray::Type::Lines || _type == VertexArray::Type::LineStrip) {
@@ -207,8 +207,8 @@ namespace eng
         float ratio1 = 0;
         float ratio2 = 0;
         float ratio3 = 0;
-        Color clr = { 0, 0, 0, 0 }
-        Point2<uint32_t> size = g;etSize() - 1;
+        Color clr = { 0, 0, 0, 0 };
+        Point2<uint32_t> size = getSize() - 1;
 
         // caluclate minimal range of the drawing on x axes
         float xstart = static_cast<float>(std::max(_range.x, 0U));
