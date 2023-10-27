@@ -71,7 +71,7 @@ namespace imp
     template<class T, class _T, class ...Ts>
     struct tuple_contain<T, _T, Ts...>
     {
-        using type = typename tuple_contain<T, Ts...>::type;
+        using type = typename imp::tuple_contain<T, Ts...>::type;
     };
 
     template<class T>
@@ -131,7 +131,7 @@ struct tuple_size
 template<class T, class ...Ts>
 struct tuple_contain
 {
-    using type = imp::tuple_contain<T, Ts...>::type;
+    using type = typename imp::tuple_contain<T, Ts...>::type;
 };
 
 template<class ...Ts>

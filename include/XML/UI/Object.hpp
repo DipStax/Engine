@@ -1,6 +1,6 @@
 #pragma once
 
-#define OBJECT_EVENT Property<std::string>::Event, Property<uint32_t>::Event, Ts...
+#define OBJECT_EVENT Property<std::string>::Event, Property<uint32_t>::Event
 
 #include "Tool/PreProcessing.hpp"
 #include "XML/UI/ContainerObject.hpp"
@@ -9,7 +9,7 @@
 namespace eng::ui
 {
     template<class ...Ts>
-    using ObjectEvent = typename unique_type<OBJECT_EVENT>::type;
+    using ObjectEvent = typename unique_type<OBJECT_EVENT, Ts...>::type;
 
     template<class ...Ts>
     class Object;
