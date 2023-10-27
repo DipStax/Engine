@@ -1,14 +1,12 @@
 #pragma once
 
-#define PROPERTY_EVENT Ts...
-
 #include "XML/UI/EventObject.hpp"
 #include "Engine/Event/Property.hpp"
 
 namespace eng::ui
 {
     template<class ...Ts>
-    using PropertyEvent = typename unique_type<PROPERTY_EVENT>::type;
+    using PropertyEvent = typename unique_type<Ts...>::type;
 
     template<class T>
     using PropertyBind = Trigger<typename Property<T>::Event>::sTask;
