@@ -4,7 +4,7 @@ namespace eng::ui
 {
     template<class ...Ts>
     Object<std::tuple<Ts...>>::Object(const std::string &_type, ThreadPool &_tp)
-        : ContainerObject(_type), PropertyObject<std::tuple<Ts...>>(_tp), Class(*this, "Class", ""),
+        : ObjectRegistre(_type), PropertyObject<std::tuple<Ts...>>(_tp), Class(*this, "Class", ""),
           Width(*this, "Width", 0), Height(*this, "Height", 0)
     {
         ownProperty();
@@ -12,7 +12,7 @@ namespace eng::ui
 
     template<class ...Ts>
     Object<std::tuple<Ts...>>::Object(Object &&_obj) noexcept
-        : ContainerObject(std::move(_obj)), PropertyObject<std::tuple<Ts...>>(std::move(_obj)),
+        : ObjectRegistre(std::move(_obj)), PropertyObject<std::tuple<Ts...>>(std::move(_obj)),
           Class(std::move(_obj.Class)), Width(std::move(_obj.Width)), Height(std::move(_obj.Height))
     {
         ownProperty();

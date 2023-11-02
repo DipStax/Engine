@@ -9,7 +9,7 @@ namespace eng::ui
     class EventObject;
 
     template<class ...Ts>
-    class EventObject<std::tuple<Ts...>> : public EventPool<Ts>..., public BaseObject
+    class EventObject<std::tuple<Ts...>> : public EventPool<Ts>...
     {
         public:
             EventObject(ThreadPool &_tp);

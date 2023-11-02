@@ -13,6 +13,5 @@ namespace eng::xml
 
         private:
             static Balise run(const std::vector<Token> &_token, size_t &_it);
-
     };
 }
