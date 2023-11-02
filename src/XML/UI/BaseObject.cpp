@@ -2,7 +2,8 @@
 
 namespace eng::ui
 {
-    BaseObject::BaseObject()
+    BaseObject::BaseObject(const std::string &_type)
+        : ObjectRegistre(_type)
     {
         create(0, 0, 32);
     }

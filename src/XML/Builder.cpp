@@ -21,10 +21,9 @@ namespace eng::xml
     Balise Builder::run(const std::vector<Token> &_token, size_t &_it)
     {
         Balise balise;
-        Balise::Type type;
 
         if (_token[_it].type == Token::Type::Open && _token[++_it].type == Token::Type::Word) {
-            balise.setName(_token[_it].value);
+            balise.setType(_token[_it].value);
             _it++;
             while (_token[_it].type != Token::Type::CloseSign && _token[_it].type != Token::Type::Close) {
                 if (_token[_it].type != Token::Type::Word) {
@@ -40,13 +39,10 @@ namespace eng::xml
             if (_token[_it].type == Token::Type::CloseSign) {
                 if (_token[++_it].type != Token::Type::Close)
                     throw std::runtime_error("error: wrong syntax on single balise end");
-                type = Balise::Type::Single;
             } else {
                 while (_token[++_it].type == Token::Type::Open && _token[_it + 1].type != Token::Type::CloseSign)
                     balise.addChildren(run(_token, _it));
-                type = Balise::Type::Children;
             }
-            balise.setType(type);
             return balise;
         }
         throw std::runtime_error("error: this element isn't a baliser");
