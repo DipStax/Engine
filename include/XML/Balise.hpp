@@ -13,28 +13,23 @@ namespace eng::xml
     class PROJECT_API Balise
     {
         public:
-            enum Type
-            {
-                Single,
-                Children,
-                NoSub
-            };
-
             Balise() = default;
             ~Balise() = default;
 
-            void setName(const std::string &_name);
-            void setType(Type _type);
+            void setType(const std::string &_type);
             void addValue(const Value &_value);
             void addChildren(const Balise &_balise);
-            void setContent(const std::string &_data);
 
-            [[nodiscard]] Type getType() const;
-            [[nodiscard]] std::string &getName();
+            [[nodiscard]] std::string &getType();
+            [[nodiscard]] const std::string &getType() const;
+
             [[nodiscard]] std::vector<Balise> &getChild();
-            [[nodiscard]] std::string &getContent();
+            [[nodiscard]] const std::vector<Balise> &getChild() const;
 
-            std::string &operator[](const std::string &_id);
+            [[nodiscard]] std::map<std::string, std::string> &getValue();
+            [[nodiscard]] const std::map<std::string, std::string> &getValue() const;
+
+            std::string &operator[](const std::string &_name);
 
             PROJECT_API friend std::ostream &operator<<(std::ostream &_os, const Balise &_balise);
 
@@ -44,8 +39,6 @@ namespace eng::xml
         private:
             std::map<std::string, std::string> m_value;
             std::vector<Balise> m_child;
-            std::string m_content;
-            Type m_type;
-            std::string m_name;
+            std::string m_type;
     };
 }

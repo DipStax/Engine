@@ -86,13 +86,13 @@ namespace imp
     template<class ...Ts, class ..._Ts>
     struct unpack_type<std::tuple<Ts...>, _Ts...>
     {
-        using type = typename imp::tuple_cat<std::tuple<Ts...>, typename imp::unpack_type<_Ts...>::type>::type;
+        using type = typename tuple_cat<std::tuple<Ts...>, typename imp::unpack_type<_Ts...>::type>::type;
     };
 
     template<class T, class ...Ts>
     struct unpack_type<T, Ts...>
     {
-        using type = typename imp::tuple_prepend<T, typename imp::unpack_type<Ts...>::type>::type;
+        using type = typename tuple_prepend<T, typename imp::unpack_type<Ts...>::type>::type;
     };
 
     template<class T>
@@ -106,13 +106,57 @@ namespace imp
     {
         using type = std::conditional_t<tuple_contain<T, Ts...>::type::value,
             typename imp::unique_type<Ts...>::type,
-            typename imp::tuple_prepend<T, typename imp::unique_type<Ts...>::type>::type>;
+            typename tuple_prepend<T, typename imp::unique_type<Ts...>::type>::type>;
     };
 
     template<class T>
     struct unique_type<T>
     {
         using type = UniqueTypeTuple<T>;
+    };
+
+    template<class ...Ts>
+    struct is_factory_pair;
+
+    template<class T, class ...Ts>
+    struct is_factory_pair<T, Ts...>
+    {
+        using type = std::false_type;
+    };
+
+    template<>
+    struct is_factory_pair<>
+    {
+        using type = std::true_type;
+    };
+
+    template<class ...Ts>
+    struct pair_key;
+
+    template<class T, class _T, class ...Ts>
+    struct pair_key<std::pair<T, _T>, Ts...>
+    {
+        using type = typename tuple_prepend<T, typename pair_key<Ts...>::type>::type;
+    };
+
+    template<>
+    struct pair_key<>
+    {
+        using type = std::tuple<>;
+    };
+
+    template<class ...Ts>
+    struct tuple_accept_ctr;
+
+    template<class ...Ts>
+    class tuple_base_of;
+
+    template<class T, class _T, class __T, class ...Ts>
+    struct tuple_base_of<T, std::tuple<std::pair<_T, __T>, Ts...>>
+    {
+        using type = std::conditional_t<std::is_base_of<T, _T>::value,
+            typename tuple_base_of<T, Ts...>::type,
+            std::false_type>;
     };
 }
 
@@ -158,9 +202,39 @@ struct unique_type
     using type = typename imp::unique_type<Ts...>::type;
 };
 
+template<class ...Ts>
+struct is_factory_pair
+{
+    using type = typename imp::is_factory_pair<Ts...>::imp;
+};
+
+template<class ...Ts>
+struct pair_key
+{
+    using type = typename imp::pair_key<Ts...>::type;
+};
+
+template<class ...Ts>
+struct tuple_accept_ctr
+{
+    using type = typename imp::tuple_accept_ctr<Ts...>::type;
+};
+
+template<class ...Ts>
+struct tuple_base_of
+{
+    using type = typename imp::tuple_base_of<Ts...>::type;
+};
+
 namespace ecs::sys
 {
     class ISystem;
+}
+
+namespace eng::ui
+{
+    template<class ...Ts>
+    class Object;
 }
 
 template<class ...Ts>
@@ -175,16 +249,16 @@ namespace opt
     }
 }
 
-template<template<typename...> class base, typename derived>
+template<template<typename ...> class T, class _T>
 struct is_base_of_template_impl
 {
-    template<typename... Ts>
-    static constexpr std::true_type  test(const base<Ts...> *);
+    template<class ...Ts>
+    static constexpr std::true_type  test(const T<Ts...> *);
     static constexpr std::false_type test(...);
-    using type = decltype(test(std::declval<derived*>()));
+    using type = decltype(test(std::declval<_T*>()));
 };
 
-template<template<typename ...> class base, typename derived>
+template<template<typename ...> class base, class derived>
 using is_base_of_template = typename is_base_of_template_impl<base, derived>::type;
 
 template<class T, class ...Ts>
@@ -210,6 +284,53 @@ concept KeyType = requires (T r, T l)
 {
     r < l;
 };
+
+template<class T>
+concept IsUiObject = is_base_of_template<eng::ui::Object, T>::type::value;
+
+template<class T>
+concept IsString = std::is_same<const char *, T>::value;
+
+template <class T, class... Ts>
+concept AcceptCtr = requires (T _l, Ts... _r) {
+    T(std::forward<Ts>(_r)...);
+};
+
+template<class ...Ts>
+concept IsFacPair = is_factory_pair<Ts...>::type::value;
+
+template<class T, class ..._Ts>
+concept TupleAcceptCtr = tuple_accept_ctr<typename pair_key<T>::type, _Ts...>::type::value;
+
+template<class T, class ...Ts>
+concept IsFacMap = IsFacPair<Ts...> && tuple_base_of<T, typename pair_key<T>::type>::type::value;
+
+namespace imp
+{
+    template<IsString T, IsUiObject _T, class ...Ts>
+    struct is_factory_pair<std::pair<T, _T>, Ts...>
+    {
+        using type = imp::is_factory_pair<Ts...>::type;
+    };
+
+    template<AcceptCtr T, class ...Ts, class ..._Ts>
+    struct tuple_accept_ctr<std::tuple<T, Ts...>, _Ts...>
+    {
+        using type = typename imp::tuple_accept_ctr<std::tuple<Ts...>, _Ts...>::type;
+    };
+
+    template<class T, class ...Ts, class ..._Ts>
+    struct tuple_accept_ctr<std::tuple<T, Ts...>, _Ts...>
+    {
+        using type = std::false_type;
+    };
+
+    template<class ..._Ts>
+    struct tuple_accept_ctr<std::tuple<>, _Ts...>
+    {
+        using type = std::true_type;
+    };
+}
 
 #pragma region Operator concept
 

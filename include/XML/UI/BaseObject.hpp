@@ -4,12 +4,15 @@
 #include "Engine/Rendering/Sprite.hpp"
 #include "Engine/Rendering/RenderTexture.hpp"
 
+#include "XML/UI/ObjectRegistre.hpp"
+#include "XML/UI/PropertyRegistre.hpp"
+
 namespace eng::ui
 {
-    class BaseObject : public IDrawable, protected RenderTarget
+    class BaseObject : public IDrawable, protected RenderTarget, public PropertyRegistre, public ObjectRegistre
     {
         public:
-            BaseObject();
+            BaseObject(const std::string &_type);
             ~BaseObject() = default;
 
         protected:

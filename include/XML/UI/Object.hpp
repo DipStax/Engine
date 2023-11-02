@@ -3,7 +3,7 @@
 #define OBJECT_EVENT Property<std::string>::Event, Property<uint32_t>::Event
 
 #include "Tool/PreProcessing.hpp"
-#include "XML/UI/ContainerObject.hpp"
+#include "XML/UI/ObjectRegistre.hpp"
 #include "XML/UI/PropertyObject.hpp"
 
 namespace eng::ui
@@ -15,7 +15,7 @@ namespace eng::ui
     class Object;
 
     template<class ...Ts>
-    class Object<std::tuple<Ts...>> : public ContainerObject, public PropertyObject<ObjectEvent<Ts...>>
+    class Object<std::tuple<Ts...>> : public BaseObject, public PropertyObject<ObjectEvent<Ts...>>
     {
         public:
             Object(const std::string& _type, ThreadPool& _tp);
