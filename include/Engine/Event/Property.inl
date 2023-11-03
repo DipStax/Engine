@@ -14,13 +14,13 @@ namespace eng
     template<class ...Ts, class ..._Ts>
     requires ContainIn<typename Property<T>::Event, Ts...>
     Property<T>::Property(EventPool<Ts...> &_ep, const std::string &_name, _Ts &&..._args)
-        : m_name(_name), m_trigger(_ep.template getTrigger<Property<T>::Event>())/*m_ep(_ep)*/, m_value(std::forward<_Ts>(_args)...)
+        : m_name(_name), m_trigger(_ep.template getTrigger<Property<T>::Event>()), m_value(std::forward<_Ts>(_args)...)
     {
     }
 
     template<class T>
     Property<T>::Property(Property<T> &&_prop) noexcept
-        : m_name(std::move(_prop.m_name)), m_trigger(_prop.m_trigger)/*m_ep(_prop.m_ep)*/, m_value(std::move(_prop.m_value))
+        : m_name(std::move(_prop.m_name)), m_trigger(_prop.m_trigger), m_value(std::move(_prop.m_value))
     {
     }
 
@@ -39,21 +39,18 @@ namespace eng
     template<class T>
     Property<T>::PropTrigger::sTask Property<T>::subscribe(PropTrigger::Task _task)
     {
-        // return m_ep.template subscribe<Event>(_task);
         return m_trigger.subscribe(_task);
     }
 
     template<class T>
     void Property<T>::unsubscribe(PropTrigger::sTask _task)
     {
-        // m_ep.template unsubscribe<Event>(_task);
         m_trigger.unsubscribe(_task);
     }
 
     template<class T>
     void Property<T>::trigger()
     {
-        // m_ep.template raise<Event>({ m_name, m_value });
         m_trigger.raise({ m_name, m_value });
     }
 

@@ -18,7 +18,6 @@ namespace eng
                 const T &value;
             };
 
-            // using PropEventPool = EventPool<Event>;
             using PropTrigger = Trigger<Event>;
 
             template<class ...Ts>
@@ -118,7 +117,6 @@ namespace eng
             Property<T> &operator=(const Property<T> &_prop) = delete;
 
             const std::string m_name;
-            // PropEventPool &m_ep;
             Trigger<Property<T>::Event> &m_trigger;
 
             T m_value;
