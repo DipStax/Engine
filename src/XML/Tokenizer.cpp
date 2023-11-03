@@ -117,7 +117,7 @@ namespace eng::xml
     {
         char get = 0;
         const std::string skip(" \t\n\r");
-        int32_t cursor = _stream.tellg();
+        int64_t cursor = _stream.tellg();
 
         while (!_stream.eof()) {
             _stream.get(get);

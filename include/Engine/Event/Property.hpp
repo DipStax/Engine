@@ -18,12 +18,15 @@ namespace eng
                 const T &value;
             };
 
-            using PropEventPool = EventPool<Event>;
+            // using PropEventPool = EventPool<Event>;
             using PropTrigger = Trigger<Event>;
 
-            Property(PropEventPool &_ep, const std::string &_name, T &_val);
             template<class ...Ts>
-            Property(PropEventPool &_ep, const std::string &_name, Ts &&..._args);
+            requires ContainIn<typename Property<T>::Event, Ts...>
+            Property(EventPool<Ts...> &_ep, const std::string &_name, T &_val);
+            template<class ...Ts, class ..._Ts>
+            requires ContainIn<typename Property<T>::Event, Ts...>
+            Property(EventPool<Ts...> &_ep, const std::string &_name, _Ts &&..._args);
             Property(Property<T> &&_prop) noexcept;
             Property<T>& operator=(Property<T> &&_prop) noexcept;
             ~Property() = default;
@@ -115,7 +118,8 @@ namespace eng
             Property<T> &operator=(const Property<T> &_prop) = delete;
 
             const std::string m_name;
-            PropEventPool &m_ep;
+            // PropEventPool &m_ep;
+            Trigger<Property<T>::Event> &m_trigger;
 
             T m_value;
     };

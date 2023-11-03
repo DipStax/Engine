@@ -4,13 +4,13 @@ namespace eng::ui
 {
     template<class ...Ts>
     PropertyObject<std::tuple<Ts...>>::PropertyObject(ThreadPool &_tp)
-        : EventObject<Ts...>(_tp)
+        : EventObject<PropertyEvent<Ts...>>(_tp)
     {
     }
 
     template<class ...Ts>
-    PropertyObject<std::tuple<Ts...>>::PropertyObject(PropertyObject<Ts...> &&_obj) noexcept
-        : EventObject<Ts...>(std::move(*this))
+    PropertyObject<std::tuple<Ts...>>::PropertyObject(PropertyObject<std::tuple<Ts...>> &&_obj) noexcept
+        : EventObject<PropertyEvent<Ts...>>(std::move(*this))
     {
     }
 
@@ -20,7 +20,7 @@ namespace eng::ui
     PropertyBind<T> PropertyObject<std::tuple<Ts...>>::bindProperty(Property<T> &_prop)
     {
         return _prop.subscribe([this] (const Property<T>::Event &_val) {
-            this->raise<Property<T>::Event>(_val);
+            this->template raise<typename Property<T>::Event>(_val);
         });
     }
 
@@ -29,6 +29,6 @@ namespace eng::ui
     requires ContainIn<typename Property<T>::Event, Ts...>
     void PropertyObject<std::tuple<Ts...>>::unbindProperty(PropertyBind<T> _stask)
     {
-        unsubscribe<Property<T>::Event>(_stask);
+        this->template unsubscribe<typename Property<T>::Event>(_stask);
     }
 }

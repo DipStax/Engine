@@ -9,12 +9,15 @@ namespace eng::ui
     class EventObject;
 
     template<class ...Ts>
-    class EventObject<std::tuple<Ts...>> : public EventPool<Ts>...
+    class EventObject<std::tuple<Ts...>> : public EventPool<Ts...>
     {
         public:
             EventObject(ThreadPool &_tp);
             EventObject(EventObject &&_eo) noexcept;
             ~EventObject() = default;
+
+        protected:
+            EventPool<Ts...> *EP();
     };
 }
 

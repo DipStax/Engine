@@ -26,8 +26,13 @@ namespace eng
             requires ContainIn<T, Ts...>
             void unsubscribe(Trigger<T>::sTask _task);
 
+            template<class T>
+            requires ContainIn<T, Ts...>
+            Trigger<T> &getTrigger();
+
         private:
             TriggerMap<Trigger, std::tuple<Ts...>> m_map;
+            // return the trigger from the pool event to the property
     };
 }
 

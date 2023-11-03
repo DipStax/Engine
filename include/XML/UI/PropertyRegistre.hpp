@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Engine/Event/Property.hpp"
-
-
+#include "Tool/Export.hpp"
 
 namespace eng
 {
@@ -13,7 +12,7 @@ namespace eng
 
     namespace ui
     {
-        class PropertyRegistre
+        class PROJECT_API PropertyRegistre
         {
             public:
                 PropertyRegistre() = default;
@@ -24,16 +23,16 @@ namespace eng
                 using fn_conv = std::function<T (const std::string &)>;
                 using fn_assign = std::function<void (const std::string &)>;
 
-                [[nodiscard]] void registerProperty(Property<std::string> &_prop);
+                void registerProperty(Property<std::string> &_prop);
                 template<IsUnsigned T>
-                [[nodiscard]] void registerProperty(Property<T> &_prop);
+                void registerProperty(Property<T> &_prop);
                 template<IsSigned T>
-                [[nodiscard]] void registerProperty(Property<T> &_prop);
+                void registerProperty(Property<T> &_prop);
                 template<IsFPN T>
-                [[nodiscard]] void registerProperty(Property<T> &_prop);
+                void registerProperty(Property<T> &_prop);
 
                 template<class T>
-                [[nodiscard]] void registerProperty(Property<T> &_prop, fn_conv<T> _conv);
+                void registerProperty(Property<T> &_prop, fn_conv<T> _conv);
 
                 friend class Factory::Balise;
 

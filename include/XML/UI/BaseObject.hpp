@@ -9,7 +9,7 @@
 
 namespace eng::ui
 {
-    class BaseObject : public IDrawable, protected RenderTarget, public PropertyRegistre, public ObjectRegistre
+    class PROJECT_API BaseObject : public IDrawable, protected RenderTarget, public PropertyRegistre, public ObjectRegistre
     {
         public:
             BaseObject(const std::string &_type);

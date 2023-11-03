@@ -10,7 +10,7 @@ namespace eng::ui
     template<class ...Ts>
     using RectangleEvent = typename unique_type<RECTANGLE_EVENT, Ts...>::type;
 
-    class Rectangle : public Object<RectangleEvent<>>
+    class PROJECT_API Rectangle : public Object<RectangleEvent<>>
     {
         public:
             Rectangle(const std::string &_type, eng::ThreadPool &_tp);

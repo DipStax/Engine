@@ -18,8 +18,8 @@ namespace eng::ui
     class Object<std::tuple<Ts...>> : public BaseObject, public PropertyObject<ObjectEvent<Ts...>>
     {
         public:
-            Object(const std::string& _type, ThreadPool& _tp);
-            Object(Object&& _obj) noexcept;
+            Object(const std::string &_type, ThreadPool &_tp);
+            Object(Object &&_obj) noexcept;
             ~Object();
 
             Property<std::string> Class;

@@ -4,11 +4,13 @@
 #include <vector>
 #include <memory>
 
+#include "Tool/Export.hpp"
+
 namespace eng::ui
 {
     class BaseObject;
 
-    class ObjectRegistre
+    class PROJECT_API ObjectRegistre
     {
         public:
             ObjectRegistre(const std::string &_type);

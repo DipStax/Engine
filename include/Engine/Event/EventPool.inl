@@ -21,7 +21,7 @@ namespace eng
     requires ContainIn<T, Ts...>
     bool EventPool<Ts...>::raise(const T &_event)
     {
-        m_map.at<T>().raise(_event);
+        m_map.template at<T>().raise(_event);
         return true;
     }
 
@@ -30,7 +30,7 @@ namespace eng
     requires ContainIn<T, Ts...>
     Trigger<T>::sTask EventPool<Ts...>::subscribe(Trigger<T>::Task _task)
     {
-        return m_map.at<T>().subscribe(_task);
+        return m_map.template at<T>().subscribe(_task);
     }
 
     template<class ...Ts>
@@ -38,6 +38,14 @@ namespace eng
     requires ContainIn<T, Ts...>
     void EventPool<Ts...>::unsubscribe(Trigger<T>::sTask _task)
     {
-        m_map.at<T>().unsubscribe(_task);
+        m_map.template at<T>().unsubscribe(_task);
+    }
+
+    template<class ...Ts>
+    template<class T>
+    requires ContainIn<T, Ts...>
+    Trigger<T> &EventPool<Ts...>::getTrigger()
+    {
+        return m_map.template at<T>();
     }
 }

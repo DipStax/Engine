@@ -18,7 +18,7 @@ namespace eng::ui
     {
         public:
             PropertyObject(ThreadPool &_tp);
-            PropertyObject(PropertyObject<Ts...> &&_obj) noexcept;
+            PropertyObject(PropertyObject<std::tuple<Ts...>> &&_obj) noexcept;
             ~PropertyObject() = default;
 
         protected:
