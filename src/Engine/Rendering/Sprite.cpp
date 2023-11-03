@@ -50,8 +50,6 @@ namespace eng
 
     void Sprite::setTxtrRect(Rect _rect)
     {
-        Point2<float> size = m_txtr.getSize().as<float>();
-
         m_rect = _rect;
         buildVertex();
     }

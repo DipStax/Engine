@@ -27,7 +27,7 @@ namespace eng
             void draw(const Vertex3D *_vtx, size_t _size, const Texture *_txtr);
             void draw(const Vertex3D *_vtx, size_t _size, VertexArray::Type _type);
 
-            virtual [[nodiscard]] Point2<uint32_t> getSize() const = 0;
+            [[nodiscard]] virtual Point2<uint32_t> getSize() const = 0;
             [[nodiscard]] Camera &getCamera();
 
             void clear(const Color &_clr = { 0, 0, 0, 255 });

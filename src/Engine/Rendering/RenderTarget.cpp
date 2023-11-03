@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cstring>
 
 #include "Engine/Rendering/RenderTarget.hpp"
 #include "Engine/Maths/Maths.hpp"
@@ -120,7 +121,7 @@ namespace eng
         bmi.bmiHeader.biPlanes = 1;
         bmi.bmiHeader.biBitCount = 32;
         bmi.bmiHeader.biCompression = BI_RGB;
-        m_dib = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, reinterpret_cast<void **>(&m_data), NULL, NULL);
+        m_dib = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, reinterpret_cast<void **>(&m_data), NULL, 0);
         ReleaseDC(NULL, hdc);
         m_depth.clear();
         m_depth.resize(_x * _y, std::numeric_limits<float>::lowest());

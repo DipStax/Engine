@@ -13,7 +13,7 @@ namespace eng::xml
     class PROJECT_API Balise
     {
         public:
-            enum PROJECT_API Type
+            enum Type
             {
                 Single,
                 Children,

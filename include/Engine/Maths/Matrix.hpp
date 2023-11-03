@@ -19,8 +19,8 @@ namespace eng
             template<size_t Z>
             Matrix<Y, Z> operator*(const Matrix<X, Z> &_matrix);
 
-            template<size_t Y, size_t X>
-            friend std::ostream &operator<<(std::ostream &_os, const Matrix<Y, X> &_mat);
+            template<size_t _Y, size_t _X>
+            friend std::ostream &operator<<(std::ostream &_os, const Matrix<_Y, _X> &_mat);
     };
 }
 

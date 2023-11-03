@@ -4,7 +4,7 @@ namespace eng
 {
     Point2<uint32_t> Mouse::Position()
     {
-        LPPOINT point;
+        LPPOINT point = NULL;
         bool ret = GetCursorPos(point);
 
         // error handling with ret

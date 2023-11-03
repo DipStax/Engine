@@ -14,7 +14,7 @@ namespace eng
 
     namespace priv
     {
-        PROJECT_API bool isEarTip(const CircleList<Vertex> &_cl, size_t _start);
+        PROJECT_API bool isEarTip(const CircleList<Vertex> &_cl, int32_t _start);
         PROJECT_API float calInside(const Point2<float> &_pt, const Point2<float>& _a, const Point2<float> &_b, const Point2<float>& _c);
         PROJECT_API bool reflex(const Point2<float> _prev, const Point2<float> &_cur, const Point2<float> &_next);
     }

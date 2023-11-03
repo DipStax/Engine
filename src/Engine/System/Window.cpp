@@ -34,8 +34,13 @@ namespace eng
         m_winClass = {
                 .style = CS_VREDRAW | CS_DBLCLKS,
                 .lpfnWndProc = WIN_proc,
+                .cbClsExtra = 0,
+                .cbWndExtra = 0,
                 .hInstance = GetModuleHandle(NULL),
+                .hIcon = NULL,
+                .hCursor = NULL,
                 .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
+                .lpszMenuName = NULL,
                 .lpszClassName = WIN_className,
         };
         RegisterClass(&m_winClass);
@@ -277,6 +282,8 @@ namespace eng
 
     bool Window::messageKeyBoard(UINT _msg, WPARAM _wparam, LPARAM _lparam)
     {
+        std::ignore = _lparam;
+
         switch (_msg) {
             case WM_KEYDOWN:
                 keyboardEvent(KeyState::Down, _wparam);

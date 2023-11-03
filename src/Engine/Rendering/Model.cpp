@@ -11,6 +11,13 @@ namespace eng
         Init();
     }
 
+    Model::Model(const Model &_model)
+        : m_v(_model.m_v), m_vn(_model.m_vn), m_vt(_model.m_vt), m_vp(_model.m_vp),
+          m_f(_model.m_f), m_txtr(_model.m_txtr), m_txtrId(_model.m_txtrId)
+    {
+    }
+
+
     Model &Model::operator=(const Model &_model)
     {
         if (this == &_model)
@@ -30,7 +37,7 @@ namespace eng
     {
         Model model = *this;
 
-        return std::move(model);
+        return model;
     }
 
     void Model::load(const std::string &_path)

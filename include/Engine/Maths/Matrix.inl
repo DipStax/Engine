@@ -36,19 +36,19 @@ namespace eng
         return mat;
     }
 
-    template<size_t Y, size_t X>
-    std::ostream& operator<<(std::ostream& _os, const Matrix<Y, X>& _mat) {
+    template<size_t _Y, size_t _X>
+    std::ostream& operator<<(std::ostream& _os, const Matrix<_Y, _X>& _mat) {
         _os << "[ ";
-        for (size_t y = 0; y < Y; y++) {
+        for (size_t y = 0; y < _Y; y++) {
             _os << "[ ";
-            for (size_t x = 0; x < X; x++) {
+            for (size_t x = 0; x < _X; x++) {
                 _os << _mat[y][x];
-                if (x != X - 1)
+                if (x != _X - 1)
                     _os << ",";
                 _os << " ";
             }
             _os << "]";
-            if (y != Y - 1)
+            if (y != _Y - 1)
                 _os << std::endl;
         }
         return _os;
