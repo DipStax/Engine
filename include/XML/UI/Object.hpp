@@ -1,6 +1,6 @@
 #pragma once
 
-#define OBJECT_EVENT Property<std::string>::Event, Property<uint32_t>::Event
+#define OBJECT_EVENT Property<uint32_t>::Event
 
 #include "Tool/PreProcessing.hpp"
 #include "XML/UI/ObjectRegistre.hpp"
@@ -22,10 +22,8 @@ namespace eng::ui
             Object(Object &&_obj) noexcept;
             ~Object();
 
-            Property<std::string> Class;
-
             Property<uint32_t> Width;
-            Property<uint32_t> Hiehgt;
+            Property<uint32_t> Height;
             [[nodiscard]] Point2<uint32_t> getSize() const;
 
             // virtual acceptor implementation
@@ -33,11 +31,11 @@ namespace eng::ui
         private:
             void ownProperty();
 
-            PropertyBind<std::string> m_bind_class;
-            PropertyBind<std::string> m_inter_class;
             PropertyBind<uint32_t> m_bind_width;
             PropertyBind<uint32_t> m_inter_width;
             PropertyBind<uint32_t> m_bind_height;
             PropertyBind<uint32_t> m_inter_height;
     };
 }
+
+#include "XML/UI/Object.inl"

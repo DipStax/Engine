@@ -43,3 +43,5 @@ namespace eng
         };
     }
 }
+
+#include "XML/UI/PropertyRegistre.inl"
