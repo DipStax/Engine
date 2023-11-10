@@ -14,12 +14,18 @@ namespace eng::Factory
     class Base<T, std::tuple<Ts...>, _Ts...>
     {
         public:
+            using BaseType = T;
+
             template<class _T, class ...__Ts>
             requires ContainIn<_T, typename pair_key<_Ts...>::type>
             std::shared_ptr<_T> build(__Ts ...&&_arg) const;
 
         protected:
+            template<class _T>
+            std::shared_ptr<_T> buildContent(const std::string &_type);
+
             std::shared_ptr<T> internalBuild(const std::string &_type, _Ts ...&&_arg) const;
+
 
         private:
             template<class ...__Ts>

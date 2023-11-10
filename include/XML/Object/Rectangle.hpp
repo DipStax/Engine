@@ -1,16 +1,12 @@
 #pragma once
 
-#define RECTANGLE_EVENT Property<std::string>::Event, Property<float>::Event, Property<Color>::Event, Property<uint32_t>::Event
-
 #include "Engine/Rendering/Color.hpp"
 #include "XML/UI/Object.hpp"
 
 namespace eng::ui
 {
     template<class ...Ts>
-    using RectangleEvent = typename unique_type<RECTANGLE_EVENT, Ts...>::type;
-
-    class PROJECT_API Rectangle : public Object<RectangleEvent<>>
+    class PROJECT_API Rectangle : public Object<Ts...>
     {
         public:
             Rectangle(const std::string &_type, eng::ThreadPool &_tp);

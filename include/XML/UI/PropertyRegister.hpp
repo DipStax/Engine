@@ -12,11 +12,11 @@ namespace eng
 
     namespace ui
     {
-        class PROJECT_API PropertyRegistre
+        class PROJECT_API PropertyRegister
         {
             public:
-                PropertyRegistre() = default;
-                ~PropertyRegistre() = default;
+                PropertyRegister() = default;
+                ~PropertyRegister() = default;
 
             protected:
                 template<class T>
@@ -44,4 +44,4 @@ namespace eng
     }
 }
 
-#include "XML/UI/PropertyRegistre.inl"
+#include "XML/UI/PropertyRegister.inl"

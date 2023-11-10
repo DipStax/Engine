@@ -305,6 +305,9 @@ concept TupleAcceptCtr = tuple_accept_ctr<typename pair_key<T>::type, _Ts...>::t
 template<class T, class ...Ts>
 concept IsFacMap = IsFacPair<Ts...> && tuple_base_of<T, typename pair_key<T>::type>::type::value;
 
+template<class T, class _T>
+concept IsBasedOf = std::is_base_of_v<T, _T>;
+
 namespace imp
 {
     template<IsString T, IsUiObject _T, class ...Ts>

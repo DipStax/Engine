@@ -19,6 +19,16 @@ namespace eng
     }
 
     template<class T>
+    void Trigger<T>::raise(const T &_event, const sTask _except)
+    {
+        for (auto &_sub : m_sub)
+            if (_sub != _except)
+                m_tp.enqueue([_sub, _event] () {
+                    (*_sub)(_event);
+                });
+    }
+
+    template<class T>
     Trigger<T>::sTask Trigger<T>::subscribe(Task _task)
     {
         m_sub.push_back(std::make_shared<Task>(_task));

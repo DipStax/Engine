@@ -11,7 +11,7 @@ namespace eng::Factory
 
     template<class _T, class ...__Ts>
     requires ContainIn<_T, typename pair_key<_Ts...>::type>
-    std::shared_ptr<_T> build(__Ts ...&&_arg) const
+    std::shared_ptr<_T> build(__Ts ...&&_args) const
     {
         return std::make_shared<_T>(std::forward<__Ts>(_args)...);
     }

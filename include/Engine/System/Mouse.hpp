@@ -18,12 +18,12 @@ namespace eng
             };
 
             enum Button {
-                Right,
-                Left,
-                Middle,
-                X1,
-                X2,
-                Other
+                Right = 0,
+                Left = 1,
+                Middle = 2,
+                X1 = 4,
+                X2 = 8,
+                Other = 16
             };
 
             static eng::Point2<uint32_t> Position();

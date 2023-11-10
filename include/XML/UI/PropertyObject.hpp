@@ -1,35 +1,15 @@
 #pragma once
 
-#include "XML/UI/EventObject.hpp"
+#include "XML/UI/PropertyBinder.hpp"
+#include "XML/UI/PropertyRegistre.hpp"
 
 namespace eng::ui
 {
     template<class ...Ts>
-    using PropertyEvent = typename unique_type<Ts...>::type;
-
-    template<class T>
-    using PropertyBind = Trigger<typename Property<T>::Event>::sTask;
-
-    template<class ...Ts>
-    class PropertyObject;
-
-    template<class ...Ts>
-    class PropertyObject<std::tuple<Ts...>> : public EventObject<PropertyEvent<Ts...>>
+    class PropertyObject : public PropertyBinder<Ts...>, public PropertyRegister
     {
         public:
-            PropertyObject(ThreadPool &_tp);
-            PropertyObject(PropertyObject<std::tuple<Ts...>> &&_obj) noexcept;
+            PropertyObject(EventPool<Ts...> &_ep_cus);
             ~PropertyObject() = default;
-
-        protected:
-            template<class T>
-            requires ContainIn<typename Property<T>::Event, Ts...>
-            [[nodiscard]] PropertyBind<T> bindProperty(Property<T> &_prop);
-
-            template<class T>
-            requires ContainIn<typename Property<T>::Event, Ts...>
-            void unbindProperty(PropertyBind<T> _stask);
     };
 }
-
-#include "XML/UI/PropertyObject.inl"

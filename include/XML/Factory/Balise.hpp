@@ -6,20 +6,41 @@
 
 namespace eng::Factory
 {
+    namespace imp
+    {
+        template<class ...Ts, class ..._Ts>
+        class Balise : public BaseFactory<ui::Object<Ts...>, std::tuple<_Ts...>, EventPool<Ts...> &, SysEventPool &, const std::string &, ThreadPool &>
+        {
+            public:
+                Balise() = default;
+                ~Balise() = default;
+
+                std::shared_ptr<BaseType> build(const xml::Balise &_balise, EventPool<Ts...> &_ep_cus, SysEventPool &_ep_sys, ThreadPool &_tp) const;
+
+                std::shared_ptr<BaseType> build(const std::string &_type, EventPool<Ts...> &_ep_cus, SysEventPool &_ep_sys, ThreadPool &_tp) const;
+
+            private:
+                std::shared_ptr<BaseType> addContent(const std::string &_balise, ThreadPool &_tp) const;
+
+                template<class ...__Ts>
+                std::shared_ptr<BaseType> internalAddContent(std::shared_ptr<BaseType> _base, const std::string &_type) const;
+                template<IsPair _T, class ...__Ts>
+                std::shared_ptr<BaseType> internalAddContent(std::shared_ptr<BaseType> _base, const std::string &_type) const;
+        };
+    }
+
     template<class ...Ts>
-    class Balise : public BaseFactory<ui::BaseObject, std::tuple<Ts...>, const std::string &, ThreadPool &>
+    class Balise
     {
         public:
-            Balise(ThreadPool &_tp);
-            ~Balise() = default;
-
-            std::shared_ptr<ui::BaseObject> build(const xml::Balise &_balise) const;
-
-            std::shared_ptr<ui::BaseObject> build(const std::string &_type) const;
+            [[nodiscard]] static const Balise &instance() const;
 
         private:
-            ThreadPool &m_tp;
-    };
+            Balise() = default;
+            ~Balise() = default;
+
+            static Balise m_balise;
+    }
 }
 
 #include "XML/Factory/Base.hpp"

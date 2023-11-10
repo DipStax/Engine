@@ -1,23 +1,19 @@
 #pragma once
 
 #include "Engine/Event/EventPool.hpp"
-#include "XML/UI/BaseObject.hpp"
 
 namespace eng::ui
 {
     template<class ...Ts>
-    class EventObject;
-
-    template<class ...Ts>
-    class EventObject<std::tuple<Ts...>> : public EventPool<Ts...>
+    class EventObject : public EventPool<Ts...>, public SysEventPool
     {
         public:
             EventObject(ThreadPool &_tp);
-            EventObject(EventObject &&_eo) noexcept;
             ~EventObject() = default;
 
         protected:
-            EventPool<Ts...> *EP();
+            EventPool<Ts...> *customEP();
+            SysEventPool *systemEP();
     };
 }
 

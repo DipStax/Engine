@@ -1,17 +1,18 @@
 #include "XML/Object/Rectangle.hpp"
 
 namespace eng::ui
-{
-    Rectangle::Rectangle(const std::string &_type, eng::ThreadPool &_tp)
-        : Object<RectangleEvent<>>(_type, _tp), PositionX(*this, "PositionX", 0), PositionY(*this, "PositionY", 0),
+{   
+    template<class ...Ts>
+    Rectangle<Ts...>::Rectangle(const std::string &_type, eng::ThreadPool &_tp)
+        : Object<Ts...>(_type, _tp), PositionX(*this, "PositionX", 0), PositionY(*this, "PositionY", 0),
           OriginX(*this, "OriginX", 0), OriginY(*this, "OriginY", 0), ScaleX(*this, "ScaleX", 1.f), ScaleY(*this, "ScaleY", 1.f),
           Rotation(*this, "Rotation", 0.f), Color(*this, "Color", eng::Color{ 255, 255, 255, 255 })
     {
         ownProperty();
     }
 
-    Rectangle::Rectangle(Rectangle &&_obj) noexcept
-        : Object<RectangleEvent<>>(std::move(_obj)), PositionX(std::move(_obj.PositionX)), PositionY(std::move(_obj.PositionY)),
+    Rectangle<Ts...>::Rectangle(Rectangle &&_obj) noexcept
+        : Object<Ts...>(std::move(_obj)), PositionX(std::move(_obj.PositionX)), PositionY(std::move(_obj.PositionY)),
           OriginX(std::move(_obj.OriginX)), OriginY(std::move(_obj.OriginY)), ScaleX(std::move(_obj.ScaleX)), ScaleY(std::move(_obj.ScaleY)),
           Rotation(std::move(_obj.Rotation)), Color(std::move(_obj.Color))
     {
@@ -20,7 +21,8 @@ namespace eng::ui
         m_rect = _obj.m_rect;
     }
 
-    Rectangle::~Rectangle()
+    template<class ...Ts>
+    Rectangle<Ts...>::~Rectangle()
     {
         unbindProperty<uint32_t>(m_bind_posx);
         unbindProperty<uint32_t>(m_bind_posy);
@@ -32,27 +34,32 @@ namespace eng::ui
         unbindProperty<eng::Color>(m_bind_color);
     }
 
-    eng::Point2<uint32_t> Rectangle::getPosition() const
+    template<class ...Ts>
+    eng::Point2<uint32_t> Rectangle<Ts...>::getPosition() const
     {
         return { PositionX, PositionY };
     }
 
-    eng::Point2<uint32_t> Rectangle::getOrigin() const
+    template<class ...Ts>
+    eng::Point2<uint32_t> Rectangle<Ts...>::getOrigin() const
     {
         return { OriginX, OriginY };
     }
 
-    eng::Point2<float> Rectangle::getScale() const
+    template<class ...Ts>
+    eng::Point2<float> Rectangle<Ts...>::getScale() const
     {
         return { ScaleX, ScaleY };
     }
 
-    void Rectangle::draw(RenderTarget &_target, const Texture *_txtr) const
+    template<class ...Ts>
+    void Rectangle<Ts...>::draw(RenderTarget &_target, const Texture *_txtr) const
     {
         _target.draw(m_vertex.data(), m_vertex.size(), VertexArray::Type::Polygone);
     }
 
-    void Rectangle::ownProperty()
+    template<class ...Ts>
+    void Rectangle<Ts...>::ownProperty()
     {
         registerProperty(PositionX);
         registerProperty(PositionY);
@@ -75,13 +82,15 @@ namespace eng::ui
         m_bind_color = bindProperty(Color);
     }
 
-    void Rectangle::processRect()
+    template<class ...Ts>
+    void Rectangle<Ts...>::processRect()
     {
         m_rect = { (getPosition() + getOrigin()).as<float>(), getSize().as<float>() * getScale() };
         buildVertex();
     }
 
-    void Rectangle::buildVertex()
+    template<class ...Ts>
+    void Rectangle<Ts...>::buildVertex()
     {
         m_vertex.clear();
         m_vertex.append({ m_rect.pos, { 0, 0 }, Color });
@@ -90,21 +99,24 @@ namespace eng::ui
         m_vertex.append({ { m_rect.pos.x, m_rect.pos.y + m_rect.size.y }, { 0, m_rect.size.y }, Color });
     }
 
-    void Rectangle::onPositionChange(const Property<uint32_t>::Event &_pos)
+    template<class ...Ts>
+    void Rectangle<Ts...>::onPositionChange(const Property<uint32_t>::Event &_pos)
     {
         std::ignore = _pos;
 
         processRect();
     }
 
-    void Rectangle::onOrigineChange(const Property<uint32_t>::Event &_ori)
+    template<class ...Ts>
+    void Rectangle<Ts...>::onOrigineChange(const Property<uint32_t>::Event &_ori)
     {
         std::ignore = _ori;
 
         processRect();
     }
 
-    void Rectangle::onRotationChange(const Property<float>::Event &_rot)
+    template<class ...Ts>
+    void Rectangle<Ts...>::onRotationChange(const Property<float>::Event &_rot)
     {
         std::ignore = _rot;
 
