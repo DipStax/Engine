@@ -8,7 +8,7 @@
 namespace eng::ui
 {
     template<class ...Ts>
-    class Object : public EventObject<Ts...>, public PropertyObject<Ts...>, ContainerObject<Ts...>
+    class Object : public EventObject<Ts...>, public PropertyObject<Ts...>, public ContainerObject<Ts...>, protected AssetObject
     {
         public:
             Object(EventPool<Ts...> &_ep_cus, SysEventPool &_ep_sys, const std::string &_name, ThreadPool &_tp);
