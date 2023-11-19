@@ -19,10 +19,10 @@ namespace eng
     }
 
     template<class T>
-    void Trigger<T>::raise(const T &_event, const sTask _except)
+    void Trigger<T>::raise(const T &_event, const sTask _not)
     {
         for (auto &_sub : m_sub)
-            if (_sub != _except)
+            if (_sub != _not)
                 m_tp.enqueue([_sub, _event] () {
                     (*_sub)(_event);
                 });

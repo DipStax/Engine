@@ -29,6 +29,6 @@ namespace eng::ui
     requires ContainIn<typename Property<T>::Event, Ts...>
     void PropertyBinder<Ts...>::unbindProperty(PropertyBind<T> _stask)
     {
-        this->m_ep_cus.template unsubscribe<typename Property<T>::Event>(_stask);
+        m_ep_cus.template unsubscribe<typename Property<T>::Event>(_stask);
     }
 }

@@ -19,11 +19,11 @@ namespace eng::ui
     }
 
     template<class ...Ts>
-    template<class T, ..._Ts>
+    template<class T, class ..._Ts>
     requires ContainIn<T, Ts...>
     void Object<Ts...>::bindEventPool(EventPool<Ts...> &_ep_cus)
     {
-        m_task_cus.set<T>(_ep_cus.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
+        m_bind_cus.add<T>(_ep_cus.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
         bindEventPool<_Ts...>(_ep_cus);
     }
 
@@ -32,15 +32,15 @@ namespace eng::ui
     requires ContainIn<T, Ts...>
     void Object<Ts...>::bindEventPool(EventPool<Ts...> &_ep_cus)
     {
-        m_task_cus.set<T>(_ep_cus.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
+        m_bind_cus.add<T>(_ep_cus.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
     }
 
     template<class ...Ts>
-    template<class T, _Ts...>
+    template<class T, class ..._Ts>
     requires ContainIn<T, SysEventType>
     void Object<Ts...>::bindEventPool(EventPool<T, Ts...> &_ep_sys)
     {
-        m_task_sys.set<T>(_ep_sys.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
+        m_bind_sys.add<T>(_ep_cus.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
         bindEventPool<_Ts...>(_ep_sys);
     }
 
@@ -49,6 +49,6 @@ namespace eng::ui
     requires ContainIn<T, Ts...>
     void Object<Ts...>::bindEventPool(EventPool<Ts...> &_ep_cus)
     {
-        m_task_sys.set<T>(_ep_sys.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
+        m_bind_sys.add<T>(_ep_sys.tempalte subscribe<T>(Object<Ts...>::transferEvent<T>, *this));
     }
 }

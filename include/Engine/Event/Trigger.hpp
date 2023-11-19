@@ -20,7 +20,7 @@ namespace eng
             ~Trigger() = default;
 
             void raise(const T &_event);
-            void raise(const T &_event, const sTask _except);
+            void raise(const T &_event, const sTask _not);
 
             [[nodiscard]] sTask subscribe(Task _task);
             void unsubscribe(const sTask _task);

@@ -1,3 +1,5 @@
+#include <string>
+
 #include "XML/UI/PropertyRegister.hpp"
 
 namespace eng::ui
@@ -32,12 +34,5 @@ namespace eng::ui
         m_conv[_prop.getName()] = [&_prop, _conv] (const std::string &_val) {
             _prop = _conv(_val);
         };
-    }
-
-    void PropertyRegister::setProperty(const std::string &_name, const std::string &_val)
-    {
-        if (m_conv.contains(_name))
-            m_conv[_name](_val);
-        // handle non registered class
     }
 }
