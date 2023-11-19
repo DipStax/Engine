@@ -2,6 +2,8 @@
 
 #include "Engine/Rendering/Color.hpp"
 #include "XML/UI/Object.hpp"
+#include "Engine/Rendering/Rect.hpp"
+#include "Engine/Rendering/VertexArray.hpp"
 
 namespace eng::ui
 {
@@ -51,7 +53,7 @@ namespace eng::ui
             PropertyBind<float> m_bind_rotation;
             PropertyBind<eng::Color> m_bind_color;
 
-            VertexArray m_vertex{};
+            VertexArray m_vertex;
 
             Rect m_rect;
     };

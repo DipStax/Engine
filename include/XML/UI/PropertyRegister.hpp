@@ -7,6 +7,7 @@ namespace eng
 {
     namespace Factory
     {
+        template<class ...Ts>
         class Balise;
     }
 
@@ -34,6 +35,7 @@ namespace eng
                 template<class T>
                 void registerProperty(Property<T> &_prop, fn_conv<T> _conv);
 
+                template<class ...Ts>
                 friend class Factory::Balise;
 
                 void setProperty(const std::string &_name, const std::string &_val);

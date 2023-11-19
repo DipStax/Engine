@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Engine/Event/Property.hpp"
+
+#include <functional>
+
 namespace eng::ui
 {
     template<class ...Ts>
@@ -7,14 +11,15 @@ namespace eng::ui
     {
         public:
             public:
-                using fn = std::function<std::shared_ptr<T> (Property<T> &_prop)>;
+                template<class T>
+                using fn = std::function<std::shared_ptr<T> (Property<T> &)>;
 
                 BindRegister() = default;
                 ~BindRegister();
 
                 template<class T, class ..._Ts>
                 requires ContainIn<T, Ts...>
-                size_t add(Property<T> &_prop, fn_bind<T> _bind, _Ts ...&&_binds);
+                size_t add(Property<T> &_prop, fn_bind<T> _bind, _Ts &&..._binds);
                 template<class T>
                 requires ContainIn<T, Ts...>
                 size_t add(Property<T> &_prop, fn_bind<T> _bind);

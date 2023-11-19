@@ -1,5 +1,6 @@
  #pragma once
 
+#include "Engine/Event/Property.hpp"
 #include "XML/UI/EventObject.hpp"
 
 namespace eng::ui
@@ -25,7 +26,7 @@ namespace eng::ui
             void unbindProperty(PropertyBind<T> _stask);
 
         private:
-            EventPool<Ts...> &_ep_cus;
+            EventPool<Ts...> &m_ep_cus;
     };
 }
 

@@ -2,45 +2,37 @@
 
 #include "Tool/PreProcessing.hpp"
 #include "XML/Factory/Base.hpp"
-#include "XML/UI/ObjectRegistre.hpp"
+#include "XML/UI/ContainerObject.hpp"
+#include "XML/UI/System/Expression.hpp"
+#include "XML/Balise.hpp"-
 
 namespace eng::Factory
 {
-    namespace imp
-    {
-        template<class ...Ts, class ..._Ts>
-        class Balise : public BaseFactory<ui::Object<Ts...>, std::tuple<_Ts...>, EventPool<Ts...> &, SysEventPool &, const std::string &, ThreadPool &>
-        {
-            public:
-                Balise() = default;
-                ~Balise() = default;
-
-                std::shared_ptr<BaseType> build(const xml::Balise &_balise, EventPool<Ts...> &_ep_cus, SysEventPool &_ep_sys, ThreadPool &_tp) const;
-
-                std::shared_ptr<BaseType> build(const std::string &_type, EventPool<Ts...> &_ep_cus, SysEventPool &_ep_sys, ThreadPool &_tp) const;
-
-            private:
-                std::shared_ptr<BaseType> addContent(const std::string &_balise, ThreadPool &_tp) const;
-
-                template<class ...__Ts>
-                std::shared_ptr<BaseType> internalAddContent(std::shared_ptr<BaseType> _base, const std::string &_type) const;
-                template<IsPair _T, class ...__Ts>
-                std::shared_ptr<BaseType> internalAddContent(std::shared_ptr<BaseType> _base, const std::string &_type) const;
-        };
-    }
-
     template<class ...Ts>
-    class Balise
+    class Balise;
+
+    template<class ...Ts, class ..._Ts>
+    class Balise<std::tuple<Ts...>, std::tuple<_Ts...>> : public Base<ui::Object<Ts...>, std::tuple<_Ts...>, const std::string &, EventPool<Ts...> &, ::eng::ui::SysEventPool &, ThreadPool &>
     {
         public:
-            [[nodiscard]] static const Balise &instance() const;
+            using BaseFactory = Base<ui::Object<Ts...>, std::tuple<_Ts...>, const std::string &, EventPool<Ts...> &, ::eng::ui::SysEventPool &, ThreadPool &>;
+            using BaseType = BaseFactory::BaseType;
 
-        private:
             Balise() = default;
             ~Balise() = default;
 
-            static Balise m_balise;
-    }
+            std::shared_ptr<BaseType> build(const xml::Balise &_balise, EventPool<Ts...> &_ep_cus, ::eng::ui::SysEventPool &_ep_sys, ThreadPool &_tp) const;
+
+            std::shared_ptr<BaseType> build(const std::string &_type, EventPool<Ts...> &_ep_cus, ::eng::ui::SysEventPool &_ep_sys, ThreadPool &_tp) const;
+
+        private:
+            std::shared_ptr<BaseType> addContent(const std::string &_balise, ThreadPool &_tp) const;
+
+            template<class ...__Ts>
+            std::shared_ptr<BaseType> internalAddContent(std::shared_ptr<BaseType> _base, const std::string &_type) const;
+            template<IsPair _T, class ...__Ts>
+            std::shared_ptr<BaseType> internalAddContent(std::shared_ptr<BaseType> _base, const std::string &_type) const;
+    };
 }
 
-#include "XML/Factory/Base.hpp"
+#include "XML/Factory/Balise.inl"

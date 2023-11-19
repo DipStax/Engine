@@ -1,7 +1,7 @@
 #pragma once
 
 #include "XML/UI/PropertyBinder.hpp"
-#include "XML/UI/PropertyRegistre.hpp"
+#include "XML/UI/PropertyRegister.hpp"
 
 namespace eng::ui
 {

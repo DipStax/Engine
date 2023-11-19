@@ -4,10 +4,11 @@ namespace eng::ui
 {
     template<class ...Ts>
     Object<Ts...>::Object(EventPool<Ts...> &_ep_cus, SysEventPool &_ep_sys, const std::string &_name, ThreadPool &_tp)
-        : EventObject<Ts...>(_tp), PropertyObject<Ts...>(*this), ContainerObject<Ts...>(*this, m_ep_sys, _tp),
-          PropertyObject<Ts...>(_ep_cus), m_ep_sys(_ep_sys), m_ep_cus(_ep_cus), m_tp(_tp)
-          m_name(_name)
+        : EventObject<Ts...>(_tp), PropertyObject<Ts...>(*this), ContainerObject<Ts...>(*this, *this, _tp),
+          PropertyObject<Ts...>(_ep_cus), m_name(_name)
     {
+        bindEventPool<SysEventType>(_ep_sys);
+        bindEventPool<Ts...>(_ep_cus);
     }
 
     template<class ...Ts>
@@ -15,7 +16,7 @@ namespace eng::ui
     requires ContainIn<T, Ts...>
     void Object<Ts...>::transferEvent(const T &_event)
     {
-        raise<T>(_event, m_task.get<T>());
+        raise<T>(_event, m_bind_cus.get<T>());
     }
 
     template<class ...Ts>

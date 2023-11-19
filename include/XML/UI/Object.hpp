@@ -24,14 +24,14 @@ namespace eng::ui
             requires ContainIn<T, Ts...>
             void transferEvent(const T &_event);
 
-            template<class T, _Ts...>
+            template<class T, class ..._Ts>
             requires ContainIn<T, Ts...>
             void bindEventPool(EventPool<Ts...> &_ep_cus);
             template<class T>
             requires ContainIn<T, Ts...>
             void bindEventPool(EventPool<Ts...> &_ep_cus);
 
-            template<class T, _Ts...>
+            template<class T, class ..._Ts>
             requires ContainIn<T, SysEventType>
             void bindEventPool(EventPool<T, _Ts...> &_ep_sys);
             template<class T>
@@ -42,5 +42,7 @@ namespace eng::ui
             SysBindRegister m_bind_sys;
 
             const std::string m_name;
-    }
+    };
 }
+
+#include "XML/UI/Object.inl"

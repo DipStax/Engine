@@ -15,7 +15,7 @@ namespace eng::ui
     {
         add(_prop, _bind);
         add(_prop, _binds);
-    }
+     
 
     template<class ...Ts>
     template<class T>
