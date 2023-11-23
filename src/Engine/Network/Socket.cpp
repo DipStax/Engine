@@ -1,35 +1,22 @@
-#include "Engine/Network/Socket.hpp"
+#include <iostream>
+
+#include "Engine/Network/tcp/Socket.hpp"
 
 namespace eng
 {
-    BasicSocket::~Socket()
+    namespace tcp
     {
-        close();
+        Socket::Socket(ThreadPool &_tp)
+            : BasicSocket(_tp, IPPROTO_TCP)
+        {
+        }
     }
 
-    void BasicSocket::close()
+    namespace udp
     {
-        if (m_socket != INVALID_SOCKET)
-            closesocket(m_socket);
-    }
-
-    BasicSocket::BasicSocket()
-    {
-        create(socket(PF_INET, SOCK_STREAM, NULL));
-    }
-
-    RawSocket BasicSocket::getRawSocket() const
-    {
-        return m_socket;
-    }
-
-    void BasicSocket::create()
-    {
-        create(socket(PF_INET, SOCK_STREAM, NULL));
-    }
-
-    void BasicSocket::create(RawSocket _socket)
-    {
-        m_socket = _socket;
+        Socket::Socket(ThreadPool &_tp)
+            : BasicSocket(_tp, IPPROTO_UDP)
+        {
+        }
     }
 }

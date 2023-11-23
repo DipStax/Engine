@@ -1,22 +1,23 @@
 #pragma once
 
-#include "Engine/Network/tcp/Socket.hpp"
+#include "Engine/Network/BasicSocket.hpp"
 #include "Engine/System/ThreadPool.hpp"
 #include "Tool/PreProcessing.hpp"
 
 namespace eng::tcp
 {
-    class PROJECT_API BasicSocket
+    template<IsBaseSocket T>
+    class PROJECT_API Acceptor
     {
         public:
-            using Accept_cb = std::function<void(Socket)>;
+            using Accept_cb = std::function<void (T)>;
 
             Acceptor(ThreadPool &_tp, uint16_t _port);
             ~Acceptor();
 
             bool listen(uint16_t _port);
 
-            bool accept(Socket &_socket); // add to
+            bool accept(T &_socket);
             void async_accept(Accept_cb _fb);
 
             void stop();

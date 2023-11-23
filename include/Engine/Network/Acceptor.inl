@@ -2,32 +2,36 @@
 
 #include <ws2tcpip.h>
 
-#include "Engine/Network/tcp/Acceptor.hpp"
+#include "Engine/Network/Acceptor.hpp"
 
 namespace eng::tcp
 {
-    Acceptor::Acceptor(ThreadPool &_tp, uint16_t _port)
+    template<IsBaseSocket T>
+    Acceptor<T>::Acceptor(ThreadPool &_tp, uint16_t _port)
         : m_tp(_tp), m_port(_port), m_tcpsocket(m_tp)
     {
         listen(m_port);
     }
 
-    Acceptor::~Acceptor()
+    template<IsBaseSocket T>
+    Acceptor<T>::~Acceptor()
     {
         stop();
     }
 
-    bool Acceptor::listen(uint16_t _port)
+    template<IsBaseSocket T>
+    bool Acceptor<T>::listen(uint16_t _port)
     {
         struct addrinfo *ep = NULL;
         struct addrinfo sin;
+        T socket(m_tp);
 
         stop();
         m_port = _port;
         std::memset(&sin, 0, sizeof(struct addrinfo));
         sin.ai_family = AF_INET;
         sin.ai_socktype = SOCK_STREAM;
-        sin.ai_protocol = IPPROTO_TCP;
+        sin.ai_protocol = socket.getProtocol();
         sin.ai_flags = AI_PASSIVE;
         if (getaddrinfo(NULL, std::to_string(m_port).c_str(), &sin, &ep))
             return false;
@@ -51,14 +55,15 @@ namespace eng::tcp
         return true;
     }
 
-    bool Acceptor::accept(Socket &_socket)
+    template<IsBaseSocket T>
+    bool Acceptor<T>::accept(T &_socket)
     {
         RawSocket target = INVALID_SOCKET;
         sockaddr_in addr;
         int len = sizeof(sockaddr_in);
 
         _socket.close();
-        if (m_socket == INVALID_SOCKET)
+        if (m_socket != INVALID_SOCKET)
             return false;
         target = ::accept(m_socket, reinterpret_cast<sockaddr *>(&addr), &len);
         if (target == INVALID_SOCKET)
@@ -67,10 +72,11 @@ namespace eng::tcp
         return true;
     }
 
-    void Acceptor::async_accept(Accept_cb _accept_cb)
+    template<IsBaseSocket T>
+    void Acceptor<T>::async_accept(Accept_cb _accept_cb)
     {
         m_tp.enqueue([this, _accept_cb]() {
-            Socket socket(this->m_tp);
+            T socket(this->m_tp);
 
             if (!accept(socket))
                 this->async_accept(_accept_cb);
@@ -79,7 +85,8 @@ namespace eng::tcp
         });
     }
 
-    void Acceptor::stop()
+    template<IsBaseSocket T>
+    void Acceptor<T>::stop()
     {
         closesocket(m_socket);
     }
