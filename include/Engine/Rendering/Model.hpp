@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "Engine/Maths/Point3.hpp"
 #include "Engine/Rendering/IDrawable3D.hpp"
@@ -16,6 +17,7 @@ namespace eng
         public:
             Model();
             ~Model() = default;
+            Model(const Model &_model);
             Model &operator=(const Model &_model);
 
             Model copy() const;

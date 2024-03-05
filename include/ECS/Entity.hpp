@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "Tool/Export.hpp"
 
 namespace ecs

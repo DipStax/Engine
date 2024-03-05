@@ -10,16 +10,16 @@ namespace eng::xml
     class PROJECT_API Tokenizer
     {
         public:
-            static [[nodiscard]] std::vector<Token> run(const std::string &file);
-            static [[nodiscard]] std::vector<Token> run(std::istream &_stream);
+            [[nodiscard]] static std::vector<Token> run(const std::string &file);
+            [[nodiscard]] static std::vector<Token> run(std::istream &_stream);
 
         protected:
-            static [[nodiscard]] bool readLWord(std::istream &_stream, Token &_token);
-            static [[nodiscard]] bool readWord(std::istream &_stream, Token &_token);
-            static [[nodiscard]] bool readOpenBalise(std::istream &_stream, Token &_token);
-            static [[nodiscard]] bool readCloseBalise(std::istream &_stream, Token &_token);
-            static [[nodiscard]] bool readCloseSign(std::istream &_stream, Token &_token);
-            static [[nodiscard]] bool readEqual(std::istream &_stream, Token &_token);
+            [[nodiscard]] static bool readLWord(std::istream &_stream, Token &_token);
+            [[nodiscard]] static bool readWord(std::istream &_stream, Token &_token);
+            [[nodiscard]] static bool readOpenBalise(std::istream &_stream, Token &_token);
+            [[nodiscard]] static bool readCloseBalise(std::istream &_stream, Token &_token);
+            [[nodiscard]] static bool readCloseSign(std::istream &_stream, Token &_token);
+            [[nodiscard]] static bool readEqual(std::istream &_stream, Token &_token);
             static bool goNextToken(std::istream &_stream);
 
         private:

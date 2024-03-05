@@ -60,7 +60,7 @@ namespace eng::xml
 
     bool Tokenizer::readWord(std::istream &_stream, Token &_token)
     {
-        size_t cursor = _stream.tellg();
+        int64_t cursor = _stream.tellg();
         char get = 0;
         const std::string skip("abcdefghijklmnopqrstuvwxyzABCDERFGHIJKLMNOPQRSTUVWXYZ");
 
@@ -117,7 +117,7 @@ namespace eng::xml
     {
         char get = 0;
         const std::string skip(" \t\n\r");
-        size_t cursor = _stream.tellg();
+        int32_t cursor = _stream.tellg();
 
         while (!_stream.eof()) {
             _stream.get(get);

@@ -15,8 +15,8 @@ class Core
         void run();
 
     private:
-        eng::RenderWindow m_win;
         eng::ThreadPool m_tp;
+        eng::RenderWindow m_win;
 };
 
 #endif

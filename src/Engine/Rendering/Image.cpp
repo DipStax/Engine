@@ -23,7 +23,7 @@ namespace eng
         if (fac.contains(ext))
             (this->*fac[ext])(_path);
         else
-            throw std::exception("Unable to load the image");
+            throw std::runtime_error("Unable to load the image");
     }
 
     void Image::load(const uint8_t *_data, const Point2<uint32_t> &_size, uint8_t _bpp)

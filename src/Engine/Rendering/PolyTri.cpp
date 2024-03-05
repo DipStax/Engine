@@ -8,7 +8,7 @@ namespace eng
         std::vector<std::array<Vertex, 3>> res;
         CircleList<Vertex> cl;
 
-        for (int32_t it = 0; it < _size; it++)
+        for (size_t it = 0; it < _size; it++)
             cl.push_back(_vtx[it]);
         for (int32_t it = 0; cl.size() > 3;) {
             if (priv::isEarTip(cl, it)) {
@@ -88,16 +88,16 @@ namespace eng
 
     namespace priv
     {
-        bool isEarTip(const CircleList<Vertex> &_cl, size_t _start)
+        bool isEarTip(const CircleList<Vertex> &_cl, int32_t _start)
         {
-            int32_t start = static_cast<int32_t>(_start);
-            float size = area(_cl[start - 1].pos, _cl[start].pos, _cl[start + 1].pos);
+            float size = area(_cl[_start - 1].pos, _cl[_start].pos, _cl[_start + 1].pos);
             float inside = 0;
+            int32_t elem = static_cast<int32_t>(_cl.size());
 
-            if (reflex(_cl[start - 1].pos, _cl[start].pos, _cl[start + 1].pos))
+            if (reflex(_cl[_start - 1].pos, _cl[_start].pos, _cl[_start + 1].pos))
                 return false;
-            for (int32_t it = start + 2; it < start + _cl.size() - 2; it++) {
-                inside = calInside(_cl[it].pos, _cl[start - 1].pos, _cl[start].pos, _cl[start + 1].pos);
+            for (int32_t it = _start + 2; it < _start + elem - 2; it++) {
+                inside = calInside(_cl[it].pos, _cl[_start - 1].pos, _cl[_start].pos, _cl[_start + 1].pos);
                 if (size - 1 < inside && inside < size + 1)
                     return false;
             }

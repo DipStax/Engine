@@ -8,7 +8,7 @@ namespace eng::xml
 {
     struct PROJECT_API Token
     {
-        enum PROJECT_API Type
+        enum Type
         {
            Open = 01,
            Close = 010,
